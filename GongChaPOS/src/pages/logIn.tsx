@@ -1,7 +1,9 @@
-
+import React from 'react'
+import ReactDOM from 'react-dom/client'
 import { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import './logIn.css';
+import CashierView from './cashierView.tsx'
 
 function Login() {
   const [username, setUsername] = useState('');
@@ -18,6 +20,14 @@ function Login() {
         if (username === employee.employeeusername && password === employee.employeeuserpassword) {
           console.log("Login successful");
           isLoginSuccessful = true; // set the flag to true if matching user found
+
+          // redirect to cashierView page
+          ReactDOM.createRoot(document.getElementById('root')!).render(
+            <React.StrictMode>
+              <CashierView />
+            </React.StrictMode>,
+          )
+          
         }
       });
 
