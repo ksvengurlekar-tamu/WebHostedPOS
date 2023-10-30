@@ -50,12 +50,14 @@ GongCha, a renowned beverage brand, required a modern and efficient POS system. 
 
 6. Ensure your PostgreSQL instance is running and properly set up.
 
-7. For production builds, run:
-   ```bash
-   npm run dev
-Run express server:
+7. Run express server:
    ```bash
    ts-node-esm  src/server/api.ts
+
+8. For production builds, run:
+   ```bash
+   npm run dev
+
 
 
 ## Dependencies
