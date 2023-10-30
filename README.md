@@ -39,25 +39,24 @@ GongCha, a renowned beverage brand, required a modern and efficient POS system. 
     
     export const db = (text: string, params?: any[]) => pool.query(text, params);
 
-3. Navigate to the project directory and install dependencies:
+4. Navigate to the project directory and install dependencies:
    ```bash
    cd gongchapos
    npm install
 
-4. Start the development server:
+5. Start the development server:
    ```bash
    npm run dev
 
-5. Ensure your PostgreSQL instance is running and properly set up.
+6. Ensure your PostgreSQL instance is running and properly set up.
 
-6. For production builds, run:
+7. For production builds, run:
    ```bash
    npm run dev
 Run express server:
-    ```bash
-    ts-node-esm  src/server/api.ts
+   ```bash
+   ts-node-esm  src/server/api.ts
 
-7. Ensure that a class is created with the necessary configuration to access your PostgreSQL database.
 
 ## Dependencies
 
