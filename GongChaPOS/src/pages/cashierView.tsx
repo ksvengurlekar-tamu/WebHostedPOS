@@ -1,9 +1,8 @@
 import React from 'react'
 
-function cashierView() {
-  return (
-    <div>cashierView</div>
-  )
+function CashierView() {
+  
+  return <CashierView />
 }
 
-export default cashierView
+export default CashierView;
