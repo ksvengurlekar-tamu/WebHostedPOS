@@ -2,7 +2,7 @@
 
 A Point Of Sale (POS) system developed for GongCha, implemented using the PERN stack (PostgreSQL, Express, React, and Node.js).
 
-![GongCha Logo](src/assets/images/GongChaLogo.png)
+![GongCha Logo](GongChaPOS/src/assets/images/GongChaLogo.png)
 
 ## Introduction
 
