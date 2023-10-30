@@ -4,10 +4,12 @@ import { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import './logIn.css';
 import CashierView from './cashierView.tsx'
+import { BrowserRouter as Router, Route, Link, useNavigate } from 'react-router-dom';
 
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate(); // experimental react-router-dom hook
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -21,24 +23,20 @@ function Login() {
           console.log("Login successful");
           isLoginSuccessful = true; // set the flag to true if matching user found
 
-          // redirect to cashierView page
-          ReactDOM.createRoot(document.getElementById('root')!).render(
-            <React.StrictMode>
-              <CashierView />
-            </React.StrictMode>,
-          )
-          
+          // return statement?
+          // Route path="/cashierView" element={<CashierView />} />
+        
         }
       });
 
       if (!isLoginSuccessful) { // check the flag after the loop
         console.log("Login failed");
       }
-      
+
     } catch (error) {
       console.error("Failed to fetch employees:", error);
     }
-};
+  };
 
 
   const togglePasswordVisibility = () => {
@@ -51,7 +49,7 @@ function Login() {
       }
     }
   };
-  
+
 
   return (
     <div className="container-fluid d-flex flex-row vh-100 p-0 background">
