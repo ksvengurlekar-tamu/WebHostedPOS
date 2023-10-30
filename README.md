@@ -18,7 +18,7 @@ GongCha, a renowned beverage brand, required a modern and efficient POS system. 
 
 ## Installation
 
-1. Ensure you have Node.js version 16, npm, and PostgreSQL installed.
+1. Ensure you have Node.js version 16 (not newer), npm, and PostgreSQL installed.
 
 2. Clone the repository:
    ```bash
@@ -32,9 +32,9 @@ GongCha, a renowned beverage brand, required a modern and efficient POS system. 
     const pool = new Pool({
     user: 'your_username',
     password: 'your_password',
-    host: 'localhost',
+    host: 'csce-315-db.engr.tamu.edu',
     port: 5432, // default Postgres port
-    database: 'your_database_name'
+    database: 'csce315331_00g_db'
     });
     
     export const db = (text: string, params?: any[]) => pool.query(text, params);
@@ -57,8 +57,6 @@ GongCha, a renowned beverage brand, required a modern and efficient POS system. 
 8. For production builds, run:
    ```bash
    npm run dev
-
-
 
 ## Dependencies
 
