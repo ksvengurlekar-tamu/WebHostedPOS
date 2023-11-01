@@ -1,15 +1,15 @@
 import React from 'react'
-import ReactDOM from 'react-dom/client'
 import { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import './logIn.css';
-import CashierView from './cashierView.tsx'
-import { BrowserRouter as Router, Route, Link, useNavigate } from 'react-router-dom';
+// import CashierView from './cashierView'
+import { Routes, Route, useNavigate  } from 'react-router-dom';
 
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate(); // experimental react-router-dom hook
+  const navigate = useNavigate();
+  // const navigate = useNavigate(); // experimental react-router-dom hook
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -29,9 +29,13 @@ function Login() {
         }
       });
 
-      if (!isLoginSuccessful) { // check the flag after the loop
+      if (isLoginSuccessful) { // check the flag after the loop
+        navigate('./cashierView');
+      } else {
         console.log("Login failed");
+
       }
+      
 
     } catch (error) {
       console.error("Failed to fetch employees:", error);
@@ -101,6 +105,10 @@ function Login() {
             />
             <label className="form-check-label" htmlFor="showPassword">Show Password</label>
           </div>
+          {/* <Routes>
+            <Route path="/" element={<Login />} exact />
+            <Route path="./cashierView" element={<CashierView />} />
+          </Routes> */}
           <button type="submit" className="btn btn-primary">
             Submit
           </button>
