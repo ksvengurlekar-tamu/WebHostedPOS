@@ -3,19 +3,20 @@ import { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import './logIn.css';
 // import CashierView from './cashierView'
-// import { Routes, Route, useNavigate  } from 'react-router-dom';
+import { Routes, Route, useNavigate  } from 'react-router-dom';
 
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   // const navigate = useNavigate(); // experimental react-router-dom hook
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
-      // const response = await fetch('http://localhost:9000/server/employees');
-      const response = await fetch('https://gong-cha-pos.onrender.com/server/employees', {mode: 'cors'});
+      const response = await fetch('http://localhost:9000/server/employees');
+      console.log("connect");
+      // const response = await fetch('https://gong-cha-pos.onrender.com/server/employees', {mode: 'cors'});
       const data = await response.json();
       let isLoginSuccessful = false; // flag to track successful login
 
@@ -31,7 +32,7 @@ function Login() {
       });
 
       if (isLoginSuccessful) { // check the flag after the loop
-        // navigate('./cashierView');
+        navigate('/cashierView');
       } else {
         console.log("Login failed");
 
