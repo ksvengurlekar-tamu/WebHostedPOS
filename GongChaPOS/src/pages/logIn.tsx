@@ -3,12 +3,12 @@ import { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import './logIn.css';
 // import CashierView from './cashierView'
-import { Routes, Route, useNavigate  } from 'react-router-dom';
+// import { Routes, Route, useNavigate  } from 'react-router-dom';
 
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   // const navigate = useNavigate(); // experimental react-router-dom hook
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -31,7 +31,7 @@ function Login() {
       });
 
       if (isLoginSuccessful) { // check the flag after the loop
-        navigate('./cashierView');
+        // navigate('./cashierView');
       } else {
         console.log("Login failed");
 
@@ -68,7 +68,7 @@ function Login() {
       </div>
       <div className="col d-flex flex-column align-items-center vh-100 loginForm">
         <div className="w-100 text-center my-2 loginText"> Log-In </div>
-        <form className="w-75 mt-4" onSubmit={handleSubmit}>
+        <form className="w-75 mt-4 h-100" onSubmit={handleSubmit}>
           <div className="mb-3">
             <label htmlFor="username" className="form-label mb-1">
               Username
