@@ -14,9 +14,9 @@ function Login() {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
-      const response = await fetch('http://localhost:9000/server/employees');
+      // const response = await fetch('http://localhost:9000/server/employees');
       console.log("connect");
-      // const response = await fetch('https://gong-cha-pos.onrender.com/server/employees', {mode: 'cors'});
+      const response = await fetch('https://gong-cha-server.onrender.com/server/employees', {mode: 'cors'});
       const data = await response.json();
       let isLoginSuccessful = false; // flag to track successful login
 
