@@ -4,7 +4,7 @@ import { db } from './server.ts';
 
 
 const app = express();
-const port = 9001;  // You can choose any port that's not in use
+const port = 3000;  // You can choose any port that's not in use
 const router = Router();
 
 app.use(cors()); // Allow CORS for all routes
