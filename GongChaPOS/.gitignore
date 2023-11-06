@@ -24,4 +24,4 @@ dist-ssr
 *.sw?
 
 
-src/server/server.ts
+server/server.ts
