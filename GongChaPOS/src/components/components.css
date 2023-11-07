@@ -80,9 +80,9 @@
     background-color: #fcfcf1;
     color: white;
     padding: 10px;
-    /* display: flex;
+    display: flex;
     justify-content: space-between;
-    position: fixed; */
+    position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
@@ -128,6 +128,7 @@
     outline: 4px auto -webkit-focus-ring-color;
   }
 
+  
   /* Left Navigation Bar CSS */
   .leftNavBar {
     background-color: #98101f;
@@ -151,4 +152,17 @@
     top: 0;
     left: 0;
     right: 0;
+  }
+
+  .card {
+    /* Add the cardStyle properties here */
+    span {
+      display: inline-block;
+    }
+  }
+
+  .categoryGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 10px;
   }

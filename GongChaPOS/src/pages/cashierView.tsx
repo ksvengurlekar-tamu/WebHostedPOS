@@ -3,6 +3,7 @@ import LeftNavBar from '../components/leftnavbar.tsx'
 import TopBar from '../components/topBar.tsx'
 import BottomBar from '../components/bottomBar.tsx'
 import Card from '../components/card.tsx';
+import CategoryGrid from '../components/categoryGrid.tsx';
 import '../components/components.css'; // Add this line
 
 function CashierView() {
@@ -14,7 +15,10 @@ function CashierView() {
         </div>
         <div className="col-md-9">
           <TopBar />
-          <Card menuItemName="Bubble Tea" />
+          <div className='categoryGrid'>
+
+          </div>
+          <CategoryGrid />
           <BottomBar />
         </div>
       </div>
