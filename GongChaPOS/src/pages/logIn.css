@@ -15,7 +15,8 @@
 }
 @font-face {
   font-family: 'Amerigo BT';
-  src: url(/src/assets/Amerigo\ BT.ttf);
+  src: url(/src/assets/Amerigo\ BT.ttf); 
+  /* this won't work when building with vite: file path is not read correctly */
 }
 
 *{

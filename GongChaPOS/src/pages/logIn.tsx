@@ -3,7 +3,9 @@ import { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import './logIn.css';
 // import CashierView from './cashierView'
-import { Routes, Route, useNavigate  } from 'react-router-dom';
+import { useNavigate  } from 'react-router-dom';
+
+import gongChaLogo from '../assets/images/GongChaLogo.png';
 
 function Login() {
   const [username, setUsername] = useState('');
@@ -61,7 +63,7 @@ function Login() {
     <div className="container-fluid d-flex flex-row vh-100 p-0 background">
       <div className="col-4 d-flex justify-content-center align-items-center vh-100 logoDiv">
         <img
-          src="src/assets/images/GongChaLogo.png"
+          src={gongChaLogo}
           alt="GongCha Logo"
           width="70%"
           className="img-fluid"
