@@ -1,18 +1,31 @@
 import React from 'react'
+import { useNavigate  } from 'react-router-dom';
 
 function LeftNavBar() {
+    const navigate = useNavigate();
+
+    // takes the text of click
+    const navClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+        // Prevent the default behavior of the anchor element
+        event.preventDefault();
+
+        const href = event.currentTarget.getAttribute('href');
+        
+        if (href) {
+            navigate(href);
+        }
+    
+    };
+
     return (
         <>
             <nav className='leftNavBar'>
                 <ul className='navbar-nav'>
                     <li className='nav-item'>
-                        <a className='nav-link' href='/cashierView'>Main Menu</a>
+                        <a href="/cashierView" onClick={navClick}>Main Menu</a>
                     </li>
                     <li className='nav-item'>
-                        <a className='nav-link' href='/cashierView'>Recipes</a>
-                    </li>
-                    <li className='nav-item'>
-                        <a className='nav-link' href='/cashierView'>Time Sheet</a>
+                        <a href="/nutritionalFacts" onClick={navClick}>Nutritional Facts</a>
                     </li>
                 </ul>
             </nav>
