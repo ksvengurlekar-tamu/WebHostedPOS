@@ -19,8 +19,9 @@ const Card: React.FC<CardDetails> = ({ menuItemName }) => {
   // Styling makes the card a square with a random color
   const cardStyle = {
     backgroundColor: cardColor,
-    width: '50px',
-    height: '50px',
+    width: '25px',
+    height: '25px',
+    fontSize: '10px',
   };
 
   return (
@@ -32,4 +33,4 @@ const Card: React.FC<CardDetails> = ({ menuItemName }) => {
 };
 
 
-export default Card
+export default Card;
