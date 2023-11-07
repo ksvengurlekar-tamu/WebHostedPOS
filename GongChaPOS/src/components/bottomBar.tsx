@@ -7,17 +7,17 @@ function bottomBar() {
     console.log('Checkout button clicked');
   };
 
-  const handleTransaction = () => {
+  const handleTransactions = () => {
     // Implement Transaction functionality here
     console.log('Transaction button clicked');
   };
 
-  const handleOrder = () => {
+  const handleOrders = () => {
     // Implement Order functionality here
     console.log('Order button clicked');
   };
 
-  const handleNotification = () => {
+  const handleNotifications = () => {
     // Implement Notification functionality here
     console.log('Notification button clicked');
   };
@@ -30,9 +30,9 @@ function bottomBar() {
   return (
     <div className="bottomNavBar">
       <button onClick={handleCheckout}>Checkout</button>
-      <button onClick={handleTransaction}>Transaction</button>
-      <button onClick={handleOrder}>Order</button>
-      <button onClick={handleNotification}>Notification</button>
+      <button onClick={handleTransactions}>Transactions</button>
+      <button onClick={handleOrders}>Orders</button>
+      <button onClick={handleNotifications}>Notifications</button>
       <button onClick={handleLogout}>Log Out</button>
     </div>
   );
@@ -54,7 +54,7 @@ function bottomBar() {
             <a className='nav-link' href='/cashierView'>Notifications</a>
           </li>
           <li className='nav-item'>
-            <a className='nav-link' href='/cashierView'>Log out</a>
+            <a className='nav-link' href='/cashierView'>Log Out</a>
           </li>
         </ul>
       </nav>
