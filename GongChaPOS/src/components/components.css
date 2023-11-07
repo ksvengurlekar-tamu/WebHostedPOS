@@ -84,7 +84,7 @@
     justify-content: space-between;
     position: fixed;
     bottom: 0;
-    left: 0;
+    left: 312px;
     right: 0;
   }
 
@@ -94,7 +94,7 @@
   }
 
   .nav-item {
-    margin: 0 10px;
+    margin: 20px 10px;
   }
 
   .nav-link {
@@ -133,24 +133,25 @@
   .leftNavBar {
     background-color: #98101f;
     color: white;
-    padding: 10px;
-    /* display: flex;
+    padding: 3px;
+    display: flex;
     justify-content: space-between;
-    position: fixed; */
+    position: fixed;
     top: 0;
     left: 0;
     bottom: 0;
   }
 
+  /* Top Navigation Bar CSS */
   .topNavBar {
     background-color: #fcfcf1;
     color: white;
     padding: 10px;
-    /* display: flex;
+    display: flex;
     justify-content: space-between;
-    position: fixed; */
+    position: fixed;
     top: 0;
-    left: 0;
+    left: 312px;
     right: 0;
   }
 
