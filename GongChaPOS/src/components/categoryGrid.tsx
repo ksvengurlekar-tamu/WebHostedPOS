@@ -1,19 +1,27 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Card from '../components/card.tsx';
 
 function CategoryGrid() {
   const [isSeriesSelected, setSeriesSelected] = useState(false);
   const [isDrinkSelected, setDrinkSelected] = useState(false);
+  const [data, setData] = useState([]); // Add this line
 
   const handleSeriesClick = () => {
-    setSeriesSelected(true);
-    console.log('Series Selected!');
+      setSeriesSelected(true);
+      console.log('Series Selected!');
   };
 
   const handleDrinkClick = () => {
-    setDrinkSelected(true);
-    console.log('Drink Selected!');
+      setDrinkSelected(true);
+      console.log('Drink Selected!');
   };
+
+  useEffect(() => {
+      fetch('https://gong-cha-server.onrender.com/server/menuItems/')
+      .then(response => response.json())
+      .then(data => setData(data))
+      .catch(error => console.error("Failed to fetch menu items: ", error));
+  }, []);
 
 
 

@@ -10,3 +10,7 @@ const pool = new Pool({
 });
 
 export const db = (text: string, params?: any[]) => pool.query(text, params);
+
+export const getItemsBySeries = (series: string) => {
+    return db('SELECT * FROM items WHERE series = $1', [series]);
+};

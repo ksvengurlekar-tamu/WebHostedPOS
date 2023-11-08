@@ -24,6 +24,15 @@ app.get('/server/employees', async (_req, res) => {
   }
 });
 
+app.get('/server/menuitems/milktea', async (_req, res) => {
+  try {
+    const result = await db('SELECT * FROM menuitems');
+    res.json(result.rows);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch data' });
+  }
+});
+
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}/server`);
 });
