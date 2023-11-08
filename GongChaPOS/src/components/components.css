@@ -210,7 +210,6 @@
     background-color: white;
     color: black;
     overflow-y: auto;
-    height: 100vh; /* Adjust this value as needed */
     .p {
       color: black;
     }

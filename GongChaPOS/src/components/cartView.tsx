@@ -115,7 +115,7 @@ const CartView: React.FC<CartViewProps> = ({ drinkNames: initialDrinkNames }) =>
 
       for (const drinkName of initialDrinkNames) {
         const response = await fetch(
-          `https://gong-cha-server.onrender.com/server/menuItems/${drinkName}`
+          `https://localhost:9000/server/menuItems/${drinkName}`
         );
         const data = await response.json();
 

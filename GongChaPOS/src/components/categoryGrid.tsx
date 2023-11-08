@@ -15,7 +15,7 @@ const CategoryGrid: React.FC<CategoryGridProps> = ({ addToCart }) => {
     setSeriesSelected(true);
     console.log("Series Selected!");
     var url =
-      "https://gong-cha-server.onrender.com/server/menuItems/" + menuItemName;
+      "https://gong-cha-server.onrender.com/server/category/" + menuItemName;
     const response = await fetch(url);
     const data = await response.json();
     console.log(data);
