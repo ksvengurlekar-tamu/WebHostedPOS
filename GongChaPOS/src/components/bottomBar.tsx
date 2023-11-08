@@ -1,10 +1,13 @@
 import React from 'react'
 import './components.css';
+import { useNavigate } from 'react-router-dom';
 
 function bottomBar() {
+  const navigate = useNavigate();
   const handleCheckout = () => {
     // Implement Checkout functionality here
     console.log('Checkout button clicked');
+    navigate('/cartView');
   };
 
   const handleTransactions = () => {
@@ -25,6 +28,7 @@ function bottomBar() {
   const handleLogout = () => {
     // Implement Log Out functionality here
     console.log('Log Out button clicked');
+    navigate('/logIn');
   };
 
   return (
@@ -37,29 +41,29 @@ function bottomBar() {
     </div>
   );
 
-  return (
-    <>
-      <nav className='bottomNavBar'>
-        <ul className='navbar-nav'>
-          <li className='nav-item'>
-            <a className='nav-link' href='/cashierView'>Checkout</a>
-          </li>
-          <li className='nav-item'>
-            <a className='nav-link' href='/cashierView'>Transactions</a>
-          </li>
-          <li className='nav-item'>
-            <a className='nav-link' href='/cashierView'>Orders</a>
-          </li>
-          <li className='nav-item'>
-            <a className='nav-link' href='/cashierView'>Notifications</a>
-          </li>
-          <li className='nav-item'>
-            <a className='nav-link' href='/cashierView'>Log Out</a>
-          </li>
-        </ul>
-      </nav>
-    </>
-  );
+  // return (
+  //   <>
+  //     <nav className='bottomNavBar'>
+  //       <ul className='navbar-nav'>
+  //         <li className='nav-item'>
+  //           <a className='nav-link' href='/cashierView'>Checkout</a>
+  //         </li>
+  //         <li className='nav-item'>
+  //           <a className='nav-link' href='/cashierView'>Transactions</a>
+  //         </li>
+  //         <li className='nav-item'>
+  //           <a className='nav-link' href='/cashierView'>Orders</a>
+  //         </li>
+  //         <li className='nav-item'>
+  //           <a className='nav-link' href='/cashierView'>Notifications</a>
+  //         </li>
+  //         <li className='nav-item'>
+  //           <a className='nav-link' href='/cashierView'>Log Out</a>
+  //         </li>
+  //       </ul>
+  //     </nav>
+  //   </>
+  // );
 }
 
 export default bottomBar;

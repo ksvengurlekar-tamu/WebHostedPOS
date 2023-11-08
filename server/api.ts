@@ -24,6 +24,29 @@ app.get('/server/employees', async (_req, res) => {
   }
 });
 
+
+// menu items
+
+app.get('/server/menuitems', async (_req, res) => {
+  try {
+    const result = await db('SELECT * FROM menuitems');
+    res.json(result.rows);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch menu item data' });
+  }
+});
+
+
+app.get('/server/menuitems/:series', async (req, res) => {
+  try {
+    const result = await db('SELECT * FROM menuitems WHERE menuitemcategory = $1', [req.params.series]);
+    res.json(result.rows);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch menu item tea latte data' });
+  }
+});
+
+
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}/server`);
 });

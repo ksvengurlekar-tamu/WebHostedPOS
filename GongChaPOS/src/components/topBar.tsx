@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './TopBar.css';
+import './components.css';
 
 /**
  * Renders the top bar component with a back button, title and current time.
@@ -21,7 +21,7 @@ function TopBar() {
   const formattedTime = currentTime.toLocaleTimeString();
 
   return (
-    <div className="top-bar">
+    <div className="topNavBar">
       <button className="back-button">Back</button>
       {/* TODO: update top-bar-title to reflect tea series selected */}
       <span className="top-bar-title">Bubble Tea Series</span>
