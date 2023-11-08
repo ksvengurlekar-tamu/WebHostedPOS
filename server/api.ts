@@ -42,7 +42,16 @@ app.get('/server/menuitems/:series', async (req, res) => {
     const result = await db('SELECT * FROM menuitems WHERE menuitemcategory = $1', [req.params.series]);
     res.json(result.rows);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch menu item tea latte data' });
+    res.status(500).json({ error: 'Failed to fetch series data' });
+  }
+});
+
+app.get('/server/menuitems/:menuitemname', async (req, res) => {
+  try {
+    const result = await db('SELECT * FROM menuitems WHERE menuitemname = $2', [req.params.menuitemname]);
+    res.json(result.rows);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch menu item' });
   }
 });
 

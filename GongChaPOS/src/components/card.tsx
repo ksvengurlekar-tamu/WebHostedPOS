@@ -2,9 +2,10 @@ import React from "react";
 import "./components.css";
 
 interface CardDetails {
+  className: string;
   menuItemName: string;
   color: string;
-  onSelect: () => void; // Add this line
+  onSelect: (menuItemName: string) => void; // Add this line
 }
 
 const generateRandomColor = (): string => {
@@ -16,8 +17,7 @@ const generateRandomColor = (): string => {
   return color;
 };
 
-const Card: React.FC<CardDetails> = ({ menuItemName, color, onSelect }) => {
-
+const Card: React.FC<CardDetails> = ({ className, menuItemName, color, onSelect }) => {
   // let cardColor = generateRandomColor();
   let cardColor = color;
 
@@ -48,18 +48,14 @@ const Card: React.FC<CardDetails> = ({ menuItemName, color, onSelect }) => {
   // Styling makes the card a square with a random color
   const cardStyle: React.CSSProperties = {
     backgroundColor: cardColor,
-    width: "200px",
-    height: "200px",
-    fontSize: "10px",
-    textAlign: "center",
-    margin: "20px",
-    padding: "30px",
-    justifyContent: "center",
+  };
+
+  const handleClick = () => {
+    onSelect(menuItemName); // Pass menuItemName to onSelect callback
   };
 
   return (
-    <div className="card" style={cardStyle} onClick={onSelect}>
-      {" "}
+    <div className={className} style={cardStyle} onClick={handleClick}>
       {/* Use onClick here */}
       <h1>{menuItemName}</h1>
       {/* Other card content */}

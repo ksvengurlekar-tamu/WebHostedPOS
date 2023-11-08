@@ -155,38 +155,51 @@
     font-size: 35px;
   }
 
-  .card {
-    /* Add the cardStyle properties here */
-    span {
-      /* display: inline-block; */
-      overflow: auto;
-    }
+ .drink{
+  width: 200px;
+  height: 150px; 
+  text-align: center;
+  margin: 5px;
+  padding: 25px;
+  justify-content: center;
+  border-radius: 10px;
+  border: 3px solid var(--gc-eggshell);
+ }
 
-    justify-content: start;
-    
-  }
+ .drink h1{
+  font-size: 23px;
+ }
+
+ .series{
+    width: 200px;
+    height: 200px; 
+    font-size: 10px;
+    text-align: center;
+    margin: 20px;
+    padding: 30px;
+    justify-content: center;
+    border-radius: 10px;
+    border: 3px solid var(--gc-eggshell);
+ }
+
 
   .categoryGrid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-gap: 10px;
+    grid-gap: 5px;
   }
 
   .menuItemGrid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-gap: 20px;
-    justify-content: start;
-    /* overflow:scroll */
-    width: "200px";
-    height: "200px";
-    font-size: "10px";
-    font-size: 10px;
-    left: 0px;
-    text-align: center;
-    margin: 0px;
-    padding: 0px;
-    justify-content: center;
+    grid-template-columns: repeat(5, 0.5fr);
+    /* flex-direction: row; */
+    /* flex-wrap: wrap; */
+    overflow:scroll;
+    margin-left: 0px;
+    padding-left: 50px;
+    grid-auto-rows: minmax(min-content, max-content); 
+    gap: 0px; 
+    height: auto;
   }
 
   span {
