@@ -42,10 +42,9 @@ function CashierView() {
           <div className="row h-100">
               <CategoryGrid addToCart={addToCart} />
             <div className="col-md-3 cart-view">
-              <CartView drinkNames={drinkNames} />
+              <CartView className="cartView" drinkNames={drinkNames} />
             </div>
            </div>
-          
           <BottomBar />
       </div>
     </div>

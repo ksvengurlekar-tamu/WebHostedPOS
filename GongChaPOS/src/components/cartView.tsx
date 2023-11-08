@@ -93,6 +93,7 @@
 import React, { useState, useEffect } from "react";
 
 interface CartViewProps {
+  className: string;
   drinkNames: string[];
 }
 

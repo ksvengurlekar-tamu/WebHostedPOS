@@ -206,8 +206,18 @@
     color: black;
   }
 
-  .cart-view{
+  .col-md-3.cart-view {
+    background-color: white;
+    color: black;
+    overflow-y: auto;
+    height: 100vh; /* Adjust this value as needed */
+    .p {
+      color: black;
+    }
+  }
 
+  .col-md-3.cart-view p{
+    color: black;
   }
 
   .main-content {
