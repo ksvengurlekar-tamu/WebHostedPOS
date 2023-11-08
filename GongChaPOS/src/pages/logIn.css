@@ -65,6 +65,7 @@
 
 .loginText{
   font-size: 80px;
+  color: var(--gc-eggshell)
 }
 
 #username::placeholder,

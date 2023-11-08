@@ -11,7 +11,6 @@ function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  // const navigate = useNavigate(); // experimental react-router-dom hook
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -60,7 +59,7 @@ function Login() {
 
 
   return (
-    <div className="container-fluid d-flex flex-row vh-100 p-0 background">
+    <div className="container-fluid d-flex flex-row vh-100 vw-100 p-0 background">
       <div className="col-4 d-flex justify-content-center align-items-center vh-100 logoDiv">
         <img
           src={gongChaLogo}
@@ -71,7 +70,7 @@ function Login() {
       </div>
       <div className="col d-flex flex-column align-items-center vh-100 loginForm">
         <div className="w-100 text-center my-2 loginText"> Log-In </div>
-        <form className="w-75 mt-4 h-100" onSubmit={handleSubmit}>
+        <form className="w-75 mt-4" onSubmit={handleSubmit}>
           <div className="mb-3">
             <label htmlFor="username" className="form-label mb-1">
               Username
