@@ -41,29 +41,29 @@ function bottomBar() {
     </div>
   );
 
-  return (
-    <>
-      <nav className='bottomNavBar'>
-        <ul className='navbar-nav'>
-          <li className='nav-item'>
-            <a className='nav-link' href='/cashierView'>Checkout</a>
-          </li>
-          <li className='nav-item'>
-            <a className='nav-link' href='/cashierView'>Transactions</a>
-          </li>
-          <li className='nav-item'>
-            <a className='nav-link' href='/cashierView'>Orders</a>
-          </li>
-          <li className='nav-item'>
-            <a className='nav-link' href='/cashierView'>Notifications</a>
-          </li>
-          <li className='nav-item'>
-            <a className='nav-link' href='/cashierView'>Log Out</a>
-          </li>
-        </ul>
-      </nav>
-    </>
-  );
+  // return (
+  //   <>
+  //     <nav className='bottomNavBar'>
+  //       <ul className='navbar-nav'>
+  //         <li className='nav-item'>
+  //           <a className='nav-link' href='/cashierView'>Checkout</a>
+  //         </li>
+  //         <li className='nav-item'>
+  //           <a className='nav-link' href='/cashierView'>Transactions</a>
+  //         </li>
+  //         <li className='nav-item'>
+  //           <a className='nav-link' href='/cashierView'>Orders</a>
+  //         </li>
+  //         <li className='nav-item'>
+  //           <a className='nav-link' href='/cashierView'>Notifications</a>
+  //         </li>
+  //         <li className='nav-item'>
+  //           <a className='nav-link' href='/cashierView'>Log Out</a>
+  //         </li>
+  //       </ul>
+  //     </nav>
+  //   </>
+  // );
 }
 
 export default bottomBar;

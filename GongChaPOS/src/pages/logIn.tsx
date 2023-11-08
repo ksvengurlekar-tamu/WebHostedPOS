@@ -25,10 +25,6 @@ function Login() {
         if (username === employee.employeeusername && password === employee.employeeuserpassword) {
           console.log("Login successful");
           isLoginSuccessful = true; // set the flag to true if matching user found
-
-          // return statement?
-          // Route path="/cashierView" element={<CashierView />} />
-        
         }
       });
 
