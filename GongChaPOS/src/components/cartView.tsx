@@ -118,10 +118,14 @@ const CartView: React.FC<CartViewProps> = ({ drinkNames: initialDrinkNames }) =>
           `https://gong-cha-server.onrender.com/server/menuItems/${drinkName}`
         );
         const data = await response.json();
-
+        
+        let price = 0;
+        data.forEach((element: any) => {
+          price = element.menuitemprice;
+        });
         const newDrink: Drink = {
           name: drinkName,
-          price: data.menuitemprice,
+          price: price,
           quantity: 1,
         };
 
