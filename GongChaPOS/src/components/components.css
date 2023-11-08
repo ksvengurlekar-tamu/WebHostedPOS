@@ -210,6 +210,7 @@
     background-color: white;
     color: black;
     overflow-y: auto;
+    
     .p {
       color: black;
     }
