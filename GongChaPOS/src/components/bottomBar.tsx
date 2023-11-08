@@ -1,10 +1,13 @@
 import React from 'react'
 import './components.css';
+import { useNavigate } from 'react-router-dom';
 
 function bottomBar() {
+  const navigate = useNavigate();
   const handleCheckout = () => {
     // Implement Checkout functionality here
     console.log('Checkout button clicked');
+    navigate('/cartView');
   };
 
   const handleTransactions = () => {
@@ -25,6 +28,7 @@ function bottomBar() {
   const handleLogout = () => {
     // Implement Log Out functionality here
     console.log('Log Out button clicked');
+    navigate('/logIn');
   };
 
   return (
