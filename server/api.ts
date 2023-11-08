@@ -24,14 +24,72 @@ app.get('/server/employees', async (_req, res) => {
   }
 });
 
-app.get('/server/menuitems/milktea', async (_req, res) => {
+
+// menu items
+
+app.get('/server/menuitems', async (_req, res) => {
   try {
     const result = await db('SELECT * FROM menuitems');
     res.json(result.rows);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch data' });
+    res.status(500).json({ error: 'Failed to fetch menu item data' });
   }
 });
+
+app.get('/server/menuitems/milktea', async (_req, res) => {
+  try {
+    const result = await db('SELECT * FROM menuitems WHERE menuitemcategory = Milk Tea');
+    res.json(result.rows);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch menu item milk tea data' });
+  }
+});
+
+app.get('/server/menuitems/milkfoam', async (_req, res) => {
+  try {
+    const result = await db('SELECT * FROM menuitems WHERE menuitemcategory = Milk Foam');
+    res.json(result.rows);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch menu item milk foam data' });
+  }
+});
+
+app.get('/server/menuitems/slush', async (_req, res) => {
+  try {
+    const result = await db('SELECT * FROM menuitems WHERE menuitemcategory = Slush');
+    res.json(result.rows);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch menu item slush data' });
+  }
+});
+
+app.get('/server/menuitems/seasonal', async (_req, res) => {
+  try {
+    const result = await db('SELECT * FROM menuitems WHERE menuitemcategory = Seasonal');
+    res.json(result.rows);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch menu item seasonal data' });
+  }
+});
+
+app.get('/server/menuitems/coffee', async (_req, res) => {
+  try {
+    const result = await db('SELECT * FROM menuitems WHERE menuitemcategory = Coffee');
+    res.json(result.rows);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch menu item coffee data' });
+  }
+});
+
+app.get('/server/menuitems/tealatte', async (_req, res) => {
+  try {
+    const result = await db('SELECT * FROM menuitems WHERE menuitemcategory = Tea Latte');
+    res.json(result.rows);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch menu item tea latte data' });
+  }
+});
+
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}/server`);

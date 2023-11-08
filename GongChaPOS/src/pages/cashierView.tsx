@@ -6,8 +6,11 @@ import Card from '../components/card.tsx';
 import CategoryGrid from '../components/categoryGrid.tsx';
 import '../components/components.css'; // Add this line
 
+
+
 function CashierView() {
-  return (
+
+    return (
     <div className="container">
       <div className="row">
         <div className="col-md-3">
@@ -24,6 +27,6 @@ function CashierView() {
       </div>
     </div>
   );
-}
+};
 
 export default CashierView;
