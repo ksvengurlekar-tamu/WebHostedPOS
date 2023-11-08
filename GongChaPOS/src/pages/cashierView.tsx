@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import LeftNavBar from "../components/leftnavbar.tsx";
 import TopBar from "../components/topBar.tsx";
 import BottomBar from "../components/bottomBar.tsx";
@@ -8,12 +8,28 @@ import "../components/components.css"; // Add this line
 
 function CashierView() {
   const view = "/cashierView";
-  const drinkList: string[] = [];
+  // const drinkList: string[] = [];
+  // const [drinkNames, setDrinkNames] = useState<string[]>([]);
+  const [drinkNames, setDrinkList] = useState<string[]>([]);
+
+  /*const addToCart = (newDrinkNames: string[]) => {
+    const updatedDrinkNames = [...drinkNames, ...newDrinkNames];
+    setDrinkNames(updatedDrinkNames);
+  }; */
+  
+  // const addToCart = (newDrinkNames: string[]) => {
+  //   setDrinkNames(newDrinkNames);
+  // };
 
   const addToCart = (drink: string): void => {
-    drinkList.push(drink);
+    setDrinkList((prevDrinkList) => [...prevDrinkList, drink]);
     console.log(drink);
-  }
+  };
+
+  // const addToCart = (drink: string): void => {
+  //   drinkList.push(drink);
+  //   console.log(drink);
+  // }
 
   return (
 
@@ -26,7 +42,7 @@ function CashierView() {
           <div className="row h-100">
               <CategoryGrid addToCart={addToCart} />
             <div className="col-md-3 cart-view">
-              <CartView drinks={drinkList} />
+              <CartView drinkNames={drinkNames} />
             </div>
            </div>
           

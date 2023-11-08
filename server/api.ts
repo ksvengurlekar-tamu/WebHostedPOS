@@ -48,7 +48,7 @@ app.get('/server/menuitems/:series', async (req, res) => {
 
 app.get('/server/menuitems/:menuitemname', async (req, res) => {
   try {
-    const result = await db('SELECT * FROM menuitems WHERE menuitemname = $2', [req.params.menuitemname]);
+    const result = await db('SELECT menuitemprice FROM menuitems WHERE menuitemname = $1', [req.params.menuitemname]);
     res.json(result.rows);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch menu item' });
