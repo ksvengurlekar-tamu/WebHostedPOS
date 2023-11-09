@@ -128,6 +128,7 @@
   .button-no-hover:hover {
     border-color: transparent; /* or the same color it was before hover */
     cursor: default;
+    border-radius: 10px;
   }
 
   button:focus,
@@ -241,7 +242,7 @@
     background-color: white;
     color: black;
     overflow-y: auto;
-    max-height: 776px;
+    max-height: 777px;
     .p {
       color: black;
     }

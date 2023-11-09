@@ -8,27 +8,33 @@ interface CategoryGridProps {
 }
 
 function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar }: CategoryGridProps) {
-  // const [isSeriesSelected, setSeriesSelected] = useState(() => {
-  //   const saved = localStorage.getItem('isSeriesSelected');
-  //   return saved === 'true'; // If saved is the string 'true', return true, otherwise return false
-  // });
-  // const [isDrinkSelected, setDrinkSelected] = useState(() => {
-  //   const saved = localStorage.getItem('isDrinkSelected');
-  //   return saved === 'true'; // Same as above
-  // });
-  const [isSeriesSelected, setSeriesSelected] = useState(false);
-  const [isDrinkSelected, setDrinkSelected] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [menuItems, setMenuItems] = useState([]);
+  const [isSeriesSelected, setSeriesSelected] = useState(() => {
+    const saved = localStorage.getItem('isSeriesSelected');
+    return saved === 'true'; // If saved is the string 'true', return true, otherwise return false
+  });
+  const [isDrinkSelected, setDrinkSelected] = useState(() => {
+    const saved = localStorage.getItem('isDrinkSelected');
+    return saved === 'true'; // Same as above
+  });
+  const [menuItems, setMenuItems] = useState<any[]>(() => {
+    // Load menu items from local storage or default to empty array
+    const savedMenuItems = localStorage.getItem('menuItems');
+    return savedMenuItems ? JSON.parse(savedMenuItems) : [];
+  });
 
-  const handleSeriesClick = async (menuItemName: string) => {
+  const [isLoading, setIsLoading] = useState(false);
+  // const [menuItems, setMenuItems] = useState([]);
+
+  const handleSeriesClick = async (SeriesName: string) => {
     setIsLoading(true)
     setMenuItems([]); // This line clears the drink items
     setSeriesSelected(true);
-    var url = "https://gong-cha-server.onrender.com/category/" + menuItemName;
+
+    var url = "https://gong-cha-server.onrender.com/category/" + SeriesName;
     const response = await fetch(url);
     const data = await response.json();
     setMenuItems(data);
+    localStorage.setItem('menuItems', JSON.stringify(data));
     setIsLoading(false);
   };
 
@@ -48,10 +54,16 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar }:
   };
 
   useEffect(() => {
-    fetch("https://gong-cha-server.onrender.com/menuItems/")
-      .then((response) => response.json())
-      .then((menuItems) => setMenuItems(menuItems))
-      .catch((error) => console.error("Failed to fetch menu items: ", error));
+    const savedSeriesSelected = localStorage.getItem('isSeriesSelected') === 'true';
+    if (savedSeriesSelected) {
+      // If the series was previously selected, we should load the menu items
+      const savedMenuItems = localStorage.getItem('menuItems');
+      if (savedMenuItems) {
+        setMenuItems(JSON.parse(savedMenuItems));
+      }
+      // Assuming we want to set seriesSelected based on the presence of items
+      setSeriesSelected(savedMenuItems != null);
+    }
   }, []);
 
   useEffect(() => {
@@ -63,13 +75,13 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar }:
     setHandleBackFromTopBar(() => handleBackClick);
   }, [setHandleBackFromTopBar, isSeriesSelected, isDrinkSelected]);
 
-  // useEffect(() => {
-  //   localStorage.setItem('isSeriesSelected', isSeriesSelected.toString());
-  // }, [isSeriesSelected]);
+  useEffect(() => {
+    localStorage.setItem('isSeriesSelected', isSeriesSelected.toString());
+  }, [isSeriesSelected]);
 
-  // useEffect(() => {
-  //   localStorage.setItem('isDrinkSelected', isDrinkSelected.toString());
-  // }, [isDrinkSelected]);
+  useEffect(() => {
+    localStorage.setItem('isDrinkSelected', isDrinkSelected.toString());
+  }, [isDrinkSelected]);
 
   // Conditionally render different sets of items based on the state
 
@@ -83,6 +95,7 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar }:
     ));
   }
   else if (isSeriesSelected) {
+    console.log(menuItems);
     itemsToRender = menuItems.map((menuItem: any) => (
       <Card
         className="drink"

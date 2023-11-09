@@ -30,7 +30,7 @@ function TopBar({isBackButtonVisible, onBackClick}: TopBarProps) {
     <div className="topNavBar">
       {isBackButtonVisible &&
         <button className="back-button" onClick={onBackClick}><FontAwesomeIcon icon={faArrowLeftLong} className='Back-icon' /></button>}
-      {!isBackButtonVisible && <div style={{marginLeft: "85px"}}></div>}
+      {!isBackButtonVisible && <div style={{marginLeft: "85px", marginBottom: "66px"}}></div>}
       {/* TODO: update top-bar-title to reflect tea series selected */}
       <span className="top-bar-title">Bubble Tea Series</span>
       <span className="top-bar-time">{formattedTime}</span>
