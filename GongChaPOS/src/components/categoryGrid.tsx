@@ -15,7 +15,7 @@ const CategoryGrid: React.FC<CategoryGridProps> = ({ addToCart }) => {
     setSeriesSelected(true);
     console.log("Series Selected!");
     var url =
-      "https://gong-cha-server.onrender.com/server/category/" + menuItemName;
+      "https://gong-cha-server.onrender.com/category/" + menuItemName;
     const response = await fetch(url);
     const data = await response.json();
     console.log(data);
@@ -28,7 +28,7 @@ const CategoryGrid: React.FC<CategoryGridProps> = ({ addToCart }) => {
   };
 
   useEffect(() => {
-    fetch("https://gong-cha-server.onrender.com/server/menuItems/")
+    fetch("https://gong-cha-server.onrender.com/menuItems/")
       .then((response) => response.json())
       .then((menuItems) => setMenuItems(menuItems))
       .catch((error) => console.error("Failed to fetch menu items: ", error));
