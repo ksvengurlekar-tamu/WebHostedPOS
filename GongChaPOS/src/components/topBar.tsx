@@ -1,11 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
 import './components.css';
 
 /**
  * Renders the top bar component with a back button, title and current time.
  * @returns JSX element
  */
-function TopBar() {
+interface TopBarProps {
+  isBackButtonVisible: boolean;
+  onBackClick: () => void;
+}
+function TopBar({isBackButtonVisible, onBackClick}: TopBarProps) {
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
@@ -22,7 +28,9 @@ function TopBar() {
 
   return (
     <div className="topNavBar">
-      <button className="back-button">Back</button>
+      {isBackButtonVisible &&
+        <button className="back-button" onClick={onBackClick}><FontAwesomeIcon icon={faArrowLeftLong} className='Back-icon' /></button>}
+      {!isBackButtonVisible && <div style={{marginLeft: "85px"}}></div>}
       {/* TODO: update top-bar-title to reflect tea series selected */}
       <span className="top-bar-title">Bubble Tea Series</span>
       <span className="top-bar-time">{formattedTime}</span>

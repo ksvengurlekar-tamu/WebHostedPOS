@@ -7,7 +7,7 @@
     --gc-tan-darker: hsl(39, 33%, 66%); /* for hover */
     --gc-tan-darkest: hsl(39, 33%, 56%); /* for active */
   
-    --gc-eggshell: hsl(60, 65%, 97%);
+    --gc-eggshell: hsl(60, 63%, 97%);
   
     --gc-dark-color: #1b1b1b;
     --gc-dark-grey: #7a7a7a;
@@ -125,6 +125,10 @@
   button:hover {
     border-color: #646cff;
   }
+  .button-no-hover:hover {
+    border-color: transparent; /* or the same color it was before hover */
+    cursor: default;
+  }
 
   button:focus,
   button:focus-visible {
@@ -144,36 +148,26 @@
   /* Top Navigation Bar CSS */
   .topNavBar {
     background-color: #fcfcf1;
-    color: white;
     padding: 10px;
     display: flex;
     justify-content: space-between;
     
+  }
+  .Back-icon > path {
+    color: black 
+  }
+  .back-button{
+    padding: 0px 20px 0px 20px;
   }
 
   .nav-item a{
     font-size: 35px;
   }
 
- .drink{
-  width: 200px;
-  height: 150px; 
-  text-align: center;
-  margin: 5px;
-  padding: 25px;
-  justify-content: center;
-  border-radius: 10px;
-  border: 3px solid var(--gc-eggshell);
- }
-
- .drink h1{
-  font-size: 23px;
- }
-
  .series{
     width: 200px;
     height: 200px; 
-    font-size: 10px;
+    font-size: 30px;
     text-align: center;
     margin: 20px;
     padding: 30px;
@@ -186,21 +180,58 @@
   .categoryGrid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-gap: 5px;
   }
+
+  .drink{
+    font-size: 27px;
+    width: 200px;
+    height: 150px; 
+    text-align: center;
+    margin: 5px;
+    padding: 5px;
+    justify-content: center;
+    border-radius: 10px;
+    border: 3px solid var(--gc-eggshell);
+ }
 
   .menuItemGrid {
     display: grid;
     grid-template-columns: repeat(5, 0.5fr);
-    /* flex-direction: row; */
-    /* flex-wrap: wrap; */
-    overflow:scroll;
-    margin-left: 0px;
-    padding-left: 50px;
+    margin: 0px;
+    padding: 20px 20px 0px 10px; /* top right bottom left */
     grid-auto-rows: minmax(min-content, max-content); 
-    gap: 0px; 
-    height: auto;
   }
+
+  .skeleton-card {
+    width: 200px;
+    height: 150px; 
+    margin: 5px;
+    padding: 5px;
+    background-color: var(--gc-eggshell);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  @keyframes load {
+    from {
+      left: -150px;
+    }
+    to {
+      left: 100%;
+    }
+  }
+  .animated-background {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, var(--gc-eggshell) 8%, #dddddd 18%, var(--gc-eggshell) 33%);
+    position: absolute;
+    background-size: 1000px 104px;
+    top:0;
+    animation: load 1.5s cubic-bezier(0.4, 0.0, 0.2, 1) infinite;
+  }
+  
+  
 
   span {
     color: black;
@@ -210,7 +241,7 @@
     background-color: white;
     color: black;
     overflow-y: auto;
-    height: 100vh;
+    max-height: 776px;
     .p {
       color: black;
     }
@@ -222,7 +253,15 @@
 
   .main-content {
     /* This ensures the main content takes the remaining height after TopBar and BottomBar */
-    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* make sure it takes the full height of its parent */
+  }
+  .main-content > .row {
+    flex: 1; /* take up all available space */
+    display: flex;
+    flex-direction: row; /* make it a flex row */
+    margin: 0; /* optional: reset any margins */
   }
 
   

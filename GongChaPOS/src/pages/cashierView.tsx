@@ -11,6 +11,8 @@ function CashierView() {
   // const drinkList: string[] = [];
   // const [drinkNames, setDrinkNames] = useState<string[]>([]);
   const [drinkNames, setDrinkList] = useState<string[]>([]);
+  const [showBackButton, setShowBackButton] = useState(false);
+  const [handleBackFromTopBar, setHandleBackFromTopBar] = useState(() => () => {});
 
   /*const addToCart = (newDrinkNames: string[]) => {
     const updatedDrinkNames = [...drinkNames, ...newDrinkNames];
@@ -38,13 +40,13 @@ function CashierView() {
         <LeftNavBar view={view} />
       </div>
       <div className="col d-flex flex-column vh-100 p-0 main-content">
-          <TopBar />
-          <div className="row h-100">
-              <CategoryGrid addToCart={addToCart} />
+          <TopBar isBackButtonVisible = {showBackButton} onBackClick={handleBackFromTopBar} />
+          <div className="row">
+              <CategoryGrid addToCart={addToCart} setShowBackButton={setShowBackButton} setHandleBackFromTopBar={setHandleBackFromTopBar} />
             <div className="col-md-3 cart-view">
-              <CartView className="cartView" drinkNames={drinkNames} />
+              <CartView drinkNames={drinkNames} />
             </div>
-           </div>
+          </div>
           <BottomBar />
       </div>
     </div>

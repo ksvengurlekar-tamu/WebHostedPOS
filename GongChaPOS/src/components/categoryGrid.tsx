@@ -1,30 +1,50 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Card from "../components/card.tsx";
 
 interface CategoryGridProps {
   addToCart: (menuItemName: string) => void;
-  // console.log("asd")
+  setShowBackButton: any;
+  setHandleBackFromTopBar: any;
 }
 
-const CategoryGrid: React.FC<CategoryGridProps> = ({ addToCart }) => {
+function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar }: CategoryGridProps) {
+  // const [isSeriesSelected, setSeriesSelected] = useState(() => {
+  //   const saved = localStorage.getItem('isSeriesSelected');
+  //   return saved === 'true'; // If saved is the string 'true', return true, otherwise return false
+  // });
+  // const [isDrinkSelected, setDrinkSelected] = useState(() => {
+  //   const saved = localStorage.getItem('isDrinkSelected');
+  //   return saved === 'true'; // Same as above
+  // });
   const [isSeriesSelected, setSeriesSelected] = useState(false);
   const [isDrinkSelected, setDrinkSelected] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [menuItems, setMenuItems] = useState([]);
 
   const handleSeriesClick = async (menuItemName: string) => {
+    setIsLoading(true)
+    setMenuItems([]); // This line clears the drink items
     setSeriesSelected(true);
-    console.log("Series Selected!");
-    var url =
-      "https://gong-cha-server.onrender.com/category/" + menuItemName;
+    var url = "https://gong-cha-server.onrender.com/category/" + menuItemName;
     const response = await fetch(url);
     const data = await response.json();
-    console.log(data);
     setMenuItems(data);
+    setIsLoading(false);
   };
 
   const handleDrinkClick = () => {
     setDrinkSelected(true);
     console.log("Drink Selected!");
+  };
+
+  const handleBackClick = () => {
+    if(isLoading || isSeriesSelected) {
+      setSeriesSelected(false);
+      setIsLoading(false);
+    } else if (isDrinkSelected) {
+      setDrinkSelected(false);
+      setSeriesSelected(true);
+    }
   };
 
   useEffect(() => {
@@ -34,10 +54,35 @@ const CategoryGrid: React.FC<CategoryGridProps> = ({ addToCart }) => {
       .catch((error) => console.error("Failed to fetch menu items: ", error));
   }, []);
 
-  // Conditionally render different sets of items based on the state
-  let itemsToRender;
+  useEffect(() => {
+    // Decide when to show the back button
+    setShowBackButton(isSeriesSelected || isDrinkSelected);
+  }, [isSeriesSelected, isDrinkSelected, setShowBackButton]);
 
-  if (isSeriesSelected) {
+  useEffect(() => {
+    setHandleBackFromTopBar(() => handleBackClick);
+  }, [setHandleBackFromTopBar, isSeriesSelected, isDrinkSelected]);
+
+  // useEffect(() => {
+  //   localStorage.setItem('isSeriesSelected', isSeriesSelected.toString());
+  // }, [isSeriesSelected]);
+
+  // useEffect(() => {
+  //   localStorage.setItem('isDrinkSelected', isDrinkSelected.toString());
+  // }, [isDrinkSelected]);
+
+  // Conditionally render different sets of items based on the state
+
+  var itemsToRender;
+
+  if (isLoading) {
+    itemsToRender = Array.from({ length: 20 }, (_, index) => (
+      <button key={index} className="skeleton-card">
+        <div className="animated-background"></div>
+      </button>
+    ));
+  }
+  else if (isSeriesSelected) {
     itemsToRender = menuItems.map((menuItem: any) => (
       <Card
         className="drink"
@@ -47,6 +92,15 @@ const CategoryGrid: React.FC<CategoryGridProps> = ({ addToCart }) => {
         onSelect={addToCart}
       />
     ));
+
+    const placeholderCount = 20 - menuItems.length;
+
+    const placeholderItems = Array.from({ length: placeholderCount }, (_, index) => (
+      <button key={index+placeholderCount} className="drink button-no-hover" style={{ backgroundColor: "#fcfcf2" }} disabled> </button>
+    ));
+
+    itemsToRender = [...itemsToRender, ...placeholderItems];
+
   } else if (isDrinkSelected) {
     // itemsToRender = POPUP implementation
   } else {
@@ -94,31 +148,12 @@ const CategoryGrid: React.FC<CategoryGridProps> = ({ addToCart }) => {
 
   return (
     <>
-      {isSeriesSelected && <div className="menuItemGrid w-75">{itemsToRender}</div>}
+      {(isSeriesSelected || isLoading) && (
+        <div className="menuItemGrid w-75">{itemsToRender}</div>
+      )}
       {!isSeriesSelected && itemsToRender}
     </>
   );
-};
+}
 
 export default CategoryGrid;
-
-// import React, { useState } from 'react';
-
-// const ToggleExample = () => {
-//   const [isVisible, setIsVisible] = useState(true);
-
-//   return (
-//     <>
-//       <button onClick={() => setIsVisible(!isVisible)} className="btn btn-primary mb-5">
-//         Toggle Element
-//       </button>
-//       {isVisible && (
-//         <div className="alert alert-success" role="alert">
-//           This element is visible!
-//         </div>
-//       )}
-//     </>
-//   );
-// };
-
-// export default ToggleExample;
