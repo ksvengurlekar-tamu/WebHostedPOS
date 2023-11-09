@@ -8,16 +8,7 @@ interface CardDetails {
   onSelect: (menuItemName: string) => void; // Add this line
 }
 
-const generateRandomColor = (): string => {
-  const letters = "0123456789ABCDEF";
-  let color = "#";
-  for (let i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
-};
-
-const Card: React.FC<CardDetails> = ({ className, menuItemName, color, onSelect }) => {
+function Card({ className, menuItemName, color, onSelect }: CardDetails) {
   // let cardColor = generateRandomColor();
   let cardColor = color;
 
@@ -48,6 +39,7 @@ const Card: React.FC<CardDetails> = ({ className, menuItemName, color, onSelect 
   // Styling makes the card a square with a random color
   const cardStyle: React.CSSProperties = {
     backgroundColor: cardColor,
+    // fontSize: "1.5rem",
   };
 
   const handleClick = () => {
@@ -55,11 +47,7 @@ const Card: React.FC<CardDetails> = ({ className, menuItemName, color, onSelect 
   };
 
   return (
-    <div className={className} style={cardStyle} onClick={handleClick}>
-      {/* Use onClick here */}
-      <h1>{menuItemName}</h1>
-      {/* Other card content */}
-    </div>
+    <button className={className} style={cardStyle} onClick={handleClick}> {menuItemName} </button>
   );
 };
 
