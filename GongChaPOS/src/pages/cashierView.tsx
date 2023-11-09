@@ -43,7 +43,7 @@ function CashierView() {
           <TopBar isBackButtonVisible = {showBackButton} onBackClick={handleBackFromTopBar} />
           <div className="row">
               <CategoryGrid addToCart={addToCart} setShowBackButton={setShowBackButton} setHandleBackFromTopBar={setHandleBackFromTopBar} />
-            <div className="col-md-3 cart-view">
+            <div className="col-md-3 cartViewContainer">
               <CartView drinkNames={drinkNames} />
             </div>
           </div>

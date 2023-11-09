@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 interface CartViewProps {
   drinkNames: string[];
@@ -6,6 +6,7 @@ interface CartViewProps {
 
 const CartView: React.FC<CartViewProps> = ({ drinkNames: initialDrinkNames }) => {
   const [drinks, setDrinks] = useState<Drink[]>([]);
+  const [selectedDrink, setSelectedDrink] = useState<Drink | null>(null);
   const [subtotal, setSubtotal] = useState<number>(0);
   const [tax, setTax] = useState<number>(0);
   const [total, setTotal] = useState<number>(0);
@@ -55,11 +56,13 @@ const CartView: React.FC<CartViewProps> = ({ drinkNames: initialDrinkNames }) =>
     setTotal(newSubtotal + newTax);
   }, [drinks]);
 
-  const removeDrink = (drinkToRemove: Drink) => {
+  const removeDrink = (drinkToRemove: Drink | null) => {
+    if (drinkToRemove === null) return;
     setDrinks((prevDrinks) => prevDrinks.filter((drink) => drink !== drinkToRemove));
   };
 
-  const incrementQuantity = (drinkToIncrement: Drink) => {
+  const incrementQuantity = (drinkToIncrement: Drink | null) => {
+    if (drinkToIncrement === null) return;
     setDrinks((prevDrinks) =>
       prevDrinks.map((drink) =>
         drink === drinkToIncrement ? { ...drink, quantity: drink.quantity + 1 } : drink
@@ -67,7 +70,8 @@ const CartView: React.FC<CartViewProps> = ({ drinkNames: initialDrinkNames }) =>
     );
   };
 
-  const decrementQuantity = (drinkToDecrement: Drink) => {
+  const decrementQuantity = (drinkToDecrement: Drink | null) => {
+    if (drinkToDecrement === null) return;
     setDrinks((prevDrinks) =>
       prevDrinks.map((drink) =>
         drink === drinkToDecrement ? { ...drink, quantity: Math.max(1, drink.quantity - 1) } : drink
@@ -80,23 +84,35 @@ const CartView: React.FC<CartViewProps> = ({ drinkNames: initialDrinkNames }) =>
   };
 
   return (
-    <div>
-      <h2>Cart</h2>
-      {drinks.map((drink, index) => (
-        <div key={index}>
-          <p>Name: {drink.name}</p>
-          <p>Price: {drink.price}</p>
-          <p>Quantity: {drink.quantity}</p>
-          <button onClick={() => removeDrink(drink)}>Remove</button>
-          <button onClick={() => incrementQuantity(drink)}>Add More</button>
-          <button onClick={() => decrementQuantity(drink)}>Less</button>
+    <>
+      <h4 className="m-0">Cart</h4>
+      <div className="cartView">
+        {drinks.map((drink, index) => (
+            <button className="cart-item" key={index} onClick={() => setSelectedDrink(drink)}>
+              <span 
+              className="item-name-quantity"
+              style={{
+                fontSize: drink.name.length > 18 ? '20px' : '30px' // Ternary operator for font size
+              }}
+              >{drink.name} <span style={{opacity: "0.5", fontSize: drink.name.length > 18 ? '20px' : '30px' }}>x{drink.quantity}</span></span>
+              <span className="item-price">${drink.price}</span>
+            </button>
+
+        ))}
+      </div>
+      <div className="cartText">
+        <span className="spaced"><span>Subtotal:</span> <span>${subtotal.toFixed(2)}</span></span>
+        <span className="spaced"><span>Tax:</span> <span>${tax.toFixed(2)}</span></span>
+        <span className="spaced"><span>Total:</span> <span>${total.toFixed(2)}</span></span>
+        <div className="cartViewButtons">
+          <button className="cartViewButton" onClick={() => removeDrink(selectedDrink)}>Remove</button>
+          <button className="cartViewButton" onClick={() => incrementQuantity(selectedDrink)}>Add More</button>
+          <button className="cartViewButton" onClick={() => decrementQuantity(selectedDrink)}>Less</button>   
         </div>
-      ))}
-      <p>Subtotal: {subtotal.toFixed(2)}</p>
-      <p>Tax: {tax.toFixed(2)}</p>
-      <p>Total: {total.toFixed(2)}</p>
-      <button onClick={clearCart}>Clear Cart</button>
-    </div>
+        <button className="cartViewButton" onClick={clearCart}>Clear Cart</button>
+      </div>
+      
+    </>
   );
 };
 

@@ -28,7 +28,7 @@ function bottomBar() {
   const handleLogout = () => {
     // Implement Log Out functionality here
     console.log('Log Out button clicked');
-    navigate('/logIn');
+    navigate('/');
   };
 
   return (

@@ -125,10 +125,12 @@
   button:hover {
     border-color: #646cff;
   }
+  .button-no-hover{
+    border-radius: 10px;
+  }
   .button-no-hover:hover {
     border-color: transparent; /* or the same color it was before hover */
     cursor: default;
-    border-radius: 10px;
   }
 
   button:focus,
@@ -238,20 +240,76 @@
     color: black;
   }
 
-  .col-md-3.cart-view {
-    background-color: white;
+  .cartViewContainer {
+    background-color: var(--gc-tan);
     color: black;
     overflow-y: auto;
     max-height: 777px;
+    padding-left: 0px;
+    padding-right: 4px;
     .p {
       color: black;
     }
+    
   }
 
-  .col-md-3.cart-view p{
+  .cartViewContainer p{
     color: black;
   }
 
+  .cartView{
+    display: flex;
+    background-color: var(--gc-eggshell);
+    flex-direction: column;
+    min-height: 450px;
+    max-height: 450px;
+    overflow: auto;
+    justify-content: flex-start; /* Align items to the start of the cross axis */
+  }
+  .cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px; 
+    background-color: transparent;
+    border-radius: 0px;
+    margin: 0px;
+    padding: 0px;
+  }
+  .cart-item:focus{
+    background-color: #747bff;
+  }
+  .cartView span{
+    font-size: 27px;
+  }
+  
+  .cartText{
+    display: flex;
+    flex-direction: column;
+  }
+  .cartText span{
+    font-size: 30px;
+  }
+  .spaced{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .cartViewButtons{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .cartViewButton{
+    background-color: var(--gc-eggshell);
+    font-size: 20px;
+    margin: 0px;
+    margin-top: 10px;
+    padding: 5px 10px 5px 10px;
+    
+
+  }
   .main-content {
     /* This ensures the main content takes the remaining height after TopBar and BottomBar */
     display: flex;

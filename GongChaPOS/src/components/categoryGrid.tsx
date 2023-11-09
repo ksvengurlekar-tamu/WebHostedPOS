@@ -89,7 +89,7 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar }:
 
   if (isLoading) {
     itemsToRender = Array.from({ length: 20 }, (_, index) => (
-      <button key={index} className="skeleton-card">
+      <button key={index} className="skeleton-card button-no-hover" disabled>
         <div className="animated-background"></div>
       </button>
     ));
