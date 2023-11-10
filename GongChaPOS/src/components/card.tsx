@@ -5,7 +5,7 @@ interface CardDetails {
   className: string;
   menuItemName: string;
   color: string;
-  onSelect: (menuItemName: string) => void; // Add this line
+  onSelect: () => void; // Add this line
 }
 
 function Card({ className, menuItemName, color, onSelect }: CardDetails) {
@@ -39,15 +39,11 @@ function Card({ className, menuItemName, color, onSelect }: CardDetails) {
   // Styling makes the card a square with a random color
   const cardStyle: React.CSSProperties = {
     backgroundColor: cardColor,
-    // fontSize: "1.5rem",
   };
 
-  const handleClick = () => {
-    onSelect(menuItemName); // Pass menuItemName to onSelect callback
-  };
 
   return (
-    <button className={className} style={cardStyle} onClick={handleClick}> {menuItemName} </button>
+    <button className={className} style={cardStyle} onClick={onSelect}> {menuItemName} </button>
   );
 };
 

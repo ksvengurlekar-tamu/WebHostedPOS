@@ -1,32 +1,42 @@
 import { useEffect, useState } from "react";
 import Card from "../components/card.tsx";
 
+interface Drink {
+  name: string;
+  price: number;
+  size: string;
+  toppings: string[];
+  quantity: number;
+}
 interface CategoryGridProps {
-  addToCart: (menuItemName: string) => void;
+  addToCart: (menuItem: Drink) => void;
   setShowBackButton: any;
   setHandleBackFromTopBar: any;
 }
-
 function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar }: CategoryGridProps) {
   const [isSeriesSelected, setSeriesSelected] = useState(() => {
-    const saved = localStorage.getItem('isSeriesSelected');
-    return saved === 'true'; // If saved is the string 'true', return true, otherwise return false
+    const saved = localStorage.getItem("isSeriesSelected");
+    return saved === "true"; // If saved is the string 'true', return true, otherwise return false
   });
   const [isDrinkSelected, setDrinkSelected] = useState(() => {
-    const saved = localStorage.getItem('isDrinkSelected');
-    return saved === 'true'; // Same as above
+    const saved = localStorage.getItem("isDrinkSelected");
+    return saved === "true"; // Same as above
   });
   const [menuItems, setMenuItems] = useState<any[]>(() => {
     // Load menu items from local storage or default to empty array
-    const savedMenuItems = localStorage.getItem('menuItems');
+    const savedMenuItems = localStorage.getItem("menuItems");
     return savedMenuItems ? JSON.parse(savedMenuItems) : [];
   });
-
   const [isLoading, setIsLoading] = useState(false);
-  // const [menuItems, setMenuItems] = useState([]);
+  const [selectedSize, setSelectedSize] = useState<string>("Medium");
+  const [selectedToppings, setSelectedToppings] = useState<string[]>([]);
+  const [selectedIceLevel, setselectedIceLevel] = useState<string>("Regular Ice");
+  const [selectedSugarLevel, setselectedSugarLevel] = useState<string>("100%");
+  const [selectedDrinkName, setSelectedDrinkName] = useState<string>("");
+  const [selectedDrinkPrice, setSelectedDrinkPrice] = useState<number>(0);    
 
   const handleSeriesClick = async (SeriesName: string) => {
-    setIsLoading(true)
+    setIsLoading(true);
     setMenuItems([]); // This line clears the drink items
     setSeriesSelected(true);
 
@@ -34,30 +44,82 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar }:
     const response = await fetch(url);
     const data = await response.json();
     setMenuItems(data);
-    localStorage.setItem('menuItems', JSON.stringify(data));
+    localStorage.setItem("menuItems", JSON.stringify(data));
     setIsLoading(false);
   };
 
-  const handleDrinkClick = () => {
-    setDrinkSelected(true);
-    console.log("Drink Selected!");
-  };
-
-  const handleBackClick = () => {
-    if(isLoading || isSeriesSelected) {
-      setSeriesSelected(false);
-      setIsLoading(false);
-    } else if (isDrinkSelected) {
-      setDrinkSelected(false);
-      setSeriesSelected(true);
+  const getButtonClassName = (type: string, value: string) => {
+    switch (type) {
+      case "size":
+        return `drinkPropButton ${
+          selectedSize === value ? "buttonClicked" : ""
+        }`;
+      case "ice":
+        return `drinkPropButton ${
+          selectedIceLevel === value ? "buttonClicked" : ""
+        }`;
+      case "sugar":
+        return `drinkPropButton ${
+          selectedSugarLevel === value ? "buttonClicked" : ""
+        }`;
+      case "topping":
+        return `drinkPropButton m-1 ${
+          selectedToppings.includes(value) ? "buttonClicked" : ""
+        }`;
+      default:
+        return "drinkPropButton";
     }
   };
 
+
+
+  // Function to handle toppings selection
+  const handleToppingClick = (topping: string) => {
+    setSelectedToppings((prevToppings) => {
+      if (prevToppings.includes(topping)) {
+        return prevToppings.filter((t) => t !== topping); // Deselect
+      } else {
+        return [...prevToppings, topping]; // Select
+      }
+    });
+  };
+
+  const handleBackClick = () => {
+    console.log(isDrinkSelected, isSeriesSelected);
+    if (isDrinkSelected) {
+      setDrinkSelected(false);
+      setSeriesSelected(true);
+    }
+    else if (isLoading || isSeriesSelected) {
+      setSeriesSelected(false);
+      setIsLoading(false);
+    }
+  };
+
+  const handleAddClick = () => {
+    const newDrink: Drink = {
+      name: selectedDrinkName,
+      price: selectedDrinkPrice,
+      size: selectedSize,
+      toppings: selectedToppings,
+      quantity: 1, // Assuming the default quantity is 1
+    };
+    addToCart(newDrink);
+    // Reset
+    setSelectedSize("Medium");
+    setSelectedToppings([]);
+    setselectedIceLevel("Regular Ice");
+    setselectedSugarLevel("100%");
+    // Close the drink popup
+    setDrinkSelected(false);
+  };
+
   useEffect(() => {
-    const savedSeriesSelected = localStorage.getItem('isSeriesSelected') === 'true';
+    const savedSeriesSelected =
+      localStorage.getItem("isSeriesSelected") === "true";
     if (savedSeriesSelected) {
       // If the series was previously selected, we should load the menu items
-      const savedMenuItems = localStorage.getItem('menuItems');
+      const savedMenuItems = localStorage.getItem("menuItems");
       if (savedMenuItems) {
         setMenuItems(JSON.parse(savedMenuItems));
       }
@@ -76,11 +138,11 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar }:
   }, [setHandleBackFromTopBar, isSeriesSelected, isDrinkSelected]);
 
   useEffect(() => {
-    localStorage.setItem('isSeriesSelected', isSeriesSelected.toString());
+    localStorage.setItem("isSeriesSelected", isSeriesSelected.toString());
   }, [isSeriesSelected]);
 
   useEffect(() => {
-    localStorage.setItem('isDrinkSelected', isDrinkSelected.toString());
+    localStorage.setItem("isDrinkSelected", isDrinkSelected.toString());
   }, [isDrinkSelected]);
 
   // Conditionally render different sets of items based on the state
@@ -93,29 +155,28 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar }:
         <div className="animated-background"></div>
       </button>
     ));
-  }
-  else if (isSeriesSelected) {
-    console.log(menuItems);
+  } else if (isSeriesSelected) {
     itemsToRender = menuItems.map((menuItem: any) => (
       <Card
         className="drink"
         key={menuItem.menuitemid}
         menuItemName={menuItem.menuitemname}
         color={menuItem.color}
-        onSelect={addToCart}
+        onSelect={() => {
+          setDrinkSelected(true);
+          setSelectedDrinkName(menuItem.menuitemname);
+          setSelectedDrinkPrice(menuItem.price);
+        }}
       />
     ));
 
     const placeholderCount = 20 - menuItems.length;
-
     const placeholderItems = Array.from({ length: placeholderCount }, (_, index) => (
-      <button key={index+placeholderCount} className="drink button-no-hover" style={{ backgroundColor: "#fcfcf2" }} disabled> </button>
+      // Use a template literal to combine the index with a string, ensuring uniqueness
+      <button key={`placeholder-${index}`} className="drink button-no-hover" style={{ backgroundColor: "#fcfcf2" }} disabled> </button>
     ));
 
     itemsToRender = [...itemsToRender, ...placeholderItems];
-
-  } else if (isDrinkSelected) {
-    // itemsToRender = POPUP implementation
   } else {
     itemsToRender = (
       <div className="categoryGrid w-25">
@@ -161,6 +222,148 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar }:
 
   return (
     <>
+      {isDrinkSelected && (
+        <>
+          <div className="overlay"></div>
+          <div className="drinkPopup">
+            <div className="row-9 d-flex">
+              <div className="col-4 d-flex flex-column drinkProp">
+                <span className="drinkPropText">Size</span>
+                <button
+                  className={getButtonClassName("size", "Medium")}
+                  onClick={() => setSelectedSize("Medium")}
+                >
+                  Medium (16 fl. oz)
+                </button>
+                <button
+                  className={getButtonClassName("size", "Large")}
+                  onClick={() => setSelectedSize("Large")}
+                >
+                  Large (24 fl. oz)
+                </button>
+              </div>
+              <div className="col-4 d-flex flex-column drinkProp">
+                <span className="drinkPropText">Ice Level</span>
+                <button
+                  className={getButtonClassName("ice", "No Ice")}
+                  onClick={() => setselectedIceLevel("No Ice")}
+                >
+                  No Ice
+                </button>
+                <button
+                  className={getButtonClassName("ice", "Light Ice")}
+                  onClick={() => setselectedIceLevel("Light Ice")}
+                >
+                  Light Ice
+                </button>
+                <button
+                  className={getButtonClassName("ice", "Regular Ice")}
+                  onClick={() => setselectedIceLevel("Regular Ice")}
+                >
+                  Regular Ice
+                </button>
+                <button
+                  className={getButtonClassName("ice", "Extra Ice")}
+                  onClick={() => setselectedIceLevel("Extra Ice")}
+                >
+                  Extra Ice
+                </button>
+              </div>
+              <div className="col d-flex flex-column drinkProp">
+                <span className="drinkPropText">Sugar Level</span>
+                <button
+                  className={getButtonClassName("sugar", "0%")}
+                  onClick={() => setselectedSugarLevel("0%")}
+                >
+                  0%
+                </button>
+                <button
+                  className={getButtonClassName("sugar", "25%")}
+                  onClick={() => setselectedSugarLevel("25%")}
+                >
+                  25%
+                </button>
+                <button
+                  className={getButtonClassName("sugar", "50%")}
+                  onClick={() => setselectedSugarLevel("50%")}
+                >
+                  50%
+                </button>
+                <button
+                  className={getButtonClassName("sugar", "100%")}
+                  onClick={() => setselectedSugarLevel("100%")}
+                >
+                  100%
+                </button>
+              </div>
+            </div>
+            <div className="row-9">
+              <span className="drinkPropText m-2">Toppings</span>
+              <div className="drinkToppings">
+                <button
+                  className={getButtonClassName("topping", "Tapioca Pearls")}
+                  onClick={() => handleToppingClick("Tapioca Pearls")}
+                >
+                  Tapioca Pearls
+                </button>
+                <button
+                  className={getButtonClassName("topping", "White Pearls")}
+                  onClick={() => handleToppingClick("White Pearls")}
+                >
+                  White Pearls
+                </button>
+                <button
+                  className={getButtonClassName("topping", "Milk Foam")}
+                  onClick={() => handleToppingClick("Milk Foam")}
+                >
+                  Milk Foam
+                </button>
+                <button
+                  className={getButtonClassName("topping", "Pudding")}
+                  onClick={() => handleToppingClick("Pudding")}
+                >
+                  Pudding
+                </button>
+                <button
+                  className={getButtonClassName("topping", "Oreo Crumbs")}
+                  onClick={() => handleToppingClick("Oreo Crumbs")}
+                >
+                  Oreo Crumbs
+                </button>
+                <button
+                  className={getButtonClassName("topping", "Basil Seeds")}
+                  onClick={() => handleToppingClick("Basil Seeds")}
+                >
+                  Basil Seeds
+                </button>
+                <button
+                  className={getButtonClassName("topping", "Herbal Jelly")}
+                  onClick={() => handleToppingClick("Herbal Jelly")}
+                >
+                  Herbal Jelly
+                </button>
+                <button
+                  className={getButtonClassName("topping", "Coconut Jelly")}
+                  onClick={() => handleToppingClick("Coconut Jelly")}
+                >
+                  Coconut Jelly
+                </button>
+                <button
+                  className={getButtonClassName("topping", "Ai-Yu Jelly")}
+                  onClick={() => handleToppingClick("Ai-Yu Jelly")}
+                >
+                  Ai-Yu Jelly
+                </button>
+              </div>
+            </div>
+            <div className="row-9 bottomOverlay">
+              <button className="bottomOverlayBack m-1" onClick={handleBackClick}>Back</button>
+              <button className="bottomOverlayBack m-1" onClick={handleAddClick}>Add</button>
+            </div>
+          </div>
+        </>
+      )}
+
       {(isSeriesSelected || isLoading) && (
         <div className="menuItemGrid w-75">{itemsToRender}</div>
       )}

@@ -32,6 +32,7 @@ function Login() {
         navigate('/cashierView');
       } else {
         console.log("Login failed");
+        alert("Login failed");
 
       }
       

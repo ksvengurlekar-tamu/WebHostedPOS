@@ -1,29 +1,32 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect} from "react";
 
+interface Drink {
+  name: string;
+  price: number;
+  size: string;
+  toppings: string[];
+  quantity: number;
+}
 interface CartViewProps {
-  drinkNames: string[];
+  InputDrinks: Drink[];
 }
 
-const CartView: React.FC<CartViewProps> = ({ drinkNames: initialDrinkNames }) => {
+function CartView({InputDrinks}: CartViewProps) {
   const [drinks, setDrinks] = useState<Drink[]>([]);
   const [selectedDrink, setSelectedDrink] = useState<Drink | null>(null);
   const [subtotal, setSubtotal] = useState<number>(0);
   const [tax, setTax] = useState<number>(0);
   const [total, setTotal] = useState<number>(0);
 
-  interface Drink {
-    name: string;
-    price: number;
-    quantity: number;
-  }
+  
 
   useEffect(() => {
     const fetchData = async () => {
       const updatedDrinks: Drink[] = [];
 
-      for (const drinkName of initialDrinkNames) {
+      for (const drink of InputDrinks) {
         const response = await fetch(
-          `https://gong-cha-server.onrender.com/menuItems/${drinkName}`
+          `https://gong-cha-server.onrender.com/menuItems/${drink.name}`
         );
         const data = await response.json();
         
@@ -32,8 +35,10 @@ const CartView: React.FC<CartViewProps> = ({ drinkNames: initialDrinkNames }) =>
           price = element.menuitemprice;
         });
         const newDrink: Drink = {
-          name: drinkName,
+          name: drink.name,
           price: price,
+          size: drink.size,
+          toppings: drink.toppings,
           quantity: 1,
         };
 
@@ -45,7 +50,7 @@ const CartView: React.FC<CartViewProps> = ({ drinkNames: initialDrinkNames }) =>
     };
 
     fetchData();
-  }, [initialDrinkNames]);
+  }, [InputDrinks]);
 
   useEffect(() => {
     const newSubtotal = drinks.reduce((total, drink) => total + drink.price * drink.quantity, 0);
@@ -108,8 +113,9 @@ const CartView: React.FC<CartViewProps> = ({ drinkNames: initialDrinkNames }) =>
           <button className="cartViewButton" onClick={() => removeDrink(selectedDrink)}>Remove</button>
           <button className="cartViewButton" onClick={() => incrementQuantity(selectedDrink)}>Add More</button>
           <button className="cartViewButton" onClick={() => decrementQuantity(selectedDrink)}>Less</button>   
-        </div>
+      </div>
         <button className="cartViewButton" onClick={clearCart}>Clear Cart</button>
+        <button className="cartViewButton " onClick={clearCart}>Sumbit</button> {/* submit logic to replace clearCart*/}
       </div>
       
     </>

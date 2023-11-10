@@ -5,33 +5,24 @@ import BottomBar from "../components/bottomBar.tsx";
 import CategoryGrid from "../components/categoryGrid.tsx";
 import CartView from "../components/cartView.tsx";
 import "../components/components.css"; // Add this line
-
+interface Drink {
+  name: string;
+  price: number;
+  size: string;
+  toppings: string[];
+  quantity: number;
+}
 function CashierView() {
   const view = "/cashierView";
-  // const drinkList: string[] = [];
-  // const [drinkNames, setDrinkNames] = useState<string[]>([]);
-  const [drinkNames, setDrinkList] = useState<string[]>([]);
+
+  const [drinks, setDrinks] = useState<Drink[]>([]);
   const [showBackButton, setShowBackButton] = useState(false);
   const [handleBackFromTopBar, setHandleBackFromTopBar] = useState(() => () => {});
 
-  /*const addToCart = (newDrinkNames: string[]) => {
-    const updatedDrinkNames = [...drinkNames, ...newDrinkNames];
-    setDrinkNames(updatedDrinkNames);
-  }; */
-  
-  // const addToCart = (newDrinkNames: string[]) => {
-  //   setDrinkNames(newDrinkNames);
-  // };
-
-  const addToCart = (drink: string): void => {
-    setDrinkList((prevDrinkList) => [...prevDrinkList, drink]);
-    console.log(drink);
+  const addToCart = (drink: Drink): void => {
+    setDrinks((prevDrinkList) => [...prevDrinkList, drink]);
+    console.log("TEST:",drink.name);
   };
-
-  // const addToCart = (drink: string): void => {
-  //   drinkList.push(drink);
-  //   console.log(drink);
-  // }
 
   return (
 
@@ -44,7 +35,7 @@ function CashierView() {
           <div className="row">
               <CategoryGrid addToCart={addToCart} setShowBackButton={setShowBackButton} setHandleBackFromTopBar={setHandleBackFromTopBar} />
             <div className="col-md-3 cartViewContainer">
-              <CartView drinkNames={drinkNames} />
+              <CartView InputDrinks={drinks} />
             </div>
           </div>
           <BottomBar />
