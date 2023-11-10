@@ -71,7 +71,8 @@ function CartView({ InputDrinks, onRemoveDrink, onClearCart }: CartViewProps) {
               style={{
                 fontSize: drink.name.length > 30 ? '16px' : '20px' // Ternary operator for font size
               }}
-              >{drink.name} <span style={{opacity: "0.5", fontSize: '20px' }}>x{drink.quantity}</span></span>
+              >
+                {drink.name} <span style={{opacity: "0.5", fontSize: '20px' }}>x{drink.quantity}</span></span>
               <span className="item-price">${drink.price}</span>
             </button>
 
