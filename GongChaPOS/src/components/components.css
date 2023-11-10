@@ -328,6 +328,8 @@
     background-color: rgba(0,0,0,0.4); /*dim the background*/
     top:0;
     bottom: 0;
+    z-index: 10; /* Higher z-index */
+    pointer-events: none;
   }
 
   .drinkPopup{
@@ -340,6 +342,8 @@
     width: 1340px;
     height: 800px;
     border: 3px solid var(--gc-red);
+    z-index: 11; /* Higher than .overlay */
+    pointer-events: all;
   }
   .drinkProp{
     margin-left: 20px;

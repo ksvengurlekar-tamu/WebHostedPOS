@@ -104,6 +104,7 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar }:
       toppings: selectedToppings,
       quantity: 1, // Assuming the default quantity is 1
     };
+    console.log("newDrink: ", newDrink);
     addToCart(newDrink);
     // Reset
     setSelectedSize("Medium");
@@ -165,7 +166,7 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar }:
         onSelect={() => {
           setDrinkSelected(true);
           setSelectedDrinkName(menuItem.menuitemname);
-          setSelectedDrinkPrice(menuItem.price);
+          setSelectedDrinkPrice(menuItem.menuitemprice);
         }}
       />
     ));

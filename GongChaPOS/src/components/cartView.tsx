@@ -9,9 +9,11 @@ interface Drink {
 }
 interface CartViewProps {
   InputDrinks: Drink[];
+  onRemoveDrink: (drinkName: string) => void;
+  onClearCart: () => void;
 }
 
-function CartView({InputDrinks}: CartViewProps) {
+function CartView({ InputDrinks, onRemoveDrink, onClearCart }: CartViewProps) {
   const [drinks, setDrinks] = useState<Drink[]>([]);
   const [selectedDrink, setSelectedDrink] = useState<Drink | null>(null);
   const [subtotal, setSubtotal] = useState<number>(0);
@@ -21,35 +23,8 @@ function CartView({InputDrinks}: CartViewProps) {
   
 
   useEffect(() => {
-    const fetchData = async () => {
-      const updatedDrinks: Drink[] = [];
-
-      for (const drink of InputDrinks) {
-        const response = await fetch(
-          `https://gong-cha-server.onrender.com/menuItems/${drink.name}`
-        );
-        const data = await response.json();
-        
-        let price = 0;
-        data.forEach((element: any) => {
-          price = element.menuitemprice;
-        });
-        const newDrink: Drink = {
-          name: drink.name,
-          price: price,
-          size: drink.size,
-          toppings: drink.toppings,
-          quantity: 1,
-        };
-
-        updatedDrinks.push(newDrink);
-      }
-
-      console.log(updatedDrinks);
-      setDrinks(updatedDrinks);
-    };
-
-    fetchData();
+    console.log("InputDrinks: ", InputDrinks);
+    setDrinks(InputDrinks)
   }, [InputDrinks]);
 
   useEffect(() => {
@@ -61,31 +36,28 @@ function CartView({InputDrinks}: CartViewProps) {
     setTotal(newSubtotal + newTax);
   }, [drinks]);
 
-  const removeDrink = (drinkToRemove: Drink | null) => {
-    if (drinkToRemove === null) return;
-    setDrinks((prevDrinks) => prevDrinks.filter((drink) => drink !== drinkToRemove));
+  const removeDrink = (drinkToRemove: string) => {
+    onRemoveDrink(drinkToRemove);
   };
 
-  const incrementQuantity = (drinkToIncrement: Drink | null) => {
-    if (drinkToIncrement === null) return;
+  const incrementQuantity = (drinkToIncrement: string) => {
     setDrinks((prevDrinks) =>
       prevDrinks.map((drink) =>
-        drink === drinkToIncrement ? { ...drink, quantity: drink.quantity + 1 } : drink
+        drink.name === drinkToIncrement ? { ...drink, quantity: drink.quantity + 1 } : drink
       )
     );
   };
 
-  const decrementQuantity = (drinkToDecrement: Drink | null) => {
-    if (drinkToDecrement === null) return;
+  const decrementQuantity = (drinkToDecrement: string) => {
     setDrinks((prevDrinks) =>
       prevDrinks.map((drink) =>
-        drink === drinkToDecrement ? { ...drink, quantity: Math.max(1, drink.quantity - 1) } : drink
+        drink.name === drinkToDecrement ? { ...drink, quantity: Math.max(1, drink.quantity - 1) } : drink
       )
     );
   };
 
   const clearCart = () => {
-    setDrinks([]);
+    onClearCart();
   };
 
   return (
@@ -97,9 +69,9 @@ function CartView({InputDrinks}: CartViewProps) {
               <span 
               className="item-name-quantity"
               style={{
-                fontSize: drink.name.length > 18 ? '20px' : '30px' // Ternary operator for font size
+                fontSize: drink.name.length > 30 ? '16px' : '20px' // Ternary operator for font size
               }}
-              >{drink.name} <span style={{opacity: "0.5", fontSize: drink.name.length > 18 ? '20px' : '30px' }}>x{drink.quantity}</span></span>
+              >{drink.name} <span style={{opacity: "0.5", fontSize: '20px' }}>x{drink.quantity}</span></span>
               <span className="item-price">${drink.price}</span>
             </button>
 
@@ -110,9 +82,9 @@ function CartView({InputDrinks}: CartViewProps) {
         <span className="spaced"><span>Tax:</span> <span>${tax.toFixed(2)}</span></span>
         <span className="spaced"><span>Total:</span> <span>${total.toFixed(2)}</span></span>
         <div className="cartViewButtons">
-          <button className="cartViewButton" onClick={() => removeDrink(selectedDrink)}>Remove</button>
-          <button className="cartViewButton" onClick={() => incrementQuantity(selectedDrink)}>Add More</button>
-          <button className="cartViewButton" onClick={() => decrementQuantity(selectedDrink)}>Less</button>   
+          <button className="cartViewButton" onClick={() => selectedDrink && removeDrink(selectedDrink.name)}>Remove</button>
+          <button className="cartViewButton" onClick={() => selectedDrink && incrementQuantity(selectedDrink.name)}>Add More</button>
+          <button className="cartViewButton" onClick={() => selectedDrink && decrementQuantity(selectedDrink.name)}>Less</button>   
       </div>
         <button className="cartViewButton" onClick={clearCart}>Clear Cart</button>
         <button className="cartViewButton " onClick={clearCart}>Sumbit</button> {/* submit logic to replace clearCart*/}

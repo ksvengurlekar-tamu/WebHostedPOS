@@ -23,6 +23,13 @@ function CashierView() {
     setDrinks((prevDrinkList) => [...prevDrinkList, drink]);
     console.log("TEST:",drink.name);
   };
+  const removeDrinkFromCart = (drinkName: string) => {
+    setDrinks((prevDrinks) => prevDrinks.filter((drink) => drink.name !== drinkName));
+  };
+
+  const clearCart = () => {
+    setDrinks([]);
+  };
 
   return (
 
@@ -35,7 +42,7 @@ function CashierView() {
           <div className="row">
               <CategoryGrid addToCart={addToCart} setShowBackButton={setShowBackButton} setHandleBackFromTopBar={setHandleBackFromTopBar} />
             <div className="col-md-3 cartViewContainer">
-              <CartView InputDrinks={drinks} />
+              <CartView InputDrinks={drinks} onRemoveDrink={removeDrinkFromCart} onClearCart={clearCart} />
             </div>
           </div>
           <BottomBar />
