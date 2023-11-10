@@ -1,13 +1,11 @@
 import './components.css';
 import { useNavigate } from 'react-router-dom';
 
-function bottomBar() {
+interface BottomBarProps {
+  onCheckout: () => void;
+}
+function bottomBar({onCheckout}: BottomBarProps) {
   const navigate = useNavigate();
-  const handleCheckout = () => {
-    // Implement Checkout functionality here
-    console.log('Checkout button clicked');
-    navigate('/cartView');
-  };
 
   const handleTransactions = () => {
     // Implement Transaction functionality here
@@ -32,7 +30,7 @@ function bottomBar() {
 
   return (
     <div className="bottomNavBar">
-      <button onClick={handleCheckout}>Checkout</button>
+      <button onClick={onCheckout}>Checkout</button>
       <button onClick={handleTransactions}>Transactions</button>
       <button onClick={handleOrders}>Orders</button>
       <button onClick={handleNotifications}>Notifications</button>

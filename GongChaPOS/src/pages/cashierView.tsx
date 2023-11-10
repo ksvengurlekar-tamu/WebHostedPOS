@@ -5,6 +5,8 @@ import BottomBar from "../components/bottomBar.tsx";
 import CategoryGrid from "../components/categoryGrid.tsx";
 import CartView from "../components/cartView.tsx";
 import "../components/components.css"; // Add this line
+import gongChaImg from "../assets/images/GongChaLogo.png";
+
 interface Drink {
   name: string;
   price: number;
@@ -18,10 +20,10 @@ function CashierView() {
   const [drinks, setDrinks] = useState<Drink[]>([]);
   const [showBackButton, setShowBackButton] = useState(false);
   const [handleBackFromTopBar, setHandleBackFromTopBar] = useState(() => () => {});
+  const [isCheckoutView, setIsCheckoutView] = useState(false); 
 
   const addToCart = (drink: Drink): void => {
     setDrinks((prevDrinkList) => [...prevDrinkList, drink]);
-    console.log("TEST:",drink.name);
   };
   const removeDrinkFromCart = (drinkName: string) => {
     setDrinks((prevDrinks) => prevDrinks.filter((drink) => drink.name !== drinkName));
@@ -30,6 +32,10 @@ function CashierView() {
   const clearCart = () => {
     setDrinks([]);
   };
+
+  const handleCheckoutButton = () => {
+    setIsCheckoutView(!isCheckoutView);
+  }
 
   return (
 
@@ -41,11 +47,17 @@ function CashierView() {
           <TopBar isBackButtonVisible = {showBackButton} onBackClick={handleBackFromTopBar} />
           <div className="row">
               <CategoryGrid addToCart={addToCart} setShowBackButton={setShowBackButton} setHandleBackFromTopBar={setHandleBackFromTopBar} />
-            <div className="col-md-3 cartViewContainer">
-              <CartView InputDrinks={drinks} onRemoveDrink={removeDrinkFromCart} onClearCart={clearCart} />
-            </div>
+              {!isCheckoutView && !showBackButton &&
+                <div className="col-7 img"> <img src={gongChaImg}></img> </div>
+              }
+              {isCheckoutView &&
+                <div className="col-md-3 cartViewContainer">
+                  <CartView InputDrinks={drinks} onRemoveDrink={removeDrinkFromCart} onClearCart={clearCart} />
+                </div>
+              }
           </div>
-          <BottomBar />
+          
+          <BottomBar onCheckout={handleCheckoutButton} />
       </div>
     </div>
   );
