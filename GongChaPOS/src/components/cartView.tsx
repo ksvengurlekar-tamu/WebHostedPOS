@@ -15,6 +15,7 @@ interface CartViewProps {
 
 function CartView({ InputDrinks, onRemoveDrink, onClearCart }: CartViewProps) {
   const [drinks, setDrinks] = useState<Drink[]>([]);
+  const [toppingPrices, setToppingPrices] = useState<Map<string, number>>(new Map()); // this will align with the topping list
   const [selectedDrink, setSelectedDrink] = useState<Drink | null>(null);
   const [subtotal, setSubtotal] = useState<number>(0);
   const [tax, setTax] = useState<number>(0);
@@ -23,15 +24,53 @@ function CartView({ InputDrinks, onRemoveDrink, onClearCart }: CartViewProps) {
   
 
   useEffect(() => {
-    console.log("InputDrinks: ", InputDrinks);
+    const fetchToppingPrices = async (newToppings: string[]) => {
+      try {
+        ;
+        const responses = await Promise.all(newToppings.map(topping =>
+          fetch(`https://gong-cha-server.onrender.com/menuitems/${topping}`)));
+        const prices = await Promise.all(responses.map(res => res.json()));
+        
+        setToppingPrices((currentPrices) => {
+          const updatedPrices = new Map(currentPrices);
+          prices.forEach((price, index) => {
+            updatedPrices.set(newToppings[index], price[0].menuitemprice);
+          });
+          
+          return updatedPrices;
+        });
+      } catch (error) {
+        console.log("Error fetching topping prices:", error);
+      }
+    };
+
+    const uniqueToppings = [...new Set(InputDrinks.flatMap(drink => drink.toppings))];
+    const newToppings = uniqueToppings.filter(topping => !toppingPrices.has(topping));
+
+    if (newToppings.length > 0) {
+      fetchToppingPrices(newToppings);
+    }
+
     setDrinks(InputDrinks)
   }, [InputDrinks]);
 
   useEffect(() => {
-    const newSubtotal = drinks.reduce((total, drink) => total + drink.price * drink.quantity, 0);
-    console.log("price: ", newSubtotal);
+    let newSubtotal = 0;
+
+    for (let i = 0; i < drinks.length; i++) {
+      let toppingTotal = 0;
+
+      for (let j = 0; j < drinks[i].toppings.length; j++) {
+        const topping = drinks[i].toppings[j];
+        const toppingPrice = toppingPrices.get(topping) || 0;
+        toppingTotal += toppingPrice;
+      }
+
+      newSubtotal += (drinks[i].price + toppingTotal) * drinks[i].quantity;
+    }
+
     setSubtotal(newSubtotal);
-    const newTax = newSubtotal * 0.0625;
+    const newTax = newSubtotal * 0.0625; // Assuming a tax rate of 6.25%
     setTax(newTax);
     setTotal(newSubtotal + newTax);
   }, [drinks]);
@@ -66,14 +105,24 @@ function CartView({ InputDrinks, onRemoveDrink, onClearCart }: CartViewProps) {
       <div className="cartView">
         {drinks.map((drink, index) => (
             <button className="cart-item" key={index} onClick={() => setSelectedDrink(drink)}>
-              <span 
-              className="item-name-quantity"
-              style={{
-                fontSize: drink.name.length > 30 ? '16px' : '20px' // Ternary operator for font size
-              }}
-              >
-                {drink.name} <span style={{opacity: "0.5", fontSize: '20px' }}>x{drink.quantity}</span></span>
-              <span className="item-price">${drink.price}</span>
+              <div className="item-name-quantity-container">
+                <span 
+                className="item-name-quantity"
+                style={{
+                  fontSize: drink.name.length > 30 ? '16px' : '20px' // Ternary operator for font size
+                }}
+                >
+                  {drink.name} <span style={{opacity: "0.5", fontSize: '20px' }}>x{drink.quantity}</span></span>
+                <span className="item-price">${drink.price}</span> 
+              </div>
+              <div className="item-toppings-container">
+                  {drink.toppings.map((topping, index) => (
+                    <div className="toppping-container">
+                      <span key={index} className="item-toppings" style={{fontSize: "20px"}}>{topping} </span>
+                      <span className="item-toppings" style={{fontSize: "20px"}}>+${toppingPrices.get(topping) || '0.00'}</span> 
+                    </div>
+                  ))}
+              </div>
             </button>
 
         ))}

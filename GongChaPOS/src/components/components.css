@@ -276,17 +276,40 @@
     justify-content: flex-start; /* Align items to the start of the cross axis */
   }
   .cart-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px; 
     background-color: transparent;
     border-radius: 0px;
     margin: 0px;
     padding: 0px;
+
   }
   .cart-item:focus{
     background-color: #747bff;
+  }
+
+  .item-name-quantity-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+  }
+  .item-toppings-container{
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+    margin-top: 0px;
+    padding: 0px;
+    
+  }
+  .item-toppings {
+    max-height: 25px;
+    transform: translateY(-10px);
+    opacity: 0.5;
+  }
+
+  .toppping-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
   }
   .cartView span{
     font-size: 27px;
