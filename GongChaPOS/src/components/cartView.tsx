@@ -9,7 +9,7 @@ interface Drink {
 }
 interface CartViewProps {
   InputDrinks: Drink[];
-  onRemoveDrink: (drinkName: string) => void;
+  onRemoveDrink: (drinkName: Drink) => void;
   onClearCart: () => void;
 }
 
@@ -26,7 +26,6 @@ function CartView({ InputDrinks, onRemoveDrink, onClearCart }: CartViewProps) {
   useEffect(() => {
     const fetchToppingPrices = async (newToppings: string[]) => {
       try {
-        ;
         const responses = await Promise.all(newToppings.map(topping =>
           fetch(`https://gong-cha-server.onrender.com/menuitems/${topping}`)));
         const prices = await Promise.all(responses.map(res => res.json()));
@@ -75,7 +74,7 @@ function CartView({ InputDrinks, onRemoveDrink, onClearCart }: CartViewProps) {
     setTotal(newSubtotal + newTax);
   }, [drinks]);
 
-  const removeDrink = (drinkToRemove: string) => {
+  const removeDrink = (drinkToRemove: Drink) => {
     onRemoveDrink(drinkToRemove);
   };
 
@@ -113,13 +112,13 @@ function CartView({ InputDrinks, onRemoveDrink, onClearCart }: CartViewProps) {
                 }}
                 >
                   {drink.name} <span style={{opacity: "0.5", fontSize: '20px' }}>x{drink.quantity}</span></span>
-                <span className="item-price">${drink.price}</span> 
+                <span className="item-price">${drink.price.toFixed(2)}</span> 
               </div>
               <div className="item-toppings-container">
                   {drink.toppings.map((topping, index) => (
                     <div className="toppping-container">
                       <span key={index} className="item-toppings" style={{fontSize: "20px"}}>{topping} </span>
-                      <span className="item-toppings" style={{fontSize: "20px"}}>+${toppingPrices.get(topping) || '0.00'}</span> 
+                      <span className="item-toppings" style={{fontSize: "20px"}}>+${toppingPrices.has(topping) ? toppingPrices.get(topping)!.toFixed(2) : '0.00'}</span> 
                     </div>
                   ))}
               </div>
@@ -132,7 +131,7 @@ function CartView({ InputDrinks, onRemoveDrink, onClearCart }: CartViewProps) {
         <span className="spaced"><span>Tax:</span> <span>${tax.toFixed(2)}</span></span>
         <span className="spaced"><span>Total:</span> <span>${total.toFixed(2)}</span></span>
         <div className="cartViewButtons">
-          <button className="cartViewButton" onClick={() => selectedDrink && removeDrink(selectedDrink.name)}>Remove</button>
+          <button className="cartViewButton" onClick={() => selectedDrink && removeDrink(selectedDrink)}>Remove</button>
           <button className="cartViewButton" onClick={() => selectedDrink && incrementQuantity(selectedDrink.name)}>Add More</button>
           <button className="cartViewButton" onClick={() => selectedDrink && decrementQuantity(selectedDrink.name)}>Less</button>   
       </div>

@@ -25,8 +25,17 @@ function CashierView() {
   const addToCart = (drink: Drink): void => {
     setDrinks((prevDrinkList) => [...prevDrinkList, drink]);
   };
-  const removeDrinkFromCart = (drinkName: string) => {
-    setDrinks((prevDrinks) => prevDrinks.filter((drink) => drink.name !== drinkName));
+  const removeDrinkFromCart = (drinkName: Drink) => {
+    setDrinks((prevDrinks) => {
+        let found = false; // This flag will indicate if the drink has been found and removed
+        return prevDrinks.filter((drink) => {
+          if (!found && drink == drinkName) {
+            found = true; // Set the flag to true when the drink is found
+            return false; // Remove the first drink that matches the name
+          }
+          return true; // Keep all other drinks
+        });
+      });
   };
 
   const clearCart = () => {
