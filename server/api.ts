@@ -77,17 +77,49 @@ app.get('/sales/nextid', async (req, res) => { // To the latest sale: orderID an
   }
 });
 
-app.post('/sales', async (req, res) => { // To add a sale into the database
-  try {
-    const { orderid, orderno, saledate, saletime, employeeid, salesprice, islarge, menuitemid } = req.body;
-    await db('INSERT INTO sales (orderid, orderno, saledate, saletime, employeeid, salesprice, islarge, menuitemid) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', 
-    [orderid, orderno, saledate, saletime, employeeid, salesprice, islarge, menuitemid]);
+// app.post('/sales', async (req, res) => { // To add a sale into the database
+//   try {
+//     const { orderid, orderno, saledate, saletime, employeeid, salesprice, islarge, menuitemid } = req.body;
+//     await db('INSERT INTO sales (orderid, orderno, saledate, saletime, employeeid, salesprice, islarge, menuitemid) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
+//       [orderid, orderno, saledate, saletime, employeeid, salesprice, islarge, menuitemid]);
 
-    res.json({ success: true, message: 'Data inserted successfully' });
+//     res.json({ success: true, message: 'Data inserted successfully' });
+//   } catch (error) {
+//     res.status(500).json({ error: 'Failed to insert into sales' });
+//   }
+// });
+
+app.get('/sales/insert', async (req, res) => { // To add a sale into the database (with auto-incremented orderID) ))
+  try {
+    let newOrderId; // INCREMENT ORDER ID
+    let newOrderNo; // stay static
+
+    const result = await db('SELECT MAX(orderid) as maxorderid, MAX(orderno) as maxorderno FROM sales');
+    if (result.rows[0]) {
+      newOrderId = result.rows[0].maxorderid + 1;
+      newOrderNo = result.rows[0].maxorderno + 1;
+      console.log("newOrderId: " + newOrderId);
+      console.log("newOrderNo: " + newOrderNo);
+    } else {
+      newOrderId = -1;
+      newOrderNo = -1;
+    }
+
+
+    const { currentDate, currentTime, employeeId, drinks } = req.body;
+    console.log(employeeId);
+
+    // for (const Drink of drinks) {
+    //   await db('INSERT INTO sales (orderid, orderno, saledate, saletime, employeeid, salesprice, islarge, menuitemid) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
+    //     [newOrderId, newOrderNo, currentDate, currentTime, Drink.employeeId, Drink.salesPrice, Drink.isLarge, Drink.menuItemId]);
+    //   newOrderId++;
+    // }
+
   } catch (error) {
     res.status(500).json({ error: 'Failed to insert into sales' });
   }
 });
+
 
 
 app.listen(port, () => {
