@@ -11,9 +11,10 @@ interface CartViewProps {
   InputDrinks: Drink[];
   onRemoveDrink: (drinkName: Drink) => void;
   onClearCart: () => void;
+  onSubmit: () => void;
 }
 
-function CartView({ InputDrinks, onRemoveDrink, onClearCart }: CartViewProps) {
+function CartView({ InputDrinks, onRemoveDrink, onClearCart, onSubmit }: CartViewProps) {
   const [drinks, setDrinks] = useState<Drink[]>([]);
   const [toppingPrices, setToppingPrices] = useState<Map<string, number>>(new Map()); // this will align with the topping list
   const [selectedDrink, setSelectedDrink] = useState<Drink | null>(null);
@@ -27,7 +28,8 @@ function CartView({ InputDrinks, onRemoveDrink, onClearCart }: CartViewProps) {
     const fetchToppingPrices = async (newToppings: string[]) => {
       try {
         const responses = await Promise.all(newToppings.map(topping =>
-          fetch(`https://gong-cha-server.onrender.com/menuitems/${topping}`)));
+          // fetch(`https://gong-cha-server.onrender.com/menuitems/${topping}`)));
+          fetch(`http://localhost:9000/menuitems/${topping}`)));
         const prices = await Promise.all(responses.map(res => res.json()));
         
         setToppingPrices((currentPrices) => {
@@ -98,6 +100,10 @@ function CartView({ InputDrinks, onRemoveDrink, onClearCart }: CartViewProps) {
     onClearCart();
   };
 
+  const submitOrder = () => {
+    onSubmit();
+  }
+
   return (
     <>
       <h4 className="m-0">Cart</h4>
@@ -136,7 +142,7 @@ function CartView({ InputDrinks, onRemoveDrink, onClearCart }: CartViewProps) {
           <button className="cartViewButton" onClick={() => selectedDrink && decrementQuantity(selectedDrink.name)}>Less</button>   
       </div>
         <button className="cartViewButton" onClick={clearCart}>Clear Cart</button>
-        <button className="cartViewButton " onClick={clearCart}>Sumbit</button> {/* submit logic to replace clearCart*/}
+        <button className="cartViewButton " onClick={submitOrder}>Sumbit</button> {/* submit logic to replace clearCart*/}
       </div>
       
     </>

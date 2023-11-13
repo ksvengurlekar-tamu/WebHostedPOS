@@ -14,6 +14,19 @@ interface Drink {
   toppings: string[];
   quantity: number;
 }
+
+function getCurrentDateTime(): { currentDate: string; currentTime: string } {
+  const now = new Date();
+
+  // Format the date as yyyy-MM-dd
+  const currentDate = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}`;
+
+  // Format the time as HH:mm:ss
+  const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+
+  return { currentDate, currentTime };
+}
+
 function CashierView() {
   const view = "/cashierView";
 
@@ -23,6 +36,10 @@ function CashierView() {
   const [isCheckoutView, setIsCheckoutView] = useState(false); 
 
   const addToCart = (drink: Drink): void => {
+    if (drink.size == "Large") {
+      drink.price += 0.75;
+    }
+
     setDrinks((prevDrinkList) => [...prevDrinkList, drink]);
   };
   const removeDrinkFromCart = (drinkName: Drink) => {
@@ -46,6 +63,34 @@ function CashierView() {
     setIsCheckoutView(!isCheckoutView);
   }
 
+  const submitOrder = async () => {
+    // var insert_url = "https://gong-cha-server.onrender.com/sales";
+    var insert_url = "http://localhost:9000/sales";
+    // var fetch_url = "https://gong-cha-server.onrender.com/sales/nextid";
+    var fetch_url = "http://localhost:9000/sales/nextid";
+
+    const fetchResponse = await fetch(fetch_url, {mode: 'cors'});
+    const nextOrderData = await fetchResponse.json();
+    const orderId = nextOrderData[0].orderid + 1; // increment for each drink in the cart
+    const orderNo = nextOrderData[0].orderno + 1; // DONOT increment
+
+    const { currentDate, currentTime } = getCurrentDateTime();
+
+    const salesData = { orderId, orderNo, currentDate, currentTime,  };
+
+    const insertResponse = await fetch(insert_url, {
+      method: 'POST',
+      headers: {
+        // this signals the API that the input is in the form of json
+        'Content-Type': 'application/json',
+      },
+      // wraps the salesData struct in a json format
+      body: JSON.stringify(salesData),
+    });
+
+    clearCart();
+  };
+
   return (
 
     <div className="container-fluid d-flex flex-row vh-100 vw-100 p-0 background">
@@ -61,7 +106,7 @@ function CashierView() {
               }
               {isCheckoutView &&
                 <div className="col-md-3 cartViewContainer">
-                  <CartView InputDrinks={drinks} onRemoveDrink={removeDrinkFromCart} onClearCart={clearCart} />
+                  <CartView InputDrinks={drinks} onRemoveDrink={removeDrinkFromCart} onClearCart={clearCart} onSubmit={submitOrder}/>
                 </div>
               }
           </div>

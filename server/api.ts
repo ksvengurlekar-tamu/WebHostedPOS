@@ -40,8 +40,7 @@ app.get('/menuitems', async (_req, res) => { // To get all menu items
 
 app.get('/menuitems/:menuitemname', async (req, res) => { // To get a specific menu item
   try {
-    console.log(req.params.menuitemname);
-    const result = await db('SELECT menuitemprice FROM menuitems WHERE menuitemname = $1', [req.params.menuitemname]);
+    const result = await db('SELECT * FROM menuitems WHERE menuitemname = $1', [req.params.menuitemname]);
     res.json(result.rows);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch menu item' });
@@ -58,7 +57,37 @@ app.get('/category/:series', async (req, res) => { // To get all menu items in a
   }
 });
 
+// Sales
 
+app.get('/sales', async (req, res) => { // To get all sales
+  try {
+    const result = await db('SELECT * FROM sales');
+    res.json(result.rows);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch sales data' });
+  }
+});
+
+app.get('/sales/nextid', async (req, res) => { // To the latest sale: orderID and orderNo for the next sale
+  try {
+    const result = await db('SELECT * FROM sales WHERE orderID = (SELECT MAX(orderID) FROM sales)');
+    res.json(result.rows);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch sales data' });
+  }
+});
+
+app.post('/sales', async (req, res) => { // To add a sale into the database
+  try {
+    const { orderid, orderno, saledate, saletime, employeeid, salesprice, islarge, menuitemid } = req.body;
+    await db('INSERT INTO sales (orderid, orderno, saledate, saletime, employeeid, salesprice, islarge, menuitemid) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', 
+    [orderid, orderno, saledate, saletime, employeeid, salesprice, islarge, menuitemid]);
+
+    res.json({ success: true, message: 'Data inserted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to insert into sales' });
+  }
+});
 
 
 app.listen(port, () => {
