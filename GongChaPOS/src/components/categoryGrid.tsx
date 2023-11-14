@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Card from "../components/card.tsx";
 
 interface Drink {
+  id: number;
   name: string;
   price: number;
   size: string;
@@ -34,6 +35,7 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar }:
   const [selectedSugarLevel, setselectedSugarLevel] = useState<string>("100%");
   const [selectedDrinkName, setSelectedDrinkName] = useState<string>("");
   const [selectedDrinkPrice, setSelectedDrinkPrice] = useState<number>(0);    
+  const [selectedDrinkID, setSelectedDrinkID] = useState<number>(0);    
 
   const handleSeriesClick = async (SeriesName: string) => {
     setIsLoading(true);
@@ -98,6 +100,7 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar }:
 
   const handleAddClick = () => {
     const newDrink: Drink = {
+      id: selectedDrinkID,
       name: selectedDrinkName,
       price: selectedDrinkPrice,
       size: selectedSize,
@@ -166,6 +169,7 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar }:
           setDrinkSelected(true);
           setSelectedDrinkName(menuItem.menuitemname);
           setSelectedDrinkPrice(menuItem.menuitemprice);
+          setSelectedDrinkID(menuItem.menuitemid)
         }}
       />
     ));

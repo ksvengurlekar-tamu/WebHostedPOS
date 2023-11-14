@@ -1,6 +1,7 @@
 import { useState, useEffect} from "react";
 
 interface Drink {
+  id: number;
   name: string;
   price: number;
   size: string;

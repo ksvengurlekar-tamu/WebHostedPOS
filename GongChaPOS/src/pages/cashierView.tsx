@@ -8,6 +8,7 @@ import "../components/components.css"; // Add this line
 import gongChaImg from "../assets/images/GongChaLogo.png";
 
 interface Drink {
+  id: number;
   name: string;
   price: number;
   size: string;
@@ -65,18 +66,13 @@ function CashierView() {
 
   const submitOrder = async () => {
     // var insert_url = "https://gong-cha-server.onrender.com/sales";
-    var insert_url = "http://localhost:9000/sales";
-    // var fetch_url = "https://gong-cha-server.onrender.com/sales/nextid";
-    var fetch_url = "http://localhost:9000/sales/nextid";
-
-    const fetchResponse = await fetch(fetch_url, {mode: 'cors'});
-    const nextOrderData = await fetchResponse.json();
-    const orderId = nextOrderData[0].orderid + 1; // increment for each drink in the cart
-    const orderNo = nextOrderData[0].orderno + 1; // DONOT increment
+    var insert_url = "http://localhost:9000/sales/insert";
+    
+    const employeesId = localStorage.getItem("employeeId");
 
     const { currentDate, currentTime } = getCurrentDateTime();
 
-    const salesData = { orderId, orderNo, currentDate, currentTime,  };
+    const salesData = { currentDate, currentTime, employeesId, drinks }; // json package
 
     const insertResponse = await fetch(insert_url, {
       method: 'POST',

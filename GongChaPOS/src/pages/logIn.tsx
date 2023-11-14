@@ -25,6 +25,7 @@ function Login() {
         if (username === employee.employeeusername && password === employee.employeeuserpassword) {
           console.log("Login successful");
           isLoginSuccessful = true; // set the flag to true if matching user found
+          localStorage.setItem("employeeId",employee.employeeid)
         }
       });
 
