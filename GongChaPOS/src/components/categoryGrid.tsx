@@ -1,19 +1,12 @@
 import { useEffect, useState } from "react";
 import Card from "../components/card.tsx";
 
-interface Topping {
-  id: number;
-  name: string;
-  price: number;
-}
-
 interface Drink {
   id: number;
   name: string;
   price: number;
   size: string;
   topping_names: string[];
-  toppings: Topping[];
   quantity: number;
 }
 
@@ -112,7 +105,6 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar }:
       price: selectedDrinkPrice,
       size: selectedSize,
       topping_names: selectedToppings,
-      toppings: [],
       quantity: 1, // Assuming the default quantity is 1
     };
     addToCart(newDrink);

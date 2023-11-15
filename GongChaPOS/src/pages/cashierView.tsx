@@ -7,11 +7,6 @@ import CartView from "../components/cartView.tsx";
 import "../components/components.css"; // Add this line
 import gongChaImg from "../assets/images/GongChaLogo.png";
 
-interface Topping {
-  id: number;
-  name: string;
-  price: number;
-}
 
 interface Drink {
   id: number;
@@ -19,7 +14,6 @@ interface Drink {
   price: number;
   size: string;
   topping_names: string[];
-  toppings: Topping[];
   quantity: number;
 }
 
@@ -54,8 +48,12 @@ function CashierView() {
   const removeDrinkFromCart = (drinkName: Drink) => {
     setDrinks((prevDrinks) => {
         let found = false; // This flag will indicate if the drink has been found and removed
+        console.log("Removing drink:", prevDrinks);
+        console.log(drinkName);
         return prevDrinks.filter((drink) => {
           if (!found && drink == drinkName) {
+            
+
             found = true; // Set the flag to true when the drink is found
             return false; // Remove the first drink that matches the name
           }

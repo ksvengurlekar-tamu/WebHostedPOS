@@ -12,7 +12,6 @@ interface Drink {
   price: number;
   size: string;
   topping_names: string[];
-  toppings: Topping[];
   quantity: number;
 }
 
@@ -25,7 +24,7 @@ interface CartViewProps {
 
 function CartView({ InputDrinks, onRemoveDrink, onClearCart, onSubmit }: CartViewProps) {
   const [drinks, setDrinks] = useState<Drink[]>([]);
-  const [toppingPrices, setToppingPrices] = useState<Map<string, any>>(new Map()); // this will align with the topping list
+  const [toppings, setToppings] = useState<Topping[]>(); // this will align with the topping list
   const [selectedDrink, setSelectedDrink] = useState<Drink | null>(null);
   const [subtotal, setSubtotal] = useState<number>(0);
   const [tax, setTax] = useState<number>(0);
@@ -47,31 +46,26 @@ function CartView({ InputDrinks, onRemoveDrink, onClearCart, onSubmit }: CartVie
     const fetchToppings = async (newToppingNames: string[]) => {
       try {
         const newToppings = await Promise.all(newToppingNames.map(fetchTopping));
-        const updatedToppings = new Map(toppingPrices);
+        var updatedToppings = toppings;
         newToppings.forEach((topping) => {
-          updatedToppings.set(topping.name, { id: topping.id, price: topping.price });
-        });
-        setToppingPrices(updatedToppings);
+          // updatedToppings.set(topping.name, { id: topping.id, price: topping.price });
+          updatedToppings = [...(toppings || []), { id: topping.id, name: topping.name, price: topping.price }];
+         });
+        setToppings(updatedToppings);
       } catch (error) {
         console.log("Error fetching toppings:", error);
       }
     };
 
     const uniqueToppingNames = [...new Set(InputDrinks.flatMap((drink) => drink.topping_names))];
-    const newToppingNames = uniqueToppingNames.filter((toppingName) => !toppingPrices.has(toppingName));
+    const newToppingNames = uniqueToppingNames.filter((toppingName) => !toppings?.some(topping => topping.name === toppingName));
 
     if (newToppingNames.length > 0) {
       fetchToppings(newToppingNames);
     }
 
-    setDrinks(InputDrinks.map((drink) => ({
-      ...drink,
-      toppings: drink.topping_names.map((toppingName) => {
-        const topping = toppingPrices.get(toppingName);
-        return { id: topping?.id || 0, name: toppingName, price: topping?.price || 0 };
-      })
-    })));
-  }, [InputDrinks, toppingPrices]);
+    setDrinks(InputDrinks);
+  }, [InputDrinks, toppings]);
   
     
   useEffect(() => {
@@ -80,9 +74,10 @@ function CartView({ InputDrinks, onRemoveDrink, onClearCart, onSubmit }: CartVie
     for (let i = 0; i < drinks.length; i++) {
       let toppingTotal = 0;
 
-      for (let j = 0; j < drinks[i].toppings.length; j++) {
-        const topping = drinks[i].toppings[j];
-        toppingTotal += topping.price;
+      for (let j = 0; j < drinks[i].topping_names.length; j++) {
+        const toppingName = drinks[i].topping_names[j];
+        const topping = toppings?.find(t => t.name === toppingName);
+        toppingTotal += topping ? topping.price : 0;
       }
 
       newSubtotal += (drinks[i].price + toppingTotal) * drinks[i].quantity;
@@ -141,12 +136,17 @@ function CartView({ InputDrinks, onRemoveDrink, onClearCart, onSubmit }: CartVie
                 <span className="item-price">${drink.price.toFixed(2)}</span> 
               </div>
               <div className="item-toppings-container">
-                  {drink.toppings.map((topping, index) => (
-                    <div className="topping-container">
-                      <span key={index} className="item-toppings" style={{fontSize: "20px"}}>{topping.name} </span>
-                      <span className="item-toppings" style={{fontSize: "20px"}}>+${topping.price.toFixed(2)}</span> 
+                {drink.topping_names.map((toppingName, toppingIndex) => {
+                  const topping = toppings?.find(t => t.name === toppingName);
+                  return (
+                    <div key={toppingIndex} className="toppping-container">
+                      <span className="item-toppings" style={{fontSize: "20px"}}>{toppingName}</span>
+                      <span className="item-toppings" style={{fontSize: "20px"}}>
+                        +${topping ? topping.price.toFixed(2) : '0.00'}
+                      </span>
                     </div>
-                  ))}
+                  );
+                })}
               </div>
             </button>
 
