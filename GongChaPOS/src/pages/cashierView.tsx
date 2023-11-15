@@ -7,12 +7,19 @@ import CartView from "../components/cartView.tsx";
 import "../components/components.css"; // Add this line
 import gongChaImg from "../assets/images/GongChaLogo.png";
 
+interface Topping {
+  id: number;
+  name: string;
+  price: number;
+}
+
 interface Drink {
   id: number;
   name: string;
   price: number;
   size: string;
-  toppings: string[];
+  topping_names: string[];
+  toppings: Topping[];
   quantity: number;
 }
 
@@ -37,12 +44,13 @@ function CashierView() {
   const [isCheckoutView, setIsCheckoutView] = useState(false); 
 
   const addToCart = (drink: Drink): void => {
-    if (drink.size == "Large") {
+    if (drink.size === "Large") {
       drink.price += 0.75;
     }
 
     setDrinks((prevDrinkList) => [...prevDrinkList, drink]);
   };
+  
   const removeDrinkFromCart = (drinkName: Drink) => {
     setDrinks((prevDrinks) => {
         let found = false; // This flag will indicate if the drink has been found and removed

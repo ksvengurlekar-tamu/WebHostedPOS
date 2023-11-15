@@ -1,19 +1,28 @@
 import { useEffect, useState } from "react";
 import Card from "../components/card.tsx";
 
+interface Topping {
+  id: number;
+  name: string;
+  price: number;
+}
+
 interface Drink {
   id: number;
   name: string;
   price: number;
   size: string;
-  toppings: string[];
+  topping_names: string[];
+  toppings: Topping[];
   quantity: number;
 }
+
 interface CategoryGridProps {
   addToCart: (menuItem: Drink) => void;
   setShowBackButton: any;
   setHandleBackFromTopBar: any;
 }
+
 function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar }: CategoryGridProps) {
   const [isSeriesSelected, setSeriesSelected] = useState(() => {
     const saved = localStorage.getItem("isSeriesSelected");
@@ -73,8 +82,6 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar }:
     }
   };
 
-
-
   // Function to handle toppings selection
   const handleToppingClick = (topping: string) => {
     setSelectedToppings((prevToppings) => {
@@ -104,7 +111,8 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar }:
       name: selectedDrinkName,
       price: selectedDrinkPrice,
       size: selectedSize,
-      toppings: selectedToppings,
+      topping_names: selectedToppings,
+      toppings: [],
       quantity: 1, // Assuming the default quantity is 1
     };
     addToCart(newDrink);

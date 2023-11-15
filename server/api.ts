@@ -89,7 +89,7 @@ app.get('/sales/nextid', async (req, res) => { // To the latest sale: orderID an
 //   }
 // });
 
-app.get('/sales/insert', async (req, res) => { // To add a sale into the database (with auto-incremented orderID) ))
+app.post('/sales/insert', async (req, res) => { // To add a sale into the database (with auto-incremented orderID) ))
   try {
     let newOrderId; // INCREMENT ORDER ID
     let newOrderNo; // stay static
@@ -105,16 +105,22 @@ app.get('/sales/insert', async (req, res) => { // To add a sale into the databas
       newOrderNo = -1;
     }
 
-
     const { currentDate, currentTime, employeeId, drinks } = req.body;
     console.log(employeeId);
 
-    // for (const Drink of drinks) {
-    //   await db('INSERT INTO sales (orderid, orderno, saledate, saletime, employeeid, salesprice, islarge, menuitemid) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
-    //     [newOrderId, newOrderNo, currentDate, currentTime, Drink.employeeId, Drink.salesPrice, Drink.isLarge, Drink.menuItemId]);
-    //   newOrderId++;
-    // }
+    for (const drink of drinks) {
+      await db('INSERT INTO sales (orderid, orderno, saledate, saletime, employeeid, salesprice, islarge, menuitemid) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
+            [newOrderId, newOrderNo, currentDate, currentTime, employeeId, drink.quantity * drink.price, drink.size === "Large", drink.id]);
+      newOrderId++;
 
+      for (const topping of drink.toppings) {
+        await db('INSERT INTO sales (orderid, orderno, saledate, saletime, employeeid, salesprice, islarge, menuitemid) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
+            [newOrderId, newOrderNo, currentDate, currentTime, employeeId, drink.quantity * topping.price, false, topping.id]);
+        newOrderId++;
+      }
+    }
+
+    res.json({ success: true, message: 'Data inserted successfully' });
   } catch (error) {
     res.status(500).json({ error: 'Failed to insert into sales' });
   }

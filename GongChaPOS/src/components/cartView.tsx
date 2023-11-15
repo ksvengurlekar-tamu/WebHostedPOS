@@ -1,13 +1,21 @@
 import { useState, useEffect} from "react";
 
+interface Topping {
+  id: number;
+  name: string;
+  price: number;
+}
+
 interface Drink {
   id: number;
   name: string;
   price: number;
   size: string;
-  toppings: string[];
+  topping_names: string[];
+  toppings: Topping[];
   quantity: number;
 }
+
 interface CartViewProps {
   InputDrinks: Drink[];
   onRemoveDrink: (drinkName: Drink) => void;
@@ -17,45 +25,55 @@ interface CartViewProps {
 
 function CartView({ InputDrinks, onRemoveDrink, onClearCart, onSubmit }: CartViewProps) {
   const [drinks, setDrinks] = useState<Drink[]>([]);
-  const [toppingPrices, setToppingPrices] = useState<Map<string, number>>(new Map()); // this will align with the topping list
+  const [toppingPrices, setToppingPrices] = useState<Map<string, any>>(new Map()); // this will align with the topping list
   const [selectedDrink, setSelectedDrink] = useState<Drink | null>(null);
   const [subtotal, setSubtotal] = useState<number>(0);
   const [tax, setTax] = useState<number>(0);
   const [total, setTotal] = useState<number>(0);
 
-  
+  const fetchTopping = async (toppingName: string): Promise<Topping> => {
+    try {
+      const response = await fetch(`http://localhost:9000/menuitems/${toppingName}`);
+      const data = await response.json();
+      const topping = data[0];
+      return { id: topping.menuitemid, name: topping.menuitemname, price: topping.menuitemprice };
+    } catch (error) {
+      console.log("Error fetching topping:", error);
+      return { id: 0, name: "", price: 0 };
+    }
+  };
 
   useEffect(() => {
-    const fetchToppingPrices = async (newToppings: string[]) => {
+    const fetchToppings = async (newToppingNames: string[]) => {
       try {
-        const responses = await Promise.all(newToppings.map(topping =>
-          // fetch(`https://gong-cha-server.onrender.com/menuitems/${topping}`)));
-          fetch(`http://localhost:9000/menuitems/${topping}`)));
-        const prices = await Promise.all(responses.map(res => res.json()));
-        
-        setToppingPrices((currentPrices) => {
-          const updatedPrices = new Map(currentPrices);
-          prices.forEach((price, index) => {
-            updatedPrices.set(newToppings[index], price[0].menuitemprice);
-          });
-          
-          return updatedPrices;
+        const newToppings = await Promise.all(newToppingNames.map(fetchTopping));
+        const updatedToppings = new Map(toppingPrices);
+        newToppings.forEach((topping) => {
+          updatedToppings.set(topping.name, { id: topping.id, price: topping.price });
         });
+        setToppingPrices(updatedToppings);
       } catch (error) {
-        console.log("Error fetching topping prices:", error);
+        console.log("Error fetching toppings:", error);
       }
     };
 
-    const uniqueToppings = [...new Set(InputDrinks.flatMap(drink => drink.toppings))];
-    const newToppings = uniqueToppings.filter(topping => !toppingPrices.has(topping));
+    const uniqueToppingNames = [...new Set(InputDrinks.flatMap((drink) => drink.topping_names))];
+    const newToppingNames = uniqueToppingNames.filter((toppingName) => !toppingPrices.has(toppingName));
 
-    if (newToppings.length > 0) {
-      fetchToppingPrices(newToppings);
+    if (newToppingNames.length > 0) {
+      fetchToppings(newToppingNames);
     }
 
-    setDrinks(InputDrinks)
-  }, [InputDrinks]);
-
+    setDrinks(InputDrinks.map((drink) => ({
+      ...drink,
+      toppings: drink.topping_names.map((toppingName) => {
+        const topping = toppingPrices.get(toppingName);
+        return { id: topping?.id || 0, name: toppingName, price: topping?.price || 0 };
+      })
+    })));
+  }, [InputDrinks, toppingPrices]);
+  
+    
   useEffect(() => {
     let newSubtotal = 0;
 
@@ -64,8 +82,7 @@ function CartView({ InputDrinks, onRemoveDrink, onClearCart, onSubmit }: CartVie
 
       for (let j = 0; j < drinks[i].toppings.length; j++) {
         const topping = drinks[i].toppings[j];
-        const toppingPrice = toppingPrices.get(topping) || 0;
-        toppingTotal += toppingPrice;
+        toppingTotal += topping.price;
       }
 
       newSubtotal += (drinks[i].price + toppingTotal) * drinks[i].quantity;
@@ -81,20 +98,22 @@ function CartView({ InputDrinks, onRemoveDrink, onClearCart, onSubmit }: CartVie
     onRemoveDrink(drinkToRemove);
   };
 
-  const incrementQuantity = (drinkToIncrement: string) => {
+  const incrementQuantity = (drinkToIncrement: Drink) => {
     setDrinks((prevDrinks) =>
       prevDrinks.map((drink) =>
-        drink.name === drinkToIncrement ? { ...drink, quantity: drink.quantity + 1 } : drink
+        drink == drinkToIncrement ? { ...drink, quantity: drink.quantity + 1 } : drink
       )
     );
+    setSelectedDrink(drinkToIncrement);
   };
 
-  const decrementQuantity = (drinkToDecrement: string) => {
+  const decrementQuantity = (drinkToDecrement: Drink) => {
     setDrinks((prevDrinks) =>
       prevDrinks.map((drink) =>
-        drink.name === drinkToDecrement ? { ...drink, quantity: Math.max(1, drink.quantity - 1) } : drink
+        drink == drinkToDecrement ? { ...drink, quantity: Math.max(1, drink.quantity - 1) } : drink
       )
     );
+    setSelectedDrink(drinkToDecrement);
   };
 
   const clearCart = () => {
@@ -123,9 +142,9 @@ function CartView({ InputDrinks, onRemoveDrink, onClearCart, onSubmit }: CartVie
               </div>
               <div className="item-toppings-container">
                   {drink.toppings.map((topping, index) => (
-                    <div className="toppping-container">
-                      <span key={index} className="item-toppings" style={{fontSize: "20px"}}>{topping} </span>
-                      <span className="item-toppings" style={{fontSize: "20px"}}>+${toppingPrices.has(topping) ? toppingPrices.get(topping)!.toFixed(2) : '0.00'}</span> 
+                    <div className="topping-container">
+                      <span key={index} className="item-toppings" style={{fontSize: "20px"}}>{topping.name} </span>
+                      <span className="item-toppings" style={{fontSize: "20px"}}>+${topping.price.toFixed(2)}</span> 
                     </div>
                   ))}
               </div>
@@ -139,8 +158,8 @@ function CartView({ InputDrinks, onRemoveDrink, onClearCart, onSubmit }: CartVie
         <span className="spaced"><span>Total:</span> <span>${total.toFixed(2)}</span></span>
         <div className="cartViewButtons">
           <button className="cartViewButton" onClick={() => selectedDrink && removeDrink(selectedDrink)}>Remove</button>
-          <button className="cartViewButton" onClick={() => selectedDrink && incrementQuantity(selectedDrink.name)}>Add More</button>
-          <button className="cartViewButton" onClick={() => selectedDrink && decrementQuantity(selectedDrink.name)}>Less</button>   
+          <button className="cartViewButton" onClick={() => selectedDrink && incrementQuantity(selectedDrink)}>Add More</button>
+          <button className="cartViewButton" onClick={() => selectedDrink && decrementQuantity(selectedDrink)}>Less</button>   
       </div>
         <button className="cartViewButton" onClick={clearCart}>Clear Cart</button>
         <button className="cartViewButton " onClick={submitOrder}>Sumbit</button> {/* submit logic to replace clearCart*/}
