@@ -113,27 +113,30 @@ app.post('/sales', async (req, res) => { // To add a sale into the database (wit
       // find corresponding ingredients and their respective quantities
       const measurementSet = await db('SELECT * FROM menuItems_inventory WHERE menuitemid = $1', [drink.id]);
 
-      var quantity = measurementSet.rows[0].measurement;
-      var id = measurementSet.rows[0].inventoryid;
+      for (const mr of measurementSet.rows) {
+        var quantity = mr.measurement;
+        var id = mr.inventoryid;
 
-      if(drink.size === "Large"){
-        quantity = quantity * 1.5;
-      }
+        if(drink.size === "Large"){
+          quantity = quantity * 1.5;
+        }
 
-      await db('UPDATE inventory SET inventoryQuantity = inventoryQuantity - $1 WHERE inventoryid = $2', [quantity, id]);
+        await db('UPDATE inventory SET inventoryQuantity = inventoryQuantity - $1 WHERE inventoryid = $2', [quantity, id]);
 
-      
-      // check if stock is exceeded
-      const inventoryCheckSet = await db('SELECT inventoryQuantity FROM inventory WHERE inventoryid = $1', [id]);
-      var remaining = inventoryCheckSet.rows[0];
-      
-      // should just be 1 value: SELECT inventoryQuantity
-      if (remaining <= 50) {
-        await db('UPDATE inventory SET inventoryinstock = $1 WHERE inventoryid = $2', [false, id]);
-      }
+        
+        // check if stock is exceeded
+        const inventoryCheckSet = await db('SELECT inventoryQuantity FROM inventory WHERE inventoryid = $1', [id]);
+        var remaining = inventoryCheckSet.rows[0].inventoryquantity;
+        //console.log(remaining)
+        
+        // should just be 1 value: SELECT inventoryQuantity
+        if (remaining <= 50) {
+          await db('UPDATE inventory SET inventoryinstock = $1 WHERE inventoryid = $2', [false, id]);
+        }
 
-      if (remaining <= 11) {
-        await db('UPDATE menuitems SET menuiteminstock = $1 WHERE menuitemid = $2', [false, drink.id]);
+        if (remaining <= 11) {
+          await db('UPDATE menuitems SET menuiteminstock = $1 WHERE menuitemid = $2', [false, drink.id]);
+        }
       }
   
        newOrderId++;
