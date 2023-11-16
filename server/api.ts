@@ -9,7 +9,8 @@ const router = Router();
 
 app.use(cors()); // Allow CORS for all routes
 app.use('/', router); // Use the router for routes prefixed with /, this is the root of the server API
-
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.get('/', (_req, res) => {
   res.send('Hello from Express!');
@@ -89,10 +90,12 @@ app.get('/sales/nextid', async (req, res) => { // To the latest sale: orderID an
 //   }
 // });
 
-app.post('/sales/insert', async (req, res) => { // To add a sale into the database (with auto-incremented orderID) ))
+app.post('/sales', async (req, res) => { // To add a sale into the database (with auto-incremented orderID) ))
   try {
     let newOrderId; // INCREMENT ORDER ID
     let newOrderNo; // stay static
+    let currentDate = new Date().toISOString().split('T')[0]; // Returns date in YYYY-MM-DD format
+    let currentTime = new Date().toISOString().split('T')[1].split('.')[0]; // Returns time in HH:MI:SS format
 
     const result = await db('SELECT MAX(orderid) as maxorderid, MAX(orderno) as maxorderno FROM sales');
     if (result.rows[0]) {
@@ -105,24 +108,20 @@ app.post('/sales/insert', async (req, res) => { // To add a sale into the databa
       newOrderNo = -1;
     }
 
-    const { currentDate, currentTime, employeeId, drinks } = req.body;
-    console.log(employeeId);
-
+    const { employeeId, drinks } = req.body;
+    let employeeIdInt = parseInt(employeeId);
+    
     for (const drink of drinks) {
-      await db('INSERT INTO sales (orderid, orderno, saledate, saletime, employeeid, salesprice, islarge, menuitemid) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
-            [newOrderId, newOrderNo, currentDate, currentTime, employeeId, drink.quantity * drink.price, drink.size === "Large", drink.id]);
+      await db('INSERT INTO sales (orderid, orderno, saledate, saletime, employeeid, saleprice, islarge, menuitemid) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
+          [newOrderId, newOrderNo, currentDate, currentTime, employeeIdInt, drink.quantity * drink.price, drink.size === "Large", drink.id]);
       newOrderId++;
-
-      for (const topping of drink.toppings) {
-        await db('INSERT INTO sales (orderid, orderno, saledate, saletime, employeeid, salesprice, islarge, menuitemid) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
-            [newOrderId, newOrderNo, currentDate, currentTime, employeeId, drink.quantity * topping.price, false, topping.id]);
-        newOrderId++;
-      }
     }
+
 
     res.json({ success: true, message: 'Data inserted successfully' });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to insert into sales' });
+    
+    console.log("THE SQL NO WORK BUT AT THIS LINE");
   }
 });
 

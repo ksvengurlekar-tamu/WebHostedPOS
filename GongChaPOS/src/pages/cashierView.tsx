@@ -6,6 +6,7 @@ import CategoryGrid from "../components/categoryGrid.tsx";
 import CartView from "../components/cartView.tsx";
 import "../components/components.css"; // Add this line
 import gongChaImg from "../assets/images/GongChaLogo.png";
+import axios from 'axios';
 
 
 interface Drink {
@@ -17,17 +18,6 @@ interface Drink {
   quantity: number;
 }
 
-function getCurrentDateTime(): { currentDate: string; currentTime: string } {
-  const now = new Date();
-
-  // Format the date as yyyy-MM-dd
-  const currentDate = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}`;
-
-  // Format the time as HH:mm:ss
-  const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
-
-  return { currentDate, currentTime };
-}
 
 function CashierView() {
   const view = "/cashierView";
@@ -72,23 +62,14 @@ function CashierView() {
 
   const submitOrder = async () => {
     // var insert_url = "https://gong-cha-server.onrender.com/sales";
-    var insert_url = "http://localhost:9000/sales/insert";
+    var insert_url = "http://localhost:9000/sales";
     
-    const employeesId = localStorage.getItem("employeeId");
+    const employeeId = localStorage.getItem("employeeId");
 
-    const { currentDate, currentTime } = getCurrentDateTime();
-
-    const salesData = { currentDate, currentTime, employeesId, drinks }; // json package
-
-    const insertResponse = await fetch(insert_url, {
-      method: 'POST',
-      headers: {
-        // this signals the API that the input is in the form of json
-        'Content-Type': 'application/json',
-      },
-      // wraps the salesData struct in a json format
-      body: JSON.stringify(salesData),
-    });
+    const insertResponse = await axios.post(insert_url, {
+      employeeId,
+      drinks,
+    });    
 
     clearCart();
   };
