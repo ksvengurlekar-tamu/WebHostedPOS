@@ -16,6 +16,8 @@ app.get('/', (_req, res) => {
   res.send('Hello from Express!');
 });
 
+
+
 //employees
 
 app.get('/employees', async (_req, res) => { // To get all employee info
@@ -26,6 +28,7 @@ app.get('/employees', async (_req, res) => { // To get all employee info
     res.status(500).json({ error: 'Failed to fetch data' });
   }
 });
+
 
 
 // menu items
@@ -58,6 +61,8 @@ app.get('/category/:series', async (req, res) => { // To get all menu items in a
   }
 });
 
+
+
 // Sales
 
 app.get('/sales', async (req, res) => { // To get all sales
@@ -77,18 +82,6 @@ app.get('/sales/nextid', async (req, res) => { // To the latest sale: orderID an
     res.status(500).json({ error: 'Failed to fetch sales data' });
   }
 });
-
-// app.post('/sales', async (req, res) => { // To add a sale into the database
-//   try {
-//     const { orderid, orderno, saledate, saletime, employeeid, salesprice, islarge, menuitemid } = req.body;
-//     await db('INSERT INTO sales (orderid, orderno, saledate, saletime, employeeid, salesprice, islarge, menuitemid) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
-//       [orderid, orderno, saledate, saletime, employeeid, salesprice, islarge, menuitemid]);
-
-//     res.json({ success: true, message: 'Data inserted successfully' });
-//   } catch (error) {
-//     res.status(500).json({ error: 'Failed to insert into sales' });
-//   }
-// });
 
 app.post('/sales', async (req, res) => { // To add a sale into the database (with auto-incremented orderID) ))
   try {
@@ -112,9 +105,38 @@ app.post('/sales', async (req, res) => { // To add a sale into the database (wit
     let employeeIdInt = parseInt(employeeId);
     
     for (const drink of drinks) {
+      // add to sales
       await db('INSERT INTO sales (orderid, orderno, saledate, saletime, employeeid, saleprice, islarge, menuitemid) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
           [newOrderId, newOrderNo, currentDate, currentTime, employeeIdInt, drink.quantity * drink.price, drink.size === "Large", drink.id]);
-      newOrderId++;
+
+
+      // find corresponding ingredients and their respective quantities
+      const measurementSet = await db('SELECT * FROM menuItems_inventory WHERE menuitemid = $1', [drink.id]);
+
+      var quantity = measurementSet.rows[0].measurement;
+      var id = measurementSet.rows[0].inventoryid;
+
+      if(drink.size === "Large"){
+        quantity = quantity * 1.5;
+      }
+
+      await db('UPDATE inventory SET inventoryQuantity = inventoryQuantity - $1 WHERE inventoryid = $2', [quantity, id]);
+
+      
+      // check if stock is exceeded
+      const inventoryCheckSet = await db('SELECT inventoryQuantity FROM inventory WHERE inventoryid = $1', [id]);
+      var remaining = inventoryCheckSet.rows[0];
+      
+      // should just be 1 value: SELECT inventoryQuantity
+      if (remaining <= 50) {
+        await db('UPDATE inventory SET inventoryinstock = $1 WHERE inventoryid = $2', [false, id]);
+      }
+
+      if (remaining <= 11) {
+        await db('UPDATE menuitems SET menuiteminstock = $1 WHERE menuitemid = $2', [false, drink.id]);
+      }
+  
+       newOrderId++;
     }
 
 
