@@ -22,19 +22,24 @@ function Login() {
       let isLoginSuccessful = false; // flag to track successful login
 
       data.forEach((employee: any) => {
-        if (username === employee.employeeusername && password === employee.employeeuserpassword) {
+        if (username === employee.employeeusername && password === employee.employeeuserpassword && employee.ismanager) {
           console.log("Login successful");
           isLoginSuccessful = true; // set the flag to true if matching user found
+          localStorage.setItem("employeeId",employee.employeeid)
+          navigate('/managerView');
+        }
+        else if (username === employee.employeeusername && password === employee.employeeuserpassword) {
+          console.log("Login successful");
+          isLoginSuccessful = true; // set the flag to true if matching user found
+          localStorage.setItem("employeeId",employee.employeeid)
+          navigate('/cashierView');
         }
       });
 
-      if (isLoginSuccessful) { // check the flag after the loop
-        navigate('/cashierView');
-      } else {
+      if (!isLoginSuccessful) {
         console.log("Login failed");
-
+        alert("Login failed");
       }
-      
 
     } catch (error) {
       console.error("Failed to fetch employees:", error);

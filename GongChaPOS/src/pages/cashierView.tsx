@@ -5,33 +5,74 @@ import BottomBar from "../components/bottomBar.tsx";
 import CategoryGrid from "../components/categoryGrid.tsx";
 import CartView from "../components/cartView.tsx";
 import "../components/components.css"; // Add this line
+import gongChaImg from "../assets/images/GongChaLogo.png";
+import axios from 'axios';
+
+
+interface Drink {
+  id: number;
+  name: string;
+  price: number;
+  size: string;
+  topping_names: string[];
+  quantity: number;
+}
+
 
 function CashierView() {
   const view = "/cashierView";
-  // const drinkList: string[] = [];
-  // const [drinkNames, setDrinkNames] = useState<string[]>([]);
-  const [drinkNames, setDrinkList] = useState<string[]>([]);
+
+  const [drinks, setDrinks] = useState<Drink[]>([]);
   const [showBackButton, setShowBackButton] = useState(false);
   const [handleBackFromTopBar, setHandleBackFromTopBar] = useState(() => () => {});
+  const [isCheckoutView, setIsCheckoutView] = useState(false); 
 
-  /*const addToCart = (newDrinkNames: string[]) => {
-    const updatedDrinkNames = [...drinkNames, ...newDrinkNames];
-    setDrinkNames(updatedDrinkNames);
-  }; */
+  const addToCart = (drink: Drink): void => {
+    if (drink.size === "Large") {
+      drink.price += 0.75;
+    }
+
+    setDrinks((prevDrinkList) => [...prevDrinkList, drink]);
+  };
   
-  // const addToCart = (newDrinkNames: string[]) => {
-  //   setDrinkNames(newDrinkNames);
-  // };
+  const removeDrinkFromCart = (drinkName: Drink) => {
+    setDrinks((prevDrinks) => {
+        let found = false; // This flag will indicate if the drink has been found and removed
+        console.log("Removing drink:", prevDrinks);
+        console.log(drinkName);
+        return prevDrinks.filter((drink) => {
+          if (!found && drink == drinkName) {
+            
 
-  const addToCart = (drink: string): void => {
-    setDrinkList((prevDrinkList) => [...prevDrinkList, drink]);
-    console.log(drink);
+            found = true; // Set the flag to true when the drink is found
+            return false; // Remove the first drink that matches the name
+          }
+          return true; // Keep all other drinks
+        });
+      });
   };
 
-  // const addToCart = (drink: string): void => {
-  //   drinkList.push(drink);
-  //   console.log(drink);
-  // }
+  const clearCart = () => {
+    setDrinks([]);
+  };
+
+  const handleCheckoutButton = () => {
+    setIsCheckoutView(!isCheckoutView);
+  }
+
+  const submitOrder = async () => {
+    // var insert_url = "https://gong-cha-server.onrender.com/sales";
+    var insert_url = "http://localhost:9000/sales";
+    
+    const employeeId = localStorage.getItem("employeeId");
+
+    const insertResponse = await axios.post(insert_url, {
+      employeeId,
+      drinks,
+    });    
+
+    clearCart();
+  };
 
   return (
 
@@ -43,11 +84,17 @@ function CashierView() {
           <TopBar isBackButtonVisible = {showBackButton} onBackClick={handleBackFromTopBar} />
           <div className="row">
               <CategoryGrid addToCart={addToCart} setShowBackButton={setShowBackButton} setHandleBackFromTopBar={setHandleBackFromTopBar} />
-            <div className="col-md-3 cart-view">
-              <CartView drinkNames={drinkNames} />
-            </div>
+              {!isCheckoutView && !showBackButton &&
+                <div className="col-7 img"> <img src={gongChaImg}></img> </div>
+              }
+              {isCheckoutView &&
+                <div className="col-md-3 cartViewContainer">
+                  <CartView InputDrinks={drinks} onRemoveDrink={removeDrinkFromCart} onClearCart={clearCart} onSubmit={submitOrder}/>
+                </div>
+              }
           </div>
-          <BottomBar />
+          
+          <BottomBar onCheckout={handleCheckoutButton} />
       </div>
     </div>
   );

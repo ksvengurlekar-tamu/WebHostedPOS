@@ -31,6 +31,13 @@ function LeftNavBar({ view }: { view: string }) {
               Nutritional Facts
             </a>
           </li>
+          { view === "Manager View" &&
+            <li>
+              <a href="/ingredients" onClick={navClick}>
+              Ingredients
+              </a>
+            </li>
+          }
         </ul>
       </nav>
     </>
