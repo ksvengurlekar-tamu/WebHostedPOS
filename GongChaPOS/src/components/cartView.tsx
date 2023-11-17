@@ -32,7 +32,7 @@ function CartView({ InputDrinks, onRemoveDrink, onClearCart, onSubmit }: CartVie
 
   const fetchTopping = async (toppingName: string): Promise<Topping> => {
     try {
-      const response = await fetch(`http://localhost:9000/menuitems/${toppingName}`);
+      const response = await fetch(`https://gong-cha-server.onrender.com/menuitems/${toppingName}`);
       const data = await response.json();
       const topping = data[0];
       return { id: topping.menuitemid, name: topping.menuitemname, price: topping.menuitemprice };
@@ -43,15 +43,21 @@ function CartView({ InputDrinks, onRemoveDrink, onClearCart, onSubmit }: CartVie
   };
 
   useEffect(() => {
+    // Load drinks from sessionStorage on component mount
+    const savedDrinks = sessionStorage.getItem('drinks');
+    if (savedDrinks) {
+      InputDrinks = JSON.parse(savedDrinks);
+    }
+  }, []); // Empty dependency array ensures this effect runs only on mount
+
+  useEffect(() => {
     const fetchToppings = async (newToppingNames: string[]) => {
       try {
         const newToppings = await Promise.all(newToppingNames.map(fetchTopping));
-        var updatedToppings = toppings;
-        newToppings.forEach((topping) => {
-          // updatedToppings.set(topping.name, { id: topping.id, price: topping.price });
-          updatedToppings = [...(toppings || []), { id: topping.id, name: topping.name, price: topping.price }];
-         });
-        setToppings(updatedToppings);
+        setToppings((currentToppings) => [
+          ...(currentToppings || []),
+          ...newToppings
+        ]);
       } catch (error) {
         console.log("Error fetching toppings:", error);
       }
@@ -63,9 +69,9 @@ function CartView({ InputDrinks, onRemoveDrink, onClearCart, onSubmit }: CartVie
     if (newToppingNames.length > 0) {
       fetchToppings(newToppingNames);
     }
-
+    
     setDrinks(InputDrinks);
-  }, [InputDrinks, toppings]);
+  }, [InputDrinks]);
   
     
   useEffect(() => {

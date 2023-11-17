@@ -31,10 +31,10 @@ function LeftNavBar({ view }: { view: string }) {
               Nutritional Facts
             </a>
           </li>
-          { view === "Manager View" &&
+          { view === "managerView" &&
             <li>
-              <a href="/ingredients" onClick={navClick}>
-              Ingredients
+              <a href="/inventory" onClick={navClick}>
+              Inventory
               </a>
             </li>
           }

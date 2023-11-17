@@ -11,7 +11,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <BrowserRouter>
       <Routes>
           <Route path="/" element={<Login />} />
-          <Route path="/cashierView" element={<CashierView />} />
+          <Route path="/cashierView" element={<CashierView view = "Cashier View" />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>,
