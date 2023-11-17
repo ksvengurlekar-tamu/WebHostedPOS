@@ -38,12 +38,12 @@ function LeftNavBar({ view }: { view: string }) {
             <a href="/nutritionalFacts" onClick={navClick}>
               Nutritional Facts
             </a>
-          </li >
-          {view === "/managerView" &&
-            <li className="nav-item">
-              <Link to="/inventory" onClick={navClick}>
-                Inventory
-              </Link>
+          </li>
+          { view === "managerView" &&
+            <li>
+              <a href="/inventory" onClick={navClick}>
+              Inventory
+              </a>
             </li>
           }
         </ul>

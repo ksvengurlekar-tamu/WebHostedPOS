@@ -14,7 +14,6 @@ function Login() {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
-      // const response = await fetch('http://localhost:9000/server/employees');
       console.log("connect");
       const response = await fetch('https://gong-cha-server.onrender.com/employees', {mode: 'cors'});
       const data = await response.json();
@@ -24,13 +23,13 @@ function Login() {
         if (username === employee.employeeusername && password === employee.employeeuserpassword && employee.ismanager) {
           console.log("Login successful");
           isLoginSuccessful = true; // set the flag to true if matching user found
-          localStorage.setItem("employeeId",employee.employeeid)
+          sessionStorage.setItem("employeeId",employee.employeeid)
           navigate('/managerView');
         }
         else if (username === employee.employeeusername && password === employee.employeeuserpassword) {
           console.log("Login successful");
           isLoginSuccessful = true; // set the flag to true if matching user found
-          localStorage.setItem("employeeId",employee.employeeid)
+          sessionStorage.setItem("employeeId",employee.employeeid)
           navigate('/cashierView');
         }
       });
@@ -108,10 +107,6 @@ function Login() {
             />
             <label className="form-check-label" htmlFor="showPassword">Show Password</label>
           </div>
-          {/* <Routes>
-            <Route path="/" element={<Login />} exact />
-            <Route path="./cashierView" element={<CashierView />} />
-          </Routes> */}
           <button type="submit" className="btn btn-primary">
             Submit
           </button>

@@ -14,20 +14,21 @@ interface CategoryGridProps {
   addToCart: (menuItem: Drink) => void;
   setShowBackButton: any;
   setHandleBackFromTopBar: any;
+  setSeries: any;
 }
 
-function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar }: CategoryGridProps) {
+function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, setSeries }: CategoryGridProps) {
   const [isSeriesSelected, setSeriesSelected] = useState(() => {
-    const saved = localStorage.getItem("isSeriesSelected");
+    const saved = sessionStorage.getItem("isSeriesSelected");
     return saved === "true"; // If saved is the string 'true', return true, otherwise return false
   });
   const [isDrinkSelected, setDrinkSelected] = useState(() => {
-    const saved = localStorage.getItem("isDrinkSelected");
+    const saved = sessionStorage.getItem("isDrinkSelected");
     return saved === "true"; // Same as above
   });
   const [menuItems, setMenuItems] = useState<any[]>(() => {
     // Load menu items from local storage or default to empty array
-    const savedMenuItems = localStorage.getItem("menuItems");
+    const savedMenuItems = sessionStorage.getItem("menuItems");
     return savedMenuItems ? JSON.parse(savedMenuItems) : [];
   });
   const [isLoading, setIsLoading] = useState(false);
@@ -43,12 +44,13 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar }:
     setIsLoading(true);
     setMenuItems([]); // This line clears the drink items
     setSeriesSelected(true);
+    setSeries(SeriesName);
 
     var url = "https://gong-cha-server.onrender.com/category/" + SeriesName;
     const response = await fetch(url);
     const data = await response.json();
     setMenuItems(data);
-    localStorage.setItem("menuItems", JSON.stringify(data));
+    sessionStorage.setItem("menuItems", JSON.stringify(data));
     setIsLoading(false);
   };
 
@@ -95,6 +97,7 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar }:
     else if (isLoading || isSeriesSelected) {
       setSeriesSelected(false);
       setIsLoading(false);
+      setSeries('');
     }
   };
 
@@ -119,10 +122,10 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar }:
 
   useEffect(() => {
     const savedSeriesSelected =
-      localStorage.getItem("isSeriesSelected") === "true";
+      sessionStorage.getItem("isSeriesSelected") === "true";
     if (savedSeriesSelected) {
       // If the series was previously selected, we should load the menu items
-      const savedMenuItems = localStorage.getItem("menuItems");
+      const savedMenuItems = sessionStorage.getItem("menuItems");
       if (savedMenuItems) {
         setMenuItems(JSON.parse(savedMenuItems));
       }
@@ -141,11 +144,11 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar }:
   }, [setHandleBackFromTopBar, isSeriesSelected, isDrinkSelected]);
 
   useEffect(() => {
-    localStorage.setItem("isSeriesSelected", isSeriesSelected.toString());
+    sessionStorage.setItem("isSeriesSelected", isSeriesSelected.toString());
   }, [isSeriesSelected]);
 
   useEffect(() => {
-    localStorage.setItem("isDrinkSelected", isDrinkSelected.toString());
+    sessionStorage.setItem("isDrinkSelected", isDrinkSelected.toString());
   }, [isDrinkSelected]);
 
   // Conditionally render different sets of items based on the state

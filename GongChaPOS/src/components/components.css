@@ -165,8 +165,24 @@
     justify-content: space-between;
     
   }
+  .topbarText{
+    font-size: 25px;
+  }
+  .topBarInfo{
+    min-width: 650px;
+    display: flex;
+    justify-content: space-between;
+    /* padding: 0px; */
+    align-items: center;
+  }
   .Back-icon > path {
-    color: black 
+    color: black ;
+  }
+  .checkIcon > path {
+    color: black ;
+  }
+  .checkIcon{
+    font-size: 25px;
   }
   .back-button{
     padding: 0px 20px 0px 20px;
