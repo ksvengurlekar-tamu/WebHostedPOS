@@ -23,8 +23,7 @@ function bottomBar({ onCheckout }: BottomBarProps) {
   };
 
   const handleLogout = () => {
-    // Implement Log Out functionality here
-    console.log('Log Out button clicked');
+    sessionStorage.clear();
     navigate('/');
   };
 

@@ -74,14 +74,14 @@ app.get('/sales', async (req, res) => { // To get all sales
   }
 });
 
-app.get('/sales/nextid', async (req, res) => { // To the latest sale: orderID and orderNo for the next sale
-  try {
-    const result = await db('SELECT * FROM sales WHERE orderID = (SELECT MAX(orderID) FROM sales)');
-    res.json(result.rows);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch sales data' });
-  }
-});
+// app.get('/sales/nextid', async (req, res) => { // To the latest sale: orderID and orderNo for the next sale
+//   try {
+//     const result = await db('SELECT * FROM sales WHERE orderID = (SELECT MAX(orderID) FROM sales)');
+//     res.json(result.rows);
+//   } catch (error) {
+//     res.status(500).json({ error: 'Failed to fetch sales data' });
+//   }
+// });
 
 app.post('/sales', async (req, res) => { // To add a sale into the database (with auto-incremented orderID) ))
   try {
@@ -147,6 +147,17 @@ app.post('/sales', async (req, res) => { // To add a sale into the database (wit
   } catch (error) {
     
     console.log("THE SQL NO WORK BUT AT THIS LINE");
+  }
+});
+
+
+//inventory
+app.get('/inventory', async (_req, res) => { 
+  try {
+    const result = await db('SELECT * FROM inventory');
+    res.json(result.rows);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch inventory data' });
   }
 });
 

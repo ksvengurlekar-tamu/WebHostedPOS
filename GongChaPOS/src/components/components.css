@@ -10,8 +10,9 @@
     --gc-eggshell: hsl(60, 63%, 97%);
   
     --gc-dark-color: #1b1b1b;
-    --gc-dark-grey: #7a7a7a;
-    --gc-gray: #e6e6e6;
+    --gc-darkest-grey: hsl(0, 0%, 48%);
+    --gc-dark-grey: hsl(0, 0%, 60%);
+    --gc-gray: hsl(0, 0%, 80%);
   }
   
   .img{
@@ -155,6 +156,10 @@
     padding: 3px;
     display: flex;
     justify-content: space-between;
+  }
+
+  .leftNavButton:hover{
+    color: var(--gc-tan)
   }
 
   /* Top Navigation Bar CSS */
@@ -450,3 +455,43 @@
     background-color: hsl(203, 85%, 40%);
   }
   
+  .inventoryContainer{
+    overflow-y: scroll;
+    justify-content: center;
+  }
+  .inventoryTable {
+    width: 100%;
+    justify-content: center;
+    /* align-items: center; */
+  }
+
+  td{
+    font-size: 25px;
+    color: black;
+    padding: 12px 20px;
+    border: 1px solid #ddd; /* Light gray border */
+  }
+  th{
+    /* font-size: 25px; */
+    background-color: var(--gc-re); 
+    color: black;
+    padding: 12px 15px;
+    border-bottom: 1px solid #ddd; 
+    border-right: 1px solid #ddd;
+  }
+
+  thead{
+    background-color: var(--gc-darkest-grey); 
+  }
+
+  tbody tr:nth-child(odd) {
+    background-color: var(--gc-gray); /* Lighter gray for odd rows */
+  }
+  tbody tr:nth-child(even) {
+    background-color: var(--gc-dark-grey); /* dark gray for even rows */
+  }
+
+  tbody tr:hover {
+    background-color: hsl(203, 85%, 50%); /* Slightly different color for hover */
+  }
+

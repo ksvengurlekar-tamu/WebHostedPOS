@@ -12,14 +12,9 @@ interface TopBarProps {
   isBackButtonVisible: boolean;
   view: string;
   series: String;
-  onBackClick: () => void;
+  onBackClick?: () => void;
 }
-function TopBar({
-  isBackButtonVisible,
-  view,
-  series,
-  onBackClick,
-}: TopBarProps) {
+function TopBar({ isBackButtonVisible, view, series, onBackClick}: TopBarProps) {
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
@@ -44,7 +39,7 @@ function TopBar({
       {!isBackButtonVisible && (
         <div style={{ marginLeft: "85px", marginBottom: "66px" }}></div>
       )}
-      <span>{series || "Bubble Tea"} Series</span>
+      <span>{series || "Bubble Tea Series"}</span>
       <div className="topBarInfo">
         <span className="topbarText">
           <FontAwesomeIcon icon={faCheck} className="checkIcon" />
