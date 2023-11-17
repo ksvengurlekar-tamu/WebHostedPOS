@@ -472,7 +472,6 @@
     border: 1px solid #ddd; /* Light gray border */
   }
   th{
-    /* font-size: 25px; */
     background-color: var(--gc-re); 
     color: black;
     padding: 12px 20px;
@@ -480,7 +479,9 @@
     border-right: 1px solid #ddd;
   }
 
-  thead{
+  thead th{
+    position: sticky;
+    top: 0; /* Adjust this value if you have a margin or padding at the top of the container */
     background-color: var(--gc-darkest-grey); 
   }
 
