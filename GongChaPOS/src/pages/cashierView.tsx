@@ -19,8 +19,8 @@ interface Drink {
 }
 
 
-function CashierView() {
-  const view = "/cashierView";
+function CashierView({ view }: { view: string }) {
+  //const view = "/cashierView";
 
   const [drinks, setDrinks] = useState<Drink[]>([]);
   const [showBackButton, setShowBackButton] = useState(false);
@@ -81,7 +81,7 @@ function CashierView() {
         <LeftNavBar view={view} />
       </div>
       <div className="col d-flex flex-column vh-100 p-0 main-content">
-          <TopBar isBackButtonVisible = {showBackButton} onBackClick={handleBackFromTopBar} />
+          <TopBar isBackButtonVisible = {showBackButton} onBackClick={handleBackFromTopBar} view={view} />
           <div className="row">
               <CategoryGrid addToCart={addToCart} setShowBackButton={setShowBackButton} setHandleBackFromTopBar={setHandleBackFromTopBar} />
               {!isCheckoutView && !showBackButton &&

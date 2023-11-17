@@ -1,6 +1,14 @@
 import React from "react";
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import Inventory from '../pages/inventory'; // Import from any directory
 
+
+
+<Router>
+  <Route path="/inventory" Component={Inventory} />
+</Router>
 // view: input should be cashierView or managierView to set "main menu"'s path
 function LeftNavBar({ view }: { view: string }) {
   const navigate = useNavigate();
@@ -30,12 +38,12 @@ function LeftNavBar({ view }: { view: string }) {
             <a href="/nutritionalFacts" onClick={navClick}>
               Nutritional Facts
             </a>
-          </li>
-          { view === "Manager View" &&
-            <li>
-              <a href="/ingredients" onClick={navClick}>
-              Ingredients
-              </a>
+          </li >
+          {view === "/managerView" &&
+            <li className="nav-item">
+              <Link to="/inventory" onClick={navClick}>
+                Inventory
+              </Link>
             </li>
           }
         </ul>

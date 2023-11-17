@@ -10,8 +10,10 @@ import './components.css';
 interface TopBarProps {
   isBackButtonVisible: boolean;
   onBackClick: () => void;
+  view: string;
 }
-function TopBar({isBackButtonVisible, onBackClick}: TopBarProps) {
+
+function TopBar({isBackButtonVisible, onBackClick, view}: TopBarProps) {
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
