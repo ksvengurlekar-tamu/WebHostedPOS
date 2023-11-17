@@ -381,9 +381,11 @@
     top:0;
     bottom: 0;
     z-index: 10; 
+    width: 100vw; /* Cover full viewport width */
+    height: 100vh; /* Cover full viewport height */
   }
 
-  .drinkPopup{
+  .Popup{
     position:absolute;
     margin: 0px;
     padding: 0px;
@@ -480,19 +482,57 @@
   }
 
   thead th{
+    font-size: 30px;
     position: sticky;
     top: 0; /* Adjust this value if you have a margin or padding at the top of the container */
-    background-color: var(--gc-darkest-grey); 
+    background-color: #e7e7e7; 
+    box-shadow: 0 4px 8px -2px rgba(0, 0, 0, 0.2); /* Box shadow for 'pop out' effect */ 
+   
   }
 
   tbody tr:nth-child(odd) {
-    background-color: var(--gc-gray); /* Lighter gray for odd rows */
+    background-color: #ffffff; /* Lighter gray for odd rows */
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1); /* Subtle box shadow for each row */
   }
   tbody tr:nth-child(even) {
-    background-color: var(--gc-dark-grey); /* dark gray for even rows */
+    background-color: #f9f9f9; /* dark gray for even rows */
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1); /* Subtle box shadow for each row */
   }
 
   tbody tr:hover {
     background-color: hsl(203, 85%, 50%); /* Slightly different color for hover */
   }
 
+  .salesInputRow{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px;
+  }
+
+  .comboBox{
+    width: 350px;
+    height: 100px;
+    padding-top: 15px;
+  }
+  .css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root{
+    font-size: 10px;
+    color: #1b1b1b;
+  }
+
+  label{
+    font-size: 35px;
+    
+    color: Black;
+
+  }
+
+  label input{
+    margin-left: 30px;
+    color: Black;
+  }
+  .tableContainer{
+    overflow-y: scroll;
+
+  }

@@ -232,7 +232,7 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
       {isDrinkSelected && (
         <>
           <div className="overlay"></div>
-          <div className="drinkPopup">
+          <div className="Popup">
             <div className="row-9 d-flex">
               <div className="col-4 d-flex flex-column drinkProp">
                 <span className="drinkPropText">Size</span>
