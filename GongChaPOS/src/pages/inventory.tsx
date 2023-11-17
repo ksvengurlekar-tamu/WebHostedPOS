@@ -3,6 +3,7 @@ import TopBar from "../components/topBar";
 import "../components/components.css";
 import  { useEffect, useState } from "react";
 import axios from 'axios';
+import GenericTable from "../components/genericTable";
 
 interface InventoryItem {
   inventoryid: number;
@@ -13,6 +14,15 @@ interface InventoryItem {
   inventoryinstock: boolean;
   inventorysupplier: string;
 }
+const inventoryColumns:{ key: keyof InventoryItem, header: string }[] = [
+  { key: 'inventoryid', header: 'ID' },
+  { key: 'inventoryname', header: 'Name' },
+  { key: 'inventoryquantity', header: 'Quantity' },
+  { key: 'inventoryreceiveddate', header: 'Received' },
+  { key: 'inventoryexpirationdate', header: 'Expiry' },
+  { key: 'inventoryinstock', header: 'In Stock' },
+  { key: 'inventorysupplier', header: 'Supplier' },
+];
 
 function Inventory() {
   const [inventoryItems, setInventoryItems] = useState<InventoryItem[]>([]);
@@ -23,6 +33,13 @@ function Inventory() {
         const response = await fetch("http://localhost:9000/inventory");
         let data = await response.json();
         data = [...data].sort((a, b) => a.inventoryid - b.inventoryid);
+        data = data.map((item: InventoryItem) => ({
+          ...item,
+          inventoryreceiveddate: item.inventoryreceiveddate.substring(0, 10),
+          inventoryexpirationdate: item.inventoryexpirationdate.substring(0, 10),
+          inventoryinstock: item.inventoryinstock ? 'Yes' : 'No'
+        }));
+        console.log(data.inventoryexpirationdate);
         setInventoryItems(data);
       } catch (error) {
         console.error("Failed to fetch inventory items:", error);
@@ -54,36 +71,7 @@ function Inventory() {
           series={"Inventory View"}
         />
 
-        {/* We should try to make this a component, with header and data props */}
-        <div className="inventoryContainer">
-          <table className="inventoryTable">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Quantity</th>
-                <th>Received</th>
-                <th>Expiry</th>
-                <th>In Stock</th>
-                <th>Supplier</th>
-              </tr>
-            </thead>
-            <tbody>
-              {inventoryItems.map((item) => (
-                <tr key={item.inventoryid}>
-                  <td>{item.inventoryid}</td>
-                  <td>{item.inventoryname}</td>
-                  <td>{item.inventoryquantity}</td>
-                  <td>{item.inventoryreceiveddate.substring(0,10)}</td>
-                  <td>{item.inventoryexpirationdate.substring(0,10)}</td>
-                  <td>{item.inventoryinstock ? 'Yes' : 'No'}</td>
-                  <td>{item.inventorysupplier}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        {/* component Done */}
+        <GenericTable<InventoryItem> data={inventoryItems} columns={inventoryColumns} />
 
         <div className="bottomNavBar">
           <button onClick={HandleSalesReport}>Sales Report</button>
