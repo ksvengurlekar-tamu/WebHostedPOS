@@ -61,7 +61,8 @@ function Inventory() {
           "https://gong-cha-server.onrender.com/menuitems"
         );
         const data = await menuItems.json();
-        setMenuItems(data);
+        const menuItemNames = data.map((item: any) => item.menuitemname);
+        setMenuItems(menuItemNames);
         console.log(data);
       } catch (error) {
         console.error("Failed to fetch menu items:", error);

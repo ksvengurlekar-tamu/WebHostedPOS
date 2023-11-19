@@ -423,6 +423,7 @@
     margin-bottom: 10px;
     margin-top: 10px;
     border-radius: 10px;
+    z-index: 2;
   }
   .drinkToppings{
     display: flex;
@@ -444,6 +445,7 @@
     bottom: 0;
     right:0;
     left:0;
+    z-index: 1;
   }
 
   .bottomOverlayBack{
@@ -524,10 +526,6 @@
     height: 100px;
     padding-top: 15px;
   }
-  .css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root{
-    font-size: 10px;
-    color: #1b1b1b;
-  }
 
   label{
     font-size: 35px;
@@ -544,3 +542,42 @@
     overflow-y: scroll;
 
   }
+
+  .addMenuItemConatiner{
+    display:flex;
+    flex-direction: column;
+  }
+
+  .addMenuIteminputCol{
+    min-height: 700px;
+    min-width:650px;
+    align-content: space-between;
+    justify-content: space-around;
+  }
+
+  .addMenuItemRow{
+    font-size: 38px;
+    min-width: 600px;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 30px;
+    
+  }
+
+  .addMenuInput{
+    width: 350px;
+    min-height: 76.13px;
+    color: black;
+    font-size: 30px;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    padding-left: 20px;
+  }
+
+  .addMenuMeasurementInput{
+    max-width: 90px;
+    color: Black;
+  }
+
+
+  

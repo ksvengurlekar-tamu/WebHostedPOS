@@ -5,29 +5,35 @@ import Autocomplete from "@mui/material/Autocomplete";
 interface AutoCompleteCustomProps{
   data: string[];
   label: string;
+  freeSolo?: boolean;
+  required?: boolean; // Optional prop for required validation
   handleSelect: (value: string) => void;
 }
 
-function AutoCompleteCustom({data, label, handleSelect}: AutoCompleteCustomProps) {
+function AutoCompleteCustom({data, label, handleSelect, freeSolo = false, required = false}: AutoCompleteCustomProps) {
   return (
     <Autocomplete
       disablePortal
-      options={data.map((item: any) => item.menuitemname)}
+      options={data}
+      freeSolo={freeSolo}
       filterOptions={(options, { inputValue }) => {
         const match = inputValue.toLowerCase();
         return options.filter((option) =>
           option.toLowerCase().startsWith(match)
         );
       }}
-      onChange={(_event, newValue) => {
+      onInputChange={(_event, newValue) => {
         // Update the state with the new value
-        handleSelect(newValue);
+        if (newValue !== null) {
+          handleSelect(newValue);
+        }
       }}
       className="comboBox"
       renderInput={(params) => (
         <TextField
           {...params}
           label={label}
+          required={required}
           InputLabelProps={{
             style: {
               fontSize: 30, // Adjust as needed
@@ -41,6 +47,10 @@ function AutoCompleteCustom({data, label, handleSelect}: AutoCompleteCustomProps
         />
       )}
       sx={{
+        "& .MuiInputBase-root": {
+          backgroundColor: 'white', // Set the background color to white
+          // Add other styles for the input base as needed
+        },
         "& + .MuiAutocomplete-popper .MuiAutocomplete-option": {
           color: "black !important",
           fontSize: 20,
@@ -49,7 +59,9 @@ function AutoCompleteCustom({data, label, handleSelect}: AutoCompleteCustomProps
           // Center the arrow vertically
           transform: 'translate(0, -15px)', // Center the label vertically
         },
-        // Add other styles as needed
+        "& .MuiSvgIcon-root > path": {
+          color: 'black', // Set the icon color to black
+        },
       }}
     />
   );

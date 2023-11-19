@@ -91,9 +91,11 @@ function CashierView({ view }: CartViewProps) {
     });    
 
     setTriggerBackAction(true); 
+    setSeries("");
     clearCart();
     
   };
+
 
   return (
 
@@ -104,7 +106,7 @@ function CashierView({ view }: CartViewProps) {
       <div className="col d-flex flex-column vh-100 p-0 main-content">
           <TopBar isBackButtonVisible = {showBackButton} view={view} series={series} onBackClick={handleBackFromTopBar} />
           <div className="row">
-              <CategoryGrid addToCart={addToCart} setShowBackButton={setShowBackButton} setHandleBackFromTopBar={setHandleBackFromTopBar} setSeries={setSeries} triggerBackAction={triggerBackAction} resetTriggerBackAction={() => setTriggerBackAction(false)} />
+              <CategoryGrid addToCart={addToCart} setShowBackButton={setShowBackButton} setHandleBackFromTopBar={setHandleBackFromTopBar} setSeries={setSeries} triggerBackAction={triggerBackAction} resetTriggerBackAction={() => setTriggerBackAction(false)}  view={view} />
               {!isCheckoutView && !showBackButton &&
                 <div className="col-7 img"> <img src={gongChaImg}></img> </div>
               }

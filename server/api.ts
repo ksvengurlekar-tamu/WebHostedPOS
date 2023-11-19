@@ -12,11 +12,26 @@ app.use('/', router); // Use the router for routes prefixed with /, this is the 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+
+interface Ingredient {
+  name: string;
+  measurement: number;
+}
+
+interface DrinkRequest {
+  drinkName: string;
+  drinkPrice: string;  // Assuming these are strings based on your log
+  drinkCalories: string;
+  drinkCategory: string;
+  hasCaffeine: boolean;
+  ingredients: Ingredient[];
+}
+
+
+
 app.get('/', (_req, res) => {
   res.send('Hello from Express!');
 });
-
-
 
 //employees
 
@@ -175,6 +190,64 @@ app.get('/inventory', async (_req, res) => {
     res.status(500).json({ error: 'Failed to fetch inventory data' });
   }
 });
+
+//addOrUpdateDrink
+app.post('/addOrUpdateDrink', async (req, res) => {
+  const { drinkName, drinkPrice, drinkCalories, drinkCategory, hasCaffeine, ingredients }: DrinkRequest = req.body;
+
+ 
+  const price = parseFloat(drinkPrice);
+  const calories = parseInt(drinkCalories);
+
+  try {
+      // Check if the drink exists
+      const checkQuery = 'SELECT menuitemid FROM menuItems WHERE menuItemName = $1';
+      const existingDrink = await db(checkQuery, [drinkName]);
+      let menuItemID
+
+      if (existingDrink.rows.length > 0) {
+          // Drink exists, update it
+          menuItemID = existingDrink.rows[0].menuitemid;
+          const updateQuery = 'UPDATE menuItems SET menuItemPrice = $1, menuItemCalories = $2, hasCaffeine = $3 WHERE menuItemID = $4';
+          await db(updateQuery, [drinkPrice, drinkCalories, hasCaffeine, menuItemID]);
+      } else {
+          // Drink does not exist, insert it
+
+          const randomColor = getRandomColor();
+          const maxIdResult = await db('SELECT MAX(menuitemid) as maxid FROM menuitems');
+          menuItemID =  maxIdResult.rows[0].maxid + 1; 
+          const insertQuery = 'INSERT INTO menuItems (menuItemID, menuItemName, menuItemPrice, menuItemCalories, menuItemCategory, hasCaffeine, color) VALUES ($1, $2, $3, $4, $5, $6, $7)';
+          await db(insertQuery, [menuItemID, drinkName, drinkPrice, drinkCalories, drinkCategory, hasCaffeine, randomColor]);
+      }
+
+      // Update ingredients in the junction table
+      for (const ingredient of ingredients) {
+          /// Assuming getInventoryID is a function that returns the inventoryID for a given ingredient name
+          const inventoryID = await getInventoryID(ingredient.name);
+          const ingredientUpdateQuery = 'INSERT INTO menuItems_Inventory (menuItemID, inventoryID, measurement) VALUES ($1, $2, $3) ON CONFLICT (menuItemID, inventoryID) DO UPDATE SET measurement = $4';
+          await db(ingredientUpdateQuery, [menuItemID, inventoryID, ingredient.measurement, ingredient.measurement]);
+      }
+
+  } catch (error) {
+      console.error(error);
+  }
+});
+
+async function getInventoryID(inventoryName: string): Promise<number> {
+  const query = 'SELECT inventoryid FROM Inventory WHERE inventoryname = $1';
+  const results = await db(query, [inventoryName]);
+  return results.rows.length > 0 ? results.rows[0].inventoryid : null;
+}
+
+function getRandomColor(): string {
+  // Generate a random hexadecimal color
+  const letters = '0123456789ABCDEF';
+  let color = '#';
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
 
 
 
