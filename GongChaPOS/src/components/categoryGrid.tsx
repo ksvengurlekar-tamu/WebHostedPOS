@@ -15,9 +15,12 @@ interface CategoryGridProps {
   setShowBackButton: any;
   setHandleBackFromTopBar: any;
   setSeries: any;
+  triggerBackAction?: boolean;
+  resetTriggerBackAction?: () => void;
+  
 }
 
-function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, setSeries }: CategoryGridProps) {
+function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, setSeries, triggerBackAction, resetTriggerBackAction }: CategoryGridProps) {
   const [isSeriesSelected, setSeriesSelected] = useState(() => {
     const saved = sessionStorage.getItem("isSeriesSelected");
     return saved === "true"; // If saved is the string 'true', return true, otherwise return false
@@ -151,7 +154,12 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
     sessionStorage.setItem("isDrinkSelected", isDrinkSelected.toString());
   }, [isDrinkSelected]);
 
-  // Conditionally render different sets of items based on the state
+  useEffect(() => {
+    if (triggerBackAction) {
+      handleBackClick();
+      resetTriggerBackAction?.(); // Call the callback function to reset the trigger in CashierView
+    }
+  }, [triggerBackAction, resetTriggerBackAction]);
 
   var itemsToRender;
 
@@ -163,16 +171,20 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
     ));
   } else if (isSeriesSelected) {
     itemsToRender = menuItems.map((menuItem: any) => (
+      
       <Card
-        className="drink"
+        // className="drink"
+        className={menuItem.menuiteminstock ? 'drink' : ' drink button-disabled'}
         key={menuItem.menuitemid}
         menuItemName={menuItem.menuitemname}
         color={menuItem.color}
         onSelect={() => {
-          setDrinkSelected(true);
-          setSelectedDrinkName(menuItem.menuitemname);
-          setSelectedDrinkPrice(menuItem.menuitemprice);
-          setSelectedDrinkID(menuItem.menuitemid)
+          if (menuItem.menuiteminstock) {
+            setDrinkSelected(true);
+            setSelectedDrinkName(menuItem.menuitemname);
+            setSelectedDrinkPrice(menuItem.menuitemprice);
+            setSelectedDrinkID(menuItem.menuitemid);
+          }
         }}
       />
     ));

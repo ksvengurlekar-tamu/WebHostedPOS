@@ -26,6 +26,7 @@ function CashierView({ view }: CartViewProps) {
 
   const [drinks, setDrinks] = useState<Drink[]>([]);
   const [showBackButton, setShowBackButton] = useState(false);
+  const [triggerBackAction, setTriggerBackAction] = useState(false);
   const [handleBackFromTopBar, setHandleBackFromTopBar] = useState(() => () => {});
   const [isCheckoutView, setIsCheckoutView] = useState(() => {
     const saved = sessionStorage.getItem("isCheckoutView");
@@ -76,11 +77,11 @@ function CashierView({ view }: CartViewProps) {
 
   const handleCheckoutButton = () => {
     setIsCheckoutView(!isCheckoutView);
-    //sessionStorage.setItem("isCheckoutView", (!isCheckoutView).toString());
+    sessionStorage.setItem("isCheckoutView", (!isCheckoutView).toString());
   }
 
   const submitOrder = async () => {
-    var insert_url = "https://gong-cha-server.onrender.com/sales";
+    var insert_url = "http://localhost:9000/sales";
     
     const employeeId = sessionStorage.getItem("employeeId");
 
@@ -89,7 +90,9 @@ function CashierView({ view }: CartViewProps) {
       drinks,
     });    
 
+    setTriggerBackAction(true); 
     clearCart();
+    
   };
 
   return (
@@ -101,7 +104,7 @@ function CashierView({ view }: CartViewProps) {
       <div className="col d-flex flex-column vh-100 p-0 main-content">
           <TopBar isBackButtonVisible = {showBackButton} view={view} series={series} onBackClick={handleBackFromTopBar} />
           <div className="row">
-              <CategoryGrid addToCart={addToCart} setShowBackButton={setShowBackButton} setHandleBackFromTopBar={setHandleBackFromTopBar} setSeries={setSeries} />
+              <CategoryGrid addToCart={addToCart} setShowBackButton={setShowBackButton} setHandleBackFromTopBar={setHandleBackFromTopBar} setSeries={setSeries} triggerBackAction={triggerBackAction} resetTriggerBackAction={() => setTriggerBackAction(false)} />
               {!isCheckoutView && !showBackButton &&
                 <div className="col-7 img"> <img src={gongChaImg}></img> </div>
               }

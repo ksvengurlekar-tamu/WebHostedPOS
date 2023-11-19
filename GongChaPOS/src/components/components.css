@@ -138,14 +138,22 @@
   .button-no-hover{
     border-radius: 10px;
   }
-  .button-no-hover:hover {
-    border-color: transparent; /* or the same color it was before hover */
-    cursor: default;
+
+  .button-disabled{
+    background-color: var(--gc-dark-grey) !important;
+    color: var(--gc-dark-color);
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-color: transparent !important;
   }
 
   button:focus,
   button:focus-visible {
     outline: 4px auto -webkit-focus-ring-color;
+  }
+  .button-no-hover:hover, .button-disabled:hover {
+    border-color: transparent; /* or the same color it was before hover */
+    cursor: default;
   }
 
   

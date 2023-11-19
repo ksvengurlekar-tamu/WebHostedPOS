@@ -61,6 +61,7 @@
 }
 .form-label{
   font-size: 50px;
+  color: var(--gc-eggshell)
 }
 
 .loginText{
@@ -82,4 +83,5 @@
 
 .form-check-label{
   font-size: 30px;
+  color: var(--gc-eggshell);
 }

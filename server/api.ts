@@ -87,8 +87,17 @@ app.post('/sales', async (req, res) => { // To add a sale into the database (wit
   try {
     let newOrderId; // INCREMENT ORDER ID
     let newOrderNo; // stay static
-    let currentDate = new Date().toISOString().split('T')[0]; // Returns date in YYYY-MM-DD format
-    let currentTime = new Date().toISOString().split('T')[1].split('.')[0]; // Returns time in HH:MI:SS format
+    const currentDate = new Date();
+  
+    // Format the date as YYYY-MM-DD in local timezone
+    const formattedDate = currentDate.getFullYear() + '-' + 
+                          (currentDate.getMonth() + 1).toString().padStart(2, '0') + '-' + 
+                          currentDate.getDate().toString().padStart(2, '0');
+
+    // Format the time as HH:MI:SS in local timezone
+    const formattedTime = currentDate.getHours().toString().padStart(2, '0') + ':' + 
+                          currentDate.getMinutes().toString().padStart(2, '0') + ':' + 
+                          currentDate.getSeconds().toString().padStart(2, '0');
 
     const result = await db('SELECT MAX(orderid) as maxorderid, MAX(orderno) as maxorderno FROM sales');
     if (result.rows[0]) {
@@ -107,7 +116,7 @@ app.post('/sales', async (req, res) => { // To add a sale into the database (wit
     for (const drink of drinks) {
       // add to sales
       await db('INSERT INTO sales (orderid, orderno, saledate, saletime, employeeid, saleprice, islarge, menuitemid) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
-          [newOrderId, newOrderNo, currentDate, currentTime, employeeIdInt, drink.quantity * drink.price, drink.size === "Large", drink.id]);
+          [newOrderId, newOrderNo, formattedDate, formattedTime, employeeIdInt, drink.quantity * drink.price, drink.size === "Large", drink.id]);
 
 
       // find corresponding ingredients and their respective quantities
@@ -120,8 +129,8 @@ app.post('/sales', async (req, res) => { // To add a sale into the database (wit
         if(drink.size === "Large"){
           quantity = quantity * 1.5;
         }
-
-        await db('UPDATE inventory SET inventoryQuantity = inventoryQuantity - $1 WHERE inventoryid = $2', [quantity, id]);
+        
+        await db('UPDATE inventory SET inventoryquantity = inventoryquantity - $1 WHERE inventoryid = $2', [parseInt(quantity), id]);
 
         
         // check if stock is exceeded
@@ -135,7 +144,13 @@ app.post('/sales', async (req, res) => { // To add a sale into the database (wit
         }
 
         if (remaining <= 11) {
-          await db('UPDATE menuitems SET menuiteminstock = $1 WHERE menuitemid = $2', [false, drink.id]);
+          // Retrieve all menu items that use this inventory item
+          const menuItemsUsingInventory = await db('SELECT menuitemid FROM menuItems_inventory WHERE inventoryid = $1', [id]);
+
+          for (const menuItem of menuItemsUsingInventory.rows) {
+            // Set each menu item to not in stock
+            await db('UPDATE menuitems SET menuiteminstock = $1 WHERE menuitemid = $2', [false, menuItem.menuitemid]);
+          }
         }
       }
   
