@@ -7,10 +7,11 @@ interface AutoCompleteCustomProps{
   label: string;
   freeSolo?: boolean;
   required?: boolean; // Optional prop for required validation
-  handleSelect: (value: string) => void;
+  handleChange: (value: string) => void;
+  onSelectItem?: (value: string) => void;
 }
 
-function AutoCompleteCustom({data, label, handleSelect, freeSolo = false, required = false}: AutoCompleteCustomProps) {
+function AutoCompleteCustom({data, label, handleChange, freeSolo = false, required = false, onSelectItem}: AutoCompleteCustomProps) {
   return (
     <Autocomplete
       disablePortal
@@ -25,7 +26,8 @@ function AutoCompleteCustom({data, label, handleSelect, freeSolo = false, requir
       onInputChange={(_event, newValue) => {
         // Update the state with the new value
         if (newValue !== null) {
-          handleSelect(newValue);
+          handleChange(newValue);
+          onSelectItem?.(newValue); // Call onSelectItem if it's provided
         }
       }}
       className="comboBox"

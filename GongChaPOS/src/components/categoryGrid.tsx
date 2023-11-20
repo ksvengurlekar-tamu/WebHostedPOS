@@ -384,7 +384,7 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
                   
                   <div className="d-flex addMenuItemRow">
                     Drink Name:
-                    <AutoCompleteCustom data={menuItems.map((item: any) => item.menuitemname)} label="Drink Name" freeSolo={true} required={true} handleSelect={(value) => handleInputChange("drinkName", value)} />
+                    <AutoCompleteCustom data={menuItems.map((item: any) => item.menuitemname)} label="Drink Name" freeSolo={true} required={true} handleChange={(value) => handleInputChange("drinkName", value)} />
                   </div>
                   <div className="d-flex addMenuItemRow">
                     Drink Price:
@@ -418,7 +418,7 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
                         <AutoCompleteCustom
                           data={inventory}
                           label={`Ingredient ${index + 1}`}
-                          handleSelect={(value) => handleIngredientChange(index, 'name', value)}
+                          handleChange={(value) => handleIngredientChange(index, 'name', value)}
                         />
                         <input
                           type="number"

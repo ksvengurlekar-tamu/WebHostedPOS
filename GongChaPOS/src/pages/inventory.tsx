@@ -47,12 +47,24 @@ const salesColumns: { key: keyof salesItem; header: string }[] = [
   { key: "menuitemid", header: "Menu Item ID" },
 ];
 
+interface InventoryFormDataType {
+  inventoryName: string;
+  quantity: number;
+  receivedDate: string;
+  expirationDate: string;
+  inStock: boolean;
+  supplier: string;
+}
+
 function Inventory() {
   const [inventoryItems, setInventoryItems] = useState<InventoryItem[]>([]);
+  const [isNewItem, setIsNewItem] = useState<boolean>(true);
+  const [salesData, setSalesData] = useState([]);
   const [filteredInventoryItems, setFilteredInventoryItems] = useState<InventoryItem[]>([]);
   const [menuItems, setMenuItems] = useState([]);
   const [selectedMenuItem, setSelectedMenuItem] = useState("");
   const [startDate, setStartDate] = useState(new Date(new Date().setDate(new Date().getDate() - 7)).toISOString().substring(0, 10));
+  
   const [endDate, setEndDate] = useState(new Date().toISOString().substring(0, 10));
   const [showSalesReport, setShowSalesReport] = useState(() => {
     const saved = sessionStorage.getItem("showSalesReport");
@@ -62,7 +74,20 @@ function Inventory() {
     const saved = sessionStorage.getItem("showRestockReport");
     return saved === "true"; // If saved is the string 'true', return true, otherwise return false
   });
-  const [salesData, setSalesData] = useState([]);
+  const [showAddInventory, setShowAddInventory] = useState(() => {
+    const saved = sessionStorage.getItem("showAddInventory");
+    return saved === "true"; // If saved is the string 'true', return true, otherwise return false
+  });
+
+  const [inventoryFormData, setInventoryFormData] = useState<InventoryFormDataType>({
+    inventoryName: '',
+    quantity: 0,
+    receivedDate: new Date().toISOString().substring(0, 10), // Defaults to current date
+    expirationDate: '', // No default value, assuming this needs to be input by the user
+    inStock: true, // Default value set to true
+    supplier: ''
+  });
+  
 
   useEffect(() => {
     const fetchInventoryItems = async () => {
@@ -107,6 +132,9 @@ function Inventory() {
   useEffect(() => {
     sessionStorage.setItem("showRestockReport", showRestockReport.toString());
   }, [showRestockReport]);
+  useEffect(() => {
+    sessionStorage.setItem("showAddInventory", showAddInventory.toString());
+  }, [showAddInventory]);
 
   const handleMenuItemSelect = async (inputMenuItem?: string, inputStartDate?: string, inputEndDate?: string) => {
 
@@ -142,7 +170,6 @@ function Inventory() {
         saletime: item.saletime, 
         islarge: item.islarge ? "Yes" : "No",
       }));
-      console.log(salesData);
       setSalesData(salesData);
     } catch (error) {
       console.error("Failed to fetch sales data:", error);
@@ -169,7 +196,6 @@ function Inventory() {
       inventoryreceiveddate: item.inventoryreceiveddate.substring(0, 10),
       inventoryexpirationdate: item.inventoryexpirationdate.substring(0,10),
     })); // date stuff
-    console.log(data);
     const outOfStockItems = data.filter((item:any) => !item.inventoryinstock);
     
     
@@ -178,12 +204,107 @@ function Inventory() {
 
   };
 
+  const fetchInventoryItemDetails = async (itemName: string) => {
+    try {
+      const response = await axios.get(`http://localhost:9000/inventory/${itemName}`); // Adjust URL as needed
+
+      if (response.data) {
+        console.log(itemName);
+        const itemDetails = response.data;
+        setInventoryFormData({
+          inventoryName: itemDetails.inventoryname,
+          quantity: itemDetails.inventoryquantity,
+          receivedDate: itemDetails.inventoryreceiveddate.substring(0, 10),
+          expirationDate: itemDetails.inventoryexpirationdate.substring(0, 10),
+          inStock: itemDetails.inventoryinstock,
+          supplier: itemDetails.inventorysupplier
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching inventory item details:", error);
+    }
+  };
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement> | string,
+    isAutoComplete?: boolean
+  ) => {
+    let name: string;
+    let value: string | boolean;
+  
+    if (isAutoComplete) {
+      // For AutoCompleteCustom component
+      name = "inventoryName"; // Assuming this is the field using autocomplete
+      value = e as string;
+      fetchInventoryItemDetails(value);
+    } else {
+      // For regular inputs
+      name = (e as React.ChangeEvent<HTMLInputElement | HTMLSelectElement>).target.name;
+      value = (e as React.ChangeEvent<HTMLInputElement | HTMLSelectElement>).target.value;
+  
+      // Check for 'inStock' select field to convert to boolean
+      if ((e as React.ChangeEvent<HTMLSelectElement>).target instanceof HTMLSelectElement && name === "inStock") {
+        value = value === 'true';
+      }
+
+      // Additional validation for expiration date
+      if (name === "expirationDate") {
+        const currentDate = new Date().toISOString().substring(0, 10);
+        if (new Date(value as string) < new Date(currentDate)) {
+          alert("Expiration date must be after the current date.");
+          value = currentDate; // Reset to today's date
+          return; // Prevent updating the state
+        }
+      }
+    }
+    setInventoryFormData(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
+
+  const handleSelectAutocomplete = (value: string) => {
+    setIsNewItem(!inventoryItems.some(item => item.inventoryname === value));
+    handleInputChange(value, true);
+  };
+
+  const handleAddInventory = async () => {
+    const endpoint = isNewItem ? 'http://localhost:9000/inventory' : `http://localhost:9000/inventory/${inventoryFormData.inventoryName}`;
+    const method = isNewItem ? 'post' : 'put';
+    console.log(endpoint);
+    console.log(method);
+    try {
+      const response = await axios[method](endpoint, inventoryFormData);
+      console.log(response.data); // Handle the response
+      handleAddInventoryBack();
+    } catch (error) {
+      console.error("Error handling inventory:", error);
+    }
+
+    
+  };
+
+  const handleAddInventoryBack = () => {  
+
+    setShowAddInventory(false);
+    setInventoryFormData({
+      inventoryName: '',
+      quantity: 0,
+      receivedDate: new Date().toISOString().substring(0, 10), // Defaults to current date
+      expirationDate: '', // No default value, assuming this needs to be input by the user
+      inStock: true, // Default value set to true
+      supplier: ''
+    });
+
+  };
+  
+
 
   const HandleExcessReport = () => {};
 
   const HandlePairProduct = () => {};
 
-  const HandleAddInventory = () => {};
+  
 
   return (
     <div className="container-fluid d-flex flex-row vh-100 vw-100 p-0 background">
@@ -196,6 +317,50 @@ function Inventory() {
           view={"Manager View"}
           series={"Inventory View"}
         />
+        {showAddInventory && ( // add inventory popup
+          <>
+            <div className="overlay"></div>
+            <div className="smallPopup d-flex flex-column">
+              <div className="addInventoryRow m-1">
+                <span>Item Name:</span>
+                <span><AutoCompleteCustom data={inventoryItems.map((item) => item.inventoryname)} label="Item Name" handleChange={(value) => handleInputChange(value, true)} onSelectItem={handleSelectAutocomplete} freeSolo={true} required={true} /></span>
+              </div>
+              <div className="addInventoryRow m-1">
+                <span>Quantity:</span>
+                <span><input type="number" name="quantity" className="addInventoryInput" onChange={handleInputChange} value={inventoryFormData.quantity} min="0" step="1"  /></span>
+              </div>
+              <div className="addInventoryRow m-1">
+                <span>Date Received:</span>
+                <span ><input type="date" name="receivedDate" className="addInventoryInput" onChange={handleInputChange} value={inventoryFormData.receivedDate} /></span>
+              </div>
+              <div className="addInventoryRow m-1">
+                <span>Exp. Date:</span>
+                <span><input type="date" name="expirationDate" className="addInventoryInput" onChange={handleInputChange} value={inventoryFormData.expirationDate} /></span>
+              </div>
+              <div className="addInventoryRow m-1">
+                <span>In Stock</span>
+                <span><select
+                      required
+                      className="addMenuInput p-1"
+                      name="inStock"
+                      onChange={handleInputChange}
+                      value={inventoryFormData.inStock ? 'true' : 'false'}
+                    >
+                      <option value="true">True</option>
+                      <option value="false">False</option>
+                    </select></span>
+              </div>
+              <div className="addInventoryRow m-1">
+                <span>Supplier:</span>
+                <span><input type="text" name="supplier" className="addInventoryInput" onChange={handleInputChange} value={inventoryFormData.supplier} ></input></span>
+              </div>
+              <div className="bottomOverlay">
+              <button className="addInventoryButton" onClick={handleAddInventoryBack}>Back</button>
+                <button className="addInventoryButton" onClick={handleAddInventory}>Submit</button>
+              </div>
+            </div>
+          </>
+        )}
         {showRestockReport && ( // restock report popup
           <>
             <div className="overlay"></div>
@@ -213,7 +378,7 @@ function Inventory() {
             <div className="overlay"></div>
             <div className="Popup d-flex flex-column">
               <div className="salesInputRow">
-                <AutoCompleteCustom data={menuItems} label="Menu Item" handleSelect={handleMenuItemSelect} />
+                <AutoCompleteCustom data={menuItems} label="Menu Item" handleChange={handleMenuItemSelect} />
                 <label htmlFor="start-date">
                   Start Date:
                   <input className="dateInput" type="date" onChange={(e) => handleMenuItemSelect(undefined,e.target.value, undefined)} defaultValue={new Date(new Date().setDate(new Date().getDate() - 7)).toISOString().substring(0, 10)}  />
@@ -244,7 +409,7 @@ function Inventory() {
           <button onClick={HandleExcessReport}>Excess Report</button>
           <button onClick={handleRestockReport}>Restock Report</button>
           <button onClick={HandlePairProduct}>Pair Product</button>
-          <button onClick={HandleAddInventory}>Add Inventory</button>
+          <button onClick={() => setShowAddInventory(true)}>Add Inventory</button>
         </div>
       </div>
     </div>

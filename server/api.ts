@@ -211,6 +211,61 @@ app.get('/inventory', async (_req, res) => {
   }
 });
 
+app.post('/inventory', async (req, res) => { // add inventory
+  try {
+    const { inventoryName, quantity, receivedDate, expirationDate, inStock, supplier } = req.body;
+    const maxIdResult = await db('SELECT MAX(inventoryid) as maxid FROM inventory');
+    const inventoryId = maxIdResult.rows[0].maxid + 1;
+    // Add a query to insert a new inventory item
+    const query = 'INSERT INTO inventory (inventoryid, inventoryname, inventoryquantity, inventoryreceiveddate, inventoryexpirationdate, inventoryinstock, inventorysupplier) VALUES ($1, $2, $3, $4, $5, $6, $7)';
+    const values = [inventoryId, inventoryName, quantity, receivedDate, expirationDate, inStock, supplier];
+
+    await db(query, values);
+
+    res.status(201).json({ message: 'Inventory item created successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to create new inventory item' });
+    console.log(error);
+  }
+});
+
+app.put('/inventory/:inventoryName', async (req, res) => { //upadate inventory
+  try {
+    const inventoryName = req.params.inventoryName;
+    const { quantity, receivedDate, expirationDate, inStock, supplier } = req.body;
+
+    // Add a query to update the inventory item
+    const query = 'UPDATE inventory SET inventoryquantity = $1, inventoryreceiveddate = $2, inventoryexpirationdate = $3, inventoryinstock = $4, inventorysupplier = $5 WHERE inventoryname = $6';
+    const values = [quantity, receivedDate, expirationDate, inStock, supplier, inventoryName];
+
+    const result = await db(query, values);
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: 'Inventory item not found' });
+    }
+
+    res.json({ message: 'Inventory item updated successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update inventory item' });
+  }
+});
+
+app.get('/inventory/:itemName', async (req, res) => { 
+  const itemName = req.params.itemName;
+
+  try {
+    const query = 'SELECT * FROM inventory WHERE inventoryname = $1';
+    const result = await db(query, [itemName]);
+
+    if (result.rows.length > 0) {
+      res.json(result.rows[0]); 
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch inventory data' });
+    console.log(error);
+  }
+});
+
 //addOrUpdateDrink
 app.post('/addOrUpdateDrink', async (req, res) => {
   const { drinkName, drinkPrice, drinkCalories, drinkCategory, hasCaffeine, ingredients }: DrinkRequest = req.body;

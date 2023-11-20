@@ -405,6 +405,18 @@
     border: 3px solid var(--gc-red);
     z-index: 11;
   }
+  .smallPopup{
+    position:absolute;
+    margin: 0px;
+    padding: 0px;
+    background-color: var(--gc-tan);
+    top: 10%;
+    left: 40%;
+    width: 600px;
+    height: 750px;
+    border: 3px solid var(--gc-red);
+    z-index: 11;
+  }
   .drinkProp{
     margin-left: 20px;
     ;
@@ -423,6 +435,16 @@
     margin-bottom: 10px;
     margin-top: 10px;
     margin-left: 10px;
+    border-radius: 10px;
+    z-index: 2;
+  }
+  .addInventoryButton{
+    background-color: var(--gc-eggshell);
+    font-size: 30px;
+    padding: 0px;
+    width: 200px;
+    height: 60px;
+    margin: 10px;
     border-radius: 10px;
     z-index: 2;
   }
@@ -594,6 +616,26 @@
 
   .salesTable thead th{
     font-size: 28px;
+  }
+
+  .addInventoryRow{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .addInventoryRow span{
+    font-size: 33px;
+  }
+
+  .addInventoryInput{
+    width: 350px;
+    min-height: 76.13px;
+    color: black;
+    font-size: 30px;
+    padding-left: 10px;
+
   }
 
   
