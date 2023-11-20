@@ -49,12 +49,17 @@ const salesColumns: { key: keyof salesItem; header: string }[] = [
 
 function Inventory() {
   const [inventoryItems, setInventoryItems] = useState<InventoryItem[]>([]);
+  const [filteredInventoryItems, setFilteredInventoryItems] = useState<InventoryItem[]>([]);
   const [menuItems, setMenuItems] = useState([]);
   const [selectedMenuItem, setSelectedMenuItem] = useState("");
   const [startDate, setStartDate] = useState(new Date(new Date().setDate(new Date().getDate() - 7)).toISOString().substring(0, 10));
   const [endDate, setEndDate] = useState(new Date().toISOString().substring(0, 10));
   const [showSalesReport, setShowSalesReport] = useState(() => {
     const saved = sessionStorage.getItem("showSalesReport");
+    return saved === "true"; // If saved is the string 'true', return true, otherwise return false
+  });
+  const [showRestockReport, setShowRestockReport] = useState(() => {
+    const saved = sessionStorage.getItem("showRestockReport");
     return saved === "true"; // If saved is the string 'true', return true, otherwise return false
   });
   const [salesData, setSalesData] = useState([]);
@@ -99,6 +104,9 @@ function Inventory() {
   useEffect(() => {
     sessionStorage.setItem("showSalesReport", showSalesReport.toString());
   }, [showSalesReport]);
+  useEffect(() => {
+    sessionStorage.setItem("showRestockReport", showRestockReport.toString());
+  }, [showRestockReport]);
 
   const handleMenuItemSelect = async (inputMenuItem?: string, inputStartDate?: string, inputEndDate?: string) => {
 
@@ -151,10 +159,27 @@ function Inventory() {
     setShowSalesReport(false);
   };
 
+  const handleRestockReport = async () => {
+    const response = await fetch("http://localhost:9000/inventory");
+    let data = await response.json();
+
+    data = [...data].sort((a, b) => a.inventoryid - b.inventoryid); // sort
+    data = data.map((item: InventoryItem) => ({
+      ...item,
+      inventoryreceiveddate: item.inventoryreceiveddate.substring(0, 10),
+      inventoryexpirationdate: item.inventoryexpirationdate.substring(0,10),
+    })); // date stuff
+    console.log(data);
+    const outOfStockItems = data.filter((item:any) => !item.inventoryinstock);
+    
+    
+    setFilteredInventoryItems(outOfStockItems); // Update the state with filtered items
+    setShowRestockReport(true);
+
+  };
+
 
   const HandleExcessReport = () => {};
-
-  const HandleRestockReport = () => {};
 
   const HandlePairProduct = () => {};
 
@@ -171,7 +196,19 @@ function Inventory() {
           view={"Manager View"}
           series={"Inventory View"}
         />
-        {showSalesReport && (
+        {showRestockReport && ( // restock report popup
+          <>
+            <div className="overlay"></div>
+            <div className="Popup d-flex flex-column">
+              <GenericTable<InventoryItem>
+                data={filteredInventoryItems}
+                columns={inventoryColumns}
+                />
+              <div className="bottomOverlay"><button className="drinkPropButton" onClick={() => setShowRestockReport(false)}>Back</button></div>
+            </div>
+          </>
+        )}
+        {showSalesReport && ( // sales report popup
           <>
             <div className="overlay"></div>
             <div className="Popup d-flex flex-column">
@@ -193,7 +230,7 @@ function Inventory() {
                     columns={salesColumns}
                 />
               </div>
-              <div><button className="drinkPropButton" onClick={handleSalesReportBack}>Back</button></div>
+              <div className="bottomOverlay "><button className="drinkPropButton " onClick={handleSalesReportBack}>Back</button></div>
             </div>
           </>
         )}
@@ -205,7 +242,7 @@ function Inventory() {
         <div className="bottomNavBar">
           <button onClick={() => setShowSalesReport(true)}>Sales Report</button>
           <button onClick={HandleExcessReport}>Excess Report</button>
-          <button onClick={HandleRestockReport}>Restock Report</button>
+          <button onClick={handleRestockReport}>Restock Report</button>
           <button onClick={HandlePairProduct}>Pair Product</button>
           <button onClick={HandleAddInventory}>Add Inventory</button>
         </div>
