@@ -4,6 +4,7 @@ import "../components/components.css";
 import GenericTable from "../components/genericTable";
 import AutoCompleteCustom from "../components/autoCompleteCustom";
 import { useEffect, useState } from "react";
+import axios from "axios";
 
 
 interface InventoryItem {
@@ -25,13 +26,38 @@ const inventoryColumns: { key: keyof InventoryItem; header: string }[] = [
   { key: "inventorysupplier", header: "Supplier" },
 ];
 
+interface salesItem {
+  orderid: number;
+  orderno: number;
+  saledate: string;
+  saletime: string;
+  employeeid: number;
+  saleprice: number;
+  islarge: boolean;
+  menuitemid: number;
+}
+const salesColumns: { key: keyof salesItem; header: string }[] = [
+  { key: "orderid", header: "Order ID" },
+  { key: "orderno", header: "Order No." },
+  { key: "saledate", header: "Sale Date" },
+  { key: "saletime", header: "Sale Time" },
+  { key: "employeeid", header: "Employee ID" },
+  { key: "saleprice", header: "Sale Price" },
+  { key: "islarge", header: "Is Large" },
+  { key: "menuitemid", header: "Menu Item ID" },
+];
+
 function Inventory() {
   const [inventoryItems, setInventoryItems] = useState<InventoryItem[]>([]);
   const [menuItems, setMenuItems] = useState([]);
   const [selectedMenuItem, setSelectedMenuItem] = useState("");
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-  const [showSalesReport, setShowSalesReport] = useState(false);
+  const [startDate, setStartDate] = useState(new Date(new Date().setDate(new Date().getDate() - 7)).toISOString().substring(0, 10));
+  const [endDate, setEndDate] = useState(new Date().toISOString().substring(0, 10));
+  const [showSalesReport, setShowSalesReport] = useState(() => {
+    const saved = sessionStorage.getItem("showSalesReport");
+    return saved === "true"; // If saved is the string 'true', return true, otherwise return false
+  });
+  const [salesData, setSalesData] = useState([]);
 
   useEffect(() => {
     const fetchInventoryItems = async () => {
@@ -63,7 +89,6 @@ function Inventory() {
         const data = await menuItems.json();
         const menuItemNames = data.map((item: any) => item.menuitemname);
         setMenuItems(menuItemNames);
-        console.log(data);
       } catch (error) {
         console.error("Failed to fetch menu items:", error);
       }
@@ -71,17 +96,59 @@ function Inventory() {
     fetchMenuItems();
   }, []);
 
-  const handleMenuItemSelect = (menuItem: string) => {
-    setSelectedMenuItem(menuItem);
-    // TODO: Filter inventory items by menu item by just updating the menuItems state you might have to query
+  useEffect(() => {
+    sessionStorage.setItem("showSalesReport", showSalesReport.toString());
+  }, [showSalesReport]);
+
+  const handleMenuItemSelect = async (inputMenuItem?: string, inputStartDate?: string, inputEndDate?: string) => {
+
+    // Determine the current or new dates to use for fetching
+    const fetchMenuItem = inputMenuItem ?? selectedMenuItem;
+    const fetchStartDate = inputStartDate ?? startDate;
+    const fetchEndDate = inputEndDate ?? endDate;
+
+    // Update state if new dates are provided
+    if (inputMenuItem !== undefined) {
+      setSelectedMenuItem(inputMenuItem);
+    }
+    if (inputStartDate !== undefined) {
+      setStartDate(inputStartDate);
+    }
+    if (inputEndDate !== undefined) {
+      setEndDate(inputEndDate);
+    }
+
+  
+    try {
+      const response = await axios.get('http://localhost:9000/salesReport', {
+        params: {
+          menuItem: fetchMenuItem,
+          startDate: fetchStartDate,
+          endDate: fetchEndDate
+        }
+      });
+
+      let salesData = response.data.map((item: salesItem) => ({
+        ...item,
+        saledate: item.saledate.substring(0, 10),
+        saletime: item.saletime, 
+        islarge: item.islarge ? "Yes" : "No",
+      }));
+      console.log(salesData);
+      setSalesData(salesData);
+    } catch (error) {
+      console.error("Failed to fetch sales data:", error);
+    }
+  
   };
-  const handleStartDate = (startDate:any) => {
-    setStartDate(startDate);
-    // TODO: Filter inventory items by start Date by just updating the menuItems state you might have to query
-  };
-  const handleEndDate = (endDate:any) => {
-    setEndDate(endDate);
-    // TODO: Filter inventory items by end Date by just updating the menuItems state you might have to query
+
+  const handleSalesReportBack = () => {
+
+    setStartDate(new Date(new Date().setDate(new Date().getDate() - 7)).toISOString().substring(0, 10));
+    setEndDate(new Date().toISOString().substring(0, 10));
+    setSalesData([]);
+    setSelectedMenuItem("");
+    setShowSalesReport(false);
   };
 
 
@@ -112,20 +179,21 @@ function Inventory() {
                 <AutoCompleteCustom data={menuItems} label="Menu Item" handleSelect={handleMenuItemSelect} />
                 <label htmlFor="start-date">
                   Start Date:
-                  <input type="date" onChange={(e) => handleStartDate(e.target.value)}  />
+                  <input className="dateInput" type="date" onChange={(e) => handleMenuItemSelect(undefined,e.target.value, undefined)} defaultValue={new Date(new Date().setDate(new Date().getDate() - 7)).toISOString().substring(0, 10)}  />
                 </label>
                 <label htmlFor="end-date">
                   End Date:
-                  <input type="date" onChange={(e) => handleEndDate(e.target.value)} defaultValue={new Date().toISOString().substring(0, 10)}  />
+                  <input className="dateInput" type="date" onChange={(e) => handleMenuItemSelect(undefined, undefined, e.target.value)} defaultValue={new Date().toISOString().substring(0, 10)}  />
                 </label>
               </div>
               <div className="tableContainer">
-                <GenericTable<InventoryItem>
-                    data={inventoryItems}
-                    columns={inventoryColumns}
+                <GenericTable<salesItem>
+                    className="salesTable"
+                    data={salesData}
+                    columns={salesColumns}
                 />
               </div>
-              <div><button className="drinkPropButton" onClick={()=>setShowSalesReport(false)}>Back</button></div>
+              <div><button className="drinkPropButton" onClick={handleSalesReportBack}>Back</button></div>
             </div>
           </>
         )}

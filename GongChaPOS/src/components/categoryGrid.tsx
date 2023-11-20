@@ -195,17 +195,29 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
       console.log(error);
     }
 
-    // setFormData({
-    //   drinkName: '',
-    //   drinkPrice: '',
-    //   drinkCalories: '',
-    //   drinkCategory: '', 
-    //   hasCaffeine: false,
-    //   ingredients: Array<Ingredient>(7).fill({ name: '', measurement: '' }) // Reset each ingredient
-    //  });
-    // setisAddMenuItemSelected(false);
-    // setSeriesSelected(false);
+    setFormData({
+      drinkName: '',
+      drinkPrice: '',
+      drinkCalories: '',
+      drinkCategory: '', 
+      hasCaffeine: false,
+      ingredients: Array<Ingredient>(7).fill({ name: '', measurement: '' }) // Reset each ingredient
+     });
+    setisAddMenuItemSelected(false);
+    setSeriesSelected(false);
   };
+
+  const handleAddDrinkBack = () => {
+    setFormData({
+      drinkName: '',
+      drinkPrice: '',
+      drinkCalories: '',
+      drinkCategory: '', 
+      hasCaffeine: false,
+      ingredients: Array<Ingredient>(7).fill({ name: '', measurement: '' }) // Reset each ingredient
+     });
+    setisAddMenuItemSelected(false);
+  }
 
   useEffect(() => {
     const savedSeriesSelected =
@@ -424,7 +436,7 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
                 </div>
                 <div className="addMenuBottomBar">
                   <div className=" bottomOverlay">
-                    <button className=" bottomOverlayBack" type="button" onClick={() => setisAddMenuItemSelected(false)}>Back</button>
+                    <button className=" bottomOverlayBack" type="button" onClick={handleAddDrinkBack}>Back</button>
                     <button className=" bottomOverlayBack" type="submit">Submit</button>
                 </div>
               </div>

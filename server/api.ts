@@ -89,14 +89,34 @@ app.get('/sales', async (req, res) => { // To get all sales
   }
 });
 
-// app.get('/sales/nextid', async (req, res) => { // To the latest sale: orderID and orderNo for the next sale
-//   try {
-//     const result = await db('SELECT * FROM sales WHERE orderID = (SELECT MAX(orderID) FROM sales)');
-//     res.json(result.rows);
-//   } catch (error) {
-//     res.status(500).json({ error: 'Failed to fetch sales data' });
-//   }
-// });
+app.get('/salesReport', async (req, res) => {
+  const { menuItem, startDate, endDate } = req.query as {
+    menuItem: string;
+    startDate: string;
+    endDate: string;
+  };
+  
+  // Ensure all required parameters are provided
+  if (!menuItem || !startDate || !endDate) {
+    return res.status(400).json({ error: 'Missing required query parameters' });
+  }
+
+  const menuItemId = await getMenuItemID(menuItem);
+
+  // console.log(startDate, endDate, menuItemId);
+
+  try {
+    const query = `
+      SELECT * FROM sales 
+      WHERE menuitemid = $1 
+      AND saledate BETWEEN $2 AND $3
+    `;
+    const result = await db(query, [menuItemId, startDate, endDate]);
+    res.json(result.rows);
+  } catch (error) {
+    console.error(error);
+  }
+});
 
 app.post('/sales', async (req, res) => { // To add a sale into the database (with auto-incremented orderID) ))
   try {
@@ -237,6 +257,12 @@ async function getInventoryID(inventoryName: string): Promise<number> {
   const query = 'SELECT inventoryid FROM Inventory WHERE inventoryname = $1';
   const results = await db(query, [inventoryName]);
   return results.rows.length > 0 ? results.rows[0].inventoryid : null;
+}
+
+async function getMenuItemID(menuItemName: string): Promise<number> {
+  const query = 'SELECT menuItemid FROM menuItems WHERE menuitemname = $1';
+  const results = await db(query, [menuItemName]);
+  return results.rows.length > 0 ? results.rows[0].menuitemid : null;
 }
 
 function getRandomColor(): string {

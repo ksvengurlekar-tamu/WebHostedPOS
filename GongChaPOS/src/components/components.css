@@ -477,6 +477,10 @@
     /* align-items: center; */
   }
 
+  .dateInput{
+    min-height: 76.13px;
+  }
+
   td{
     font-size: 25px;
     color: black;
@@ -540,8 +544,15 @@
   }
   .tableContainer{
     overflow-y: scroll;
-
   }
+  
+  .inventoryTable .noDataCell {
+    background-color: white;
+    text-align: center; 
+    vertical-align: middle; 
+    height: 520px; 
+  }
+  
 
   .addMenuItemConatiner{
     display:flex;
@@ -579,5 +590,8 @@
     color: Black;
   }
 
+  .salesTable thead th{
+    font-size: 28px;
+  }
 
   
