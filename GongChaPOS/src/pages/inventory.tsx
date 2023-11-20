@@ -409,7 +409,7 @@ function Inventory() {
           <button onClick={HandleExcessReport}>Excess Report</button>
           <button onClick={handleRestockReport}>Restock Report</button>
           <button onClick={HandlePairProduct}>Pair Product</button>
-          <button onClick={() => setShowAddInventory(true)}>Add Inventory</button>
+          <button onClick={() => setShowAddInventory(true)}>Add/Update</button>
         </div>
       </div>
     </div>
