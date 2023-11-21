@@ -206,22 +206,47 @@ function Inventory() {
 
   const fetchInventoryItemDetails = async (itemName: string) => {
     try {
-      const response = await axios.get(`http://localhost:9000/inventory/${itemName}`); // Adjust URL as needed
-
+      const response = await axios.get(`http://localhost:9000/inventory/${itemName}`);
+  
       if (response.data) {
-        console.log(itemName);
         const itemDetails = response.data;
+  
         setInventoryFormData({
-          inventoryName: itemDetails.inventoryname,
-          quantity: itemDetails.inventoryquantity,
-          receivedDate: itemDetails.inventoryreceiveddate.substring(0, 10),
-          expirationDate: itemDetails.inventoryexpirationdate.substring(0, 10),
-          inStock: itemDetails.inventoryinstock,
-          supplier: itemDetails.inventorysupplier
+          inventoryName: itemDetails.inventoryname || itemName,
+          quantity: itemDetails.inventoryquantity || 0,
+          receivedDate: itemDetails.inventoryreceiveddate 
+                          ? itemDetails.inventoryreceiveddate.substring(0, 10) 
+                          : new Date().toISOString().substring(0, 10),
+          expirationDate: itemDetails.inventoryexpirationdate 
+                           ? itemDetails.inventoryexpirationdate.substring(0, 10) 
+                           : '',
+          inStock: itemDetails.hasOwnProperty('inventoryinstock') 
+                   ? itemDetails.inventoryinstock 
+                   : true,
+          supplier: itemDetails.inventorysupplier || ''
+        });
+      } else {
+        // Handle the case where the item is not found
+        setInventoryFormData({
+          inventoryName: itemName,
+          quantity: 0,
+          receivedDate: new Date().toISOString().substring(0, 10),
+          expirationDate: '',
+          inStock: true,
+          supplier: ''
         });
       }
     } catch (error) {
       console.error("Error fetching inventory item details:", error);
+      // Reset form data if there is an error fetching details
+      setInventoryFormData({
+        inventoryName: itemName,
+        quantity: 0,
+        receivedDate: new Date().toISOString().substring(0, 10),
+        expirationDate: '',
+        inStock: true,
+        supplier: ''
+      });
     }
   };
 
@@ -236,7 +261,23 @@ function Inventory() {
       // For AutoCompleteCustom component
       name = "inventoryName"; // Assuming this is the field using autocomplete
       value = e as string;
-      fetchInventoryItemDetails(value);
+      const isExistingItem = inventoryItems.some(item => item.inventoryname === value);
+      setIsNewItem(!isExistingItem);
+
+      if (isExistingItem) {
+        fetchInventoryItemDetails(value);
+      } else {
+        // Reset form data for a new item
+        setInventoryFormData(prevState => ({
+          ...prevState,
+          [name]: value,
+          quantity: 0,
+          receivedDate: new Date().toISOString().substring(0, 10),
+          expirationDate: '',
+          inStock: true,
+          supplier: ''
+        }));
+      }
     } else {
       // For regular inputs
       name = (e as React.ChangeEvent<HTMLInputElement | HTMLSelectElement>).target.name;
@@ -264,9 +305,10 @@ function Inventory() {
   };
 
   const handleSelectAutocomplete = (value: string) => {
-    setIsNewItem(!inventoryItems.some(item => item.inventoryname === value));
-    handleInputChange(value, true);
+    const isExistingItem = inventoryItems.some(item => item.inventoryname === value);
+    setIsNewItem(!isExistingItem);
   };
+  
 
   const handleAddInventory = async () => {
     const endpoint = isNewItem ? 'http://localhost:9000/inventory' : `http://localhost:9000/inventory/${inventoryFormData.inventoryName}`;
