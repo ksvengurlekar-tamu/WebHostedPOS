@@ -56,6 +56,18 @@ interface InventoryFormDataType {
   supplier: string;
 }
 
+interface PairedProduct {
+  item1: string;
+  item2: string;
+  frequency: number;
+}
+
+const pairedProductColumns: { key: keyof PairedProduct; header: string }[] = [
+  { key: "item1", header: "Item 1" },
+  { key: "item2", header: "Item 2" },
+  { key: "frequency", header: "Frequency" }
+];
+
 function Inventory() {
   const [inventoryItems, setInventoryItems] = useState<InventoryItem[]>([]);
   const [isNewItem, setIsNewItem] = useState<boolean>(true);
@@ -74,6 +86,10 @@ function Inventory() {
     const saved = sessionStorage.getItem("showRestockReport");
     return saved === "true"; // If saved is the string 'true', return true, otherwise return false
   });
+  const [showPairProducts, setShowPairProducts] = useState(() => {
+    const saved = sessionStorage.getItem("showPairProducts");
+    return saved === "true"; // If saved is the string 'true', return true, otherwise return false
+  });
   const [showAddInventory, setShowAddInventory] = useState(() => {
     const saved = sessionStorage.getItem("showAddInventory");
     return saved === "true"; // If saved is the string 'true', return true, otherwise return false
@@ -87,8 +103,15 @@ function Inventory() {
     inStock: true, // Default value set to true
     supplier: ''
   });
+  const [dates, setDates] = useState({
+    startDate: new Date(new Date().setDate(new Date().getDate() - 7)).toISOString().substring(0, 10),
+    endDate: new Date().toISOString().substring(0, 10)
+  });
+  const [pairedProducts, setPairedProducts] = useState<PairedProduct[]>([]);
   
 
+
+  
   useEffect(() => {
     const fetchInventoryItems = async () => {
       try {
@@ -135,6 +158,9 @@ function Inventory() {
   useEffect(() => {
     sessionStorage.setItem("showAddInventory", showAddInventory.toString());
   }, [showAddInventory]);
+  useEffect(() => {
+    sessionStorage.setItem("showPairProducts", showPairProducts.toString());
+  }, [showPairProducts]);
 
   const handleMenuItemSelect = async (inputMenuItem?: string, inputStartDate?: string, inputEndDate?: string) => {
 
@@ -154,7 +180,6 @@ function Inventory() {
       setEndDate(inputEndDate);
     }
 
-  
     try {
       const response = await axios.get('http://localhost:9000/salesReport', {
         params: {
@@ -203,6 +228,44 @@ function Inventory() {
     setShowRestockReport(true);
 
   };
+
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setDates(prevDates => {
+      const newDates = { ...prevDates, [name]: value };
+      const startDate = new Date(newDates.startDate);
+      const endDate = new Date(newDates.endDate);
+      const currentDate = new Date();
+
+      if (startDate > endDate) {
+        alert("Start date must be before the end date.");
+        return { ...newDates, startDate: newDates.endDate }; // Update startDate to endDate
+      } else if (endDate > currentDate) {
+        alert("End date must be before the current date.");
+        return { ...newDates, endDate: currentDate.toISOString().substring(0, 10) }; // Reset endDate to today
+      } else {
+        fetchPairedProducts(newDates.startDate, newDates.endDate);
+      }
+
+      return newDates;
+    });
+  };
+
+
+  const fetchPairedProducts = async (startDate: string, endDate: string) => {
+    try {
+      console.log(startDate, endDate);
+      const response = await axios.get('http://localhost:9000/pairProducts', {
+        params: { startDate, endDate }
+      });
+      if (response.data) {
+        setPairedProducts(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching paired products:", error);
+    }
+  };
+
 
   const fetchInventoryItemDetails = async (itemName: string) => {
     try {
@@ -403,6 +466,28 @@ function Inventory() {
             </div>
           </>
         )}
+        {showPairProducts && ( // pair products popup
+          <>
+            <div className="overlay"></div>
+            <div className="Popup d-flex flex-column">
+              <div className="pairRow">
+                <span className="pairCol">
+                  Start Date:
+                  <input type="date" className="addInventoryInput" onChange={handleDateChange} name="startDate"  value={dates.startDate}  />
+                </span>
+                <span className="pairCol">
+                  End Date:
+                  <input type="date" className="addInventoryInput" onChange={handleDateChange} name="endDate" value={dates.endDate}  />
+                </span>
+              </div>
+              <GenericTable<PairedProduct>
+                data={pairedProducts}
+                columns={pairedProductColumns}
+                />
+              <div className="bottomOverlay"><button className="drinkPropButton" onClick={() => setShowPairProducts(false)}>Back</button></div>
+            </div>
+          </>
+        )}
         {showRestockReport && ( // restock report popup
           <>
             <div className="overlay"></div>
@@ -415,6 +500,7 @@ function Inventory() {
             </div>
           </>
         )}
+        
         {showSalesReport && ( // sales report popup
           <>
             <div className="overlay"></div>
@@ -450,7 +536,7 @@ function Inventory() {
           <button onClick={() => setShowSalesReport(true)}>Sales Report</button>
           <button onClick={HandleExcessReport}>Excess Report</button>
           <button onClick={handleRestockReport}>Restock Report</button>
-          <button onClick={HandlePairProduct}>Pair Product</button>
+          <button onClick={() => setShowPairProducts(true)}>Pair Product</button>
           <button onClick={() => setShowAddInventory(true)}>Add/Update</button>
         </div>
       </div>

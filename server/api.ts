@@ -308,6 +308,29 @@ app.post('/addOrUpdateDrink', async (req, res) => {
   }
 });
 
+app.get('/pairProducts', async (req, res) => {
+  try {
+    const { startDate, endDate } = req.query;
+
+    const query = "SELECT "
+      + "CASE WHEN menuItem1.menuItemName < menuItem2.menuItemName THEN menuItem1.menuItemName ELSE menuItem2.menuItemName END AS item1, "
+      + "CASE WHEN menuItem1.menuItemName < menuItem2.menuItemName THEN menuItem2.menuItemName ELSE menuItem1.menuItemName END AS item2, "
+      + "COUNT(*) AS frequency "
+      + "FROM Sales AS sale1 "
+      + "INNER JOIN Sales AS sale2 ON sale1.orderNo = sale2.orderNo AND sale1.menuItemID <> sale2.menuItemID "
+      + "INNER JOIN menuItems AS menuItem1 ON sale1.menuItemID = menuItem1.menuItemID "
+      + "INNER JOIN menuItems AS menuItem2 ON sale2.menuItemID = menuItem2.menuItemID "
+      + "WHERE sale1.saleDate BETWEEN $1 AND $2 "
+      + "GROUP BY item1, item2 "
+      + "ORDER BY frequency DESC;"
+
+    const result = await db(query, [startDate, endDate]);
+    res.json(result.rows);
+  } catch (error) {
+    console.error(error);
+  }
+});
+
 async function getInventoryID(inventoryName: string): Promise<number> {
   const query = 'SELECT inventoryid FROM Inventory WHERE inventoryname = $1';
   const results = await db(query, [inventoryName]);

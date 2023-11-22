@@ -503,6 +503,7 @@
 
   .dateInput{
     min-height: 76.13px;
+    color: black;
   }
 
   td{
@@ -636,6 +637,19 @@
     font-size: 30px;
     padding-left: 10px;
 
+  }
+
+  .pairRow{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content:center;
+  }
+
+  .pairCol{
+    margin-right: 70px;
+    margin-top: 10px;
+    margin-bottom: 10px;
   }
 
   
