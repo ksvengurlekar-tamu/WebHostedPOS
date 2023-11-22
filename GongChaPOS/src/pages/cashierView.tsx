@@ -26,6 +26,7 @@ function CashierView({ view }: CartViewProps) {
 
   const [drinks, setDrinks] = useState<Drink[]>([]);
   const [showBackButton, setShowBackButton] = useState(false);
+  const [triggerBackAction, setTriggerBackAction] = useState(false);
   const [handleBackFromTopBar, setHandleBackFromTopBar] = useState(() => () => {});
   const [isCheckoutView, setIsCheckoutView] = useState(() => {
     const saved = sessionStorage.getItem("isCheckoutView");
@@ -42,6 +43,8 @@ function CashierView({ view }: CartViewProps) {
     setDrinks(updatedDrinks);
   }, []);
 
+
+
   const addToCart = (drink: Drink): void => {
     if (drink.size === "Large") {
       drink.price += 0.75;
@@ -54,6 +57,7 @@ function CashierView({ view }: CartViewProps) {
   
   const removeDrinkFromCart = (drinkName: Drink) => {
     let found = false; // This flag will indicate if the drink has been found and removed
+    console.log(drinks);
     const updatedDrinks = drinks.filter((drink) => {
       if (!found && drink === drinkName) {
         found = true; // Set the flag to true when the drink is found
@@ -61,7 +65,7 @@ function CashierView({ view }: CartViewProps) {
       }
       return true; // All other drinks will be kept
     });
-
+    console.log(updatedDrinks);
     setDrinks(updatedDrinks);
     sessionStorage.setItem("drinks", JSON.stringify(updatedDrinks));
   };
@@ -86,8 +90,12 @@ function CashierView({ view }: CartViewProps) {
       drinks,
     });    
 
+    setTriggerBackAction(true); 
+    setSeries("");
     clearCart();
+    
   };
+
 
   return (
 
@@ -98,7 +106,7 @@ function CashierView({ view }: CartViewProps) {
       <div className="col d-flex flex-column vh-100 p-0 main-content">
           <TopBar isBackButtonVisible = {showBackButton} view={view} series={series} onBackClick={handleBackFromTopBar} />
           <div className="row">
-              <CategoryGrid addToCart={addToCart} setShowBackButton={setShowBackButton} setHandleBackFromTopBar={setHandleBackFromTopBar} setSeries={setSeries} />
+              <CategoryGrid addToCart={addToCart} setShowBackButton={setShowBackButton} setHandleBackFromTopBar={setHandleBackFromTopBar} setSeries={setSeries} triggerBackAction={triggerBackAction} resetTriggerBackAction={() => setTriggerBackAction(false)}  view={view} />
               {!isCheckoutView && !showBackButton &&
                 <div className="col-7 img"> <img src={gongChaImg}></img> </div>
               }

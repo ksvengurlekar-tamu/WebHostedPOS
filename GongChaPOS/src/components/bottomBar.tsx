@@ -4,9 +4,9 @@ import { useNavigate } from 'react-router-dom';
 interface BottomBarProps {
   onCheckout: () => void;
 }
-function bottomBar({onCheckout}: BottomBarProps) {
+function bottomBar({ onCheckout }: BottomBarProps) {
   const navigate = useNavigate();
-
+  
   const handleTransactions = () => {
     // Implement Transaction functionality here
     console.log('Transaction button clicked');
@@ -23,14 +23,13 @@ function bottomBar({onCheckout}: BottomBarProps) {
   };
 
   const handleLogout = () => {
-    // Implement Log Out functionality here
-    console.log('Log Out button clicked');
+    sessionStorage.clear();
     navigate('/');
   };
 
   return (
     <div className="bottomNavBar">
-      <button onClick={onCheckout}>Checkout</button>
+      <button onClick={onCheckout}>NOT CHECKOUT</button>
       <button onClick={handleTransactions}>Transactions</button>
       <button onClick={handleOrders}>Orders</button>
       <button onClick={handleNotifications}>Notifications</button>

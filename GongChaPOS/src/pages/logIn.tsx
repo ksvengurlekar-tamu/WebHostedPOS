@@ -2,7 +2,6 @@ import React from 'react'
 import { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import './logIn.css';
-// import CashierView from './cashierView'
 import { useNavigate  } from 'react-router-dom';
 
 import gongChaLogo from '../assets/images/GongChaLogo.png';

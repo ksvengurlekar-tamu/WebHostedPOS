@@ -10,8 +10,9 @@
     --gc-eggshell: hsl(60, 63%, 97%);
   
     --gc-dark-color: #1b1b1b;
-    --gc-dark-grey: #7a7a7a;
-    --gc-gray: #e6e6e6;
+    --gc-darkest-grey: hsl(0, 0%, 48%);
+    --gc-dark-grey: hsl(0, 0%, 60%);
+    --gc-gray: hsl(0, 0%, 80%);
   }
   
   .img{
@@ -137,14 +138,22 @@
   .button-no-hover{
     border-radius: 10px;
   }
-  .button-no-hover:hover {
-    border-color: transparent; /* or the same color it was before hover */
-    cursor: default;
+
+  .button-disabled{
+    background-color: var(--gc-dark-grey) !important;
+    color: var(--gc-dark-color);
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-color: transparent !important;
   }
 
   button:focus,
   button:focus-visible {
     outline: 4px auto -webkit-focus-ring-color;
+  }
+  .button-no-hover:hover, .button-disabled:hover {
+    border-color: transparent; /* or the same color it was before hover */
+    cursor: default;
   }
 
   
@@ -155,6 +164,10 @@
     padding: 3px;
     display: flex;
     justify-content: space-between;
+  }
+
+  .leftNavButton:hover{
+    color: var(--gc-tan)
   }
 
   /* Top Navigation Bar CSS */
@@ -376,9 +389,11 @@
     top:0;
     bottom: 0;
     z-index: 10; 
+    width: 100vw; /* Cover full viewport width */
+    height: 100vh; /* Cover full viewport height */
   }
 
-  .drinkPopup{
+  .Popup{
     position:absolute;
     margin: 0px;
     padding: 0px;
@@ -387,6 +402,18 @@
     left: 20%;
     width: 1340px;
     height: 800px;
+    border: 3px solid var(--gc-red);
+    z-index: 11;
+  }
+  .smallPopup{
+    position:absolute;
+    margin: 0px;
+    padding: 0px;
+    background-color: var(--gc-tan);
+    top: 10%;
+    left: 40%;
+    width: 600px;
+    height: 750px;
     border: 3px solid var(--gc-red);
     z-index: 11;
   }
@@ -407,7 +434,19 @@
     height: 60px;
     margin-bottom: 10px;
     margin-top: 10px;
+    margin-left: 10px;
     border-radius: 10px;
+    z-index: 2;
+  }
+  .addInventoryButton{
+    background-color: var(--gc-eggshell);
+    font-size: 30px;
+    padding: 0px;
+    width: 200px;
+    height: 60px;
+    margin: 10px;
+    border-radius: 10px;
+    z-index: 2;
   }
   .drinkToppings{
     display: flex;
@@ -423,12 +462,14 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
     position: absolute;
     background-color: rgba(0,0,0,0.4); /*dim the background*/
     height: 90px;
     bottom: 0;
     right:0;
     left:0;
+    z-index: 1;
   }
 
   .bottomOverlayBack{
@@ -449,4 +490,171 @@
   .buttonClicked{
     background-color: hsl(203, 85%, 40%);
   }
+  
+  .inventoryContainer{
+    overflow-y: scroll;
+    justify-content: center;
+  }
+  .inventoryTable {
+    width: 100%;
+    justify-content: center;
+    /* align-items: center; */
+  }
+
+  .dateInput{
+    min-height: 76.13px;
+    color: black;
+  }
+
+  td{
+    font-size: 25px;
+    color: black;
+    padding: 12px 20px;
+    border: 1px solid #ddd; /* Light gray border */
+  }
+  th{
+    background-color: var(--gc-re); 
+    color: black;
+    padding: 12px 20px;
+    border-bottom: 1px solid #ddd; 
+    border-right: 1px solid #ddd;
+  }
+
+  thead th{
+    font-size: 30px;
+    position: sticky;
+    top: 0; /* Adjust this value if you have a margin or padding at the top of the container */
+    background-color: #e7e7e7; 
+    box-shadow: 0 4px 8px -2px rgba(0, 0, 0, 0.2); /* Box shadow for 'pop out' effect */ 
+   
+  }
+
+  tbody tr:nth-child(odd) {
+    background-color: #ffffff; /* Lighter gray for odd rows */
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1); /* Subtle box shadow for each row */
+  }
+  tbody tr:nth-child(even) {
+    background-color: #f9f9f9; /* dark gray for even rows */
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1); /* Subtle box shadow for each row */
+  }
+
+  tbody tr:hover {
+    background-color: hsl(203, 85%, 50%); /* Slightly different color for hover */
+  }
+
+  .salesInputRow{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px;
+  }
+
+  .comboBox{
+    width: 350px;
+    height: 100px;
+    padding-top: 15px;
+  }
+
+  label{
+    font-size: 35px;
+    
+    color: Black;
+
+  }
+
+  label input{
+    margin-left: 30px;
+    color: Black;
+  }
+  .tableContainer{
+    overflow-y: scroll;
+  }
+  
+  .inventoryTable .noDataCell {
+    background-color: white;
+    text-align: center; 
+    vertical-align: middle; 
+    height: 516px; 
+  }
+  
+
+  .addMenuItemConatiner{
+    display:flex;
+    flex-direction: column;
+  }
+
+  .addMenuIteminputCol{
+    min-height: 700px;
+    min-width:650px;
+    align-content: space-between;
+    justify-content: space-around;
+  }
+
+  .addMenuItemRow{
+    font-size: 38px;
+    min-width: 600px;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 30px;
+    
+  }
+
+  .addMenuInput{
+    width: 350px;
+    min-height: 76.13px;
+    color: black;
+    font-size: 30px;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    padding-left: 20px;
+  }
+
+  .addMenuMeasurementInput{
+    max-width: 90px;
+    color: Black;
+  }
+
+  .salesTable thead th{
+    font-size: 28px;
+  }
+
+  .addInventoryRow{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .addInventoryRow span{
+    font-size: 33px;
+  }
+
+  .addInventoryInput{
+    width: 350px;
+    min-height: 76.13px;
+    color: black;
+    font-size: 30px;
+    padding-left: 10px;
+
+  }
+
+  .pairRow, .excessRow{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .pairCol{
+    margin-right: 70px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  .excessCol{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 20px;
+  }
+
   

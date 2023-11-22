@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
 import Card from "../components/card.tsx";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import AutoCompleteCustom from "./autoCompleteCustom.tsx";
+import axios from "axios";
 
 interface Drink {
   id: number;
@@ -9,15 +13,31 @@ interface Drink {
   topping_names: string[];
   quantity: number;
 }
+interface Ingredient {
+  name: string;
+  measurement: string;
+}
+
+interface FormDataType {
+  drinkName: string;
+  drinkPrice: string;
+  drinkCalories: string;
+  drinkCategory: string;
+  hasCaffeine: boolean;
+  ingredients: Ingredient[]; // Array of Ingredient objects
+}
 
 interface CategoryGridProps {
   addToCart: (menuItem: Drink) => void;
   setShowBackButton: any;
   setHandleBackFromTopBar: any;
   setSeries: any;
+  triggerBackAction?: boolean;
+  resetTriggerBackAction?: () => void;
+  view: string;
 }
 
-function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, setSeries }: CategoryGridProps) {
+function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, setSeries, triggerBackAction, resetTriggerBackAction, view }: CategoryGridProps) {
   const [isSeriesSelected, setSeriesSelected] = useState(() => {
     const saved = sessionStorage.getItem("isSeriesSelected");
     return saved === "true"; // If saved is the string 'true', return true, otherwise return false
@@ -26,11 +46,33 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
     const saved = sessionStorage.getItem("isDrinkSelected");
     return saved === "true"; // Same as above
   });
+  const [isAddMenuItemSelected, setisAddMenuItemSelected] = useState(() => {
+    const saved = sessionStorage.getItem("isAddMenuItemSelected");
+    return saved === "true"; // Same as above
+  });
   const [menuItems, setMenuItems] = useState<any[]>(() => {
     // Load menu items from local storage or default to empty array
     const savedMenuItems = sessionStorage.getItem("menuItems");
     return savedMenuItems ? JSON.parse(savedMenuItems) : [];
   });
+  const [seriesName, setSeriesName] = useState<string>(() => {
+    const savedSeriesName = sessionStorage.getItem('seriesName');
+    return savedSeriesName || ""; // Use the saved value, or default to an empty string if not found
+  }); 
+  
+
+  const [formData, setFormData] = useState<FormDataType>({
+    drinkName: '',
+    drinkPrice: '',
+    drinkCalories: '',
+    drinkCategory: '',
+    hasCaffeine: false,
+    // Explicitly define the type for each element in the ingredients array
+    ingredients: Array<Ingredient>(7).fill({ name: '', measurement: '' }) 
+});
+
+
+  const [inventory, setinventory] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedSize, setSelectedSize] = useState<string>("Medium");
   const [selectedToppings, setSelectedToppings] = useState<string[]>([]);
@@ -38,13 +80,15 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
   const [selectedSugarLevel, setselectedSugarLevel] = useState<string>("100%");
   const [selectedDrinkName, setSelectedDrinkName] = useState<string>("");
   const [selectedDrinkPrice, setSelectedDrinkPrice] = useState<number>(0);    
-  const [selectedDrinkID, setSelectedDrinkID] = useState<number>(0);    
+  const [selectedDrinkID, setSelectedDrinkID] = useState<number>(0); 
+  
 
   const handleSeriesClick = async (SeriesName: string) => {
     setIsLoading(true);
     setMenuItems([]); // This line clears the drink items
     setSeriesSelected(true);
     setSeries(SeriesName);
+    setSeriesName(SeriesName)
 
     var url = "https://gong-cha-server.onrender.com/category/" + SeriesName;
     const response = await fetch(url);
@@ -120,6 +164,61 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
     setDrinkSelected(false);
   };
 
+  const handleInputChange = (name: keyof FormDataType, value: string | boolean) => {
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      [name]: typeof value === 'boolean' ? value : value
+    }));
+  };
+  
+
+  const handleIngredientChange = (index: number, field: keyof Ingredient, value: string) => {
+    setFormData(prevFormData => {
+        const updatedIngredients = [...prevFormData.ingredients];
+        updatedIngredients[index] = { ...updatedIngredients[index], [field]: value };
+        return { ...prevFormData, ingredients: updatedIngredients };
+    });
+};
+  
+
+  const handleSubmit = async () => {
+
+    // let drinkPrice = parseFloat(formData.drinkPrice) || 0;
+    // let drinkCalories = parseInt(formData.drinkCalories, 10) || 0;
+    formData.drinkCategory = seriesName;
+    formData.ingredients = formData.ingredients.filter(ingredient => ingredient.name !== '' && ingredient.measurement !== '');
+    try {
+      var insert_url = "https://gong-cha-server.onrender.com/addOrUpdateDrink";
+      console.log(formData);
+      await axios.post(insert_url,formData);    
+    } catch (error) {
+      console.log(error);
+    }
+
+    setFormData({
+      drinkName: '',
+      drinkPrice: '',
+      drinkCalories: '',
+      drinkCategory: '', 
+      hasCaffeine: false,
+      ingredients: Array<Ingredient>(7).fill({ name: '', measurement: '' }) // Reset each ingredient
+     });
+    setisAddMenuItemSelected(false);
+    setSeriesSelected(false);
+  };
+
+  const handleAddDrinkBack = () => {
+    setFormData({
+      drinkName: '',
+      drinkPrice: '',
+      drinkCalories: '',
+      drinkCategory: '', 
+      hasCaffeine: false,
+      ingredients: Array<Ingredient>(7).fill({ name: '', measurement: '' }) // Reset each ingredient
+     });
+    setisAddMenuItemSelected(false);
+  }
+
   useEffect(() => {
     const savedSeriesSelected =
       sessionStorage.getItem("isSeriesSelected") === "true";
@@ -132,6 +231,21 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
       // Assuming we want to set seriesSelected based on the presence of items
       setSeriesSelected(savedMenuItems != null);
     }
+
+    // Load inventory
+    async function loadInventory()  {
+      try {
+        const response = await fetch("https://gong-cha-server.onrender.com/inventory");
+        const data = await response.json();
+        const inventoryNames = data.map((item: any) => item.inventoryname);
+        setinventory(inventoryNames);
+      } catch (error) {
+        console.error("Failed to load inventory:", error);
+      }
+    }
+
+    loadInventory();
+
   }, []);
 
   useEffect(() => {
@@ -151,7 +265,20 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
     sessionStorage.setItem("isDrinkSelected", isDrinkSelected.toString());
   }, [isDrinkSelected]);
 
-  // Conditionally render different sets of items based on the state
+  useEffect(() => {
+    sessionStorage.setItem("isAddMenuItemSelected", isAddMenuItemSelected.toString());
+  }, [isAddMenuItemSelected]);
+
+  useEffect(() => {
+    sessionStorage.setItem('seriesName', seriesName);
+  }, [seriesName]);
+
+  useEffect(() => {
+    if (triggerBackAction) {
+      handleBackClick();
+      resetTriggerBackAction?.(); // Call the callback function to reset the trigger in CashierView
+    }
+  }, [triggerBackAction, resetTriggerBackAction]);
 
   var itemsToRender;
 
@@ -163,25 +290,41 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
     ));
   } else if (isSeriesSelected) {
     itemsToRender = menuItems.map((menuItem: any) => (
+      
       <Card
-        className="drink"
+        // className="drink"
+        className={menuItem.menuiteminstock ? 'drink' : ' drink button-disabled'}
         key={menuItem.menuitemid}
         menuItemName={menuItem.menuitemname}
         color={menuItem.color}
         onSelect={() => {
-          setDrinkSelected(true);
-          setSelectedDrinkName(menuItem.menuitemname);
-          setSelectedDrinkPrice(menuItem.menuitemprice);
-          setSelectedDrinkID(menuItem.menuitemid)
+          if (menuItem.menuiteminstock) {
+            setDrinkSelected(true);
+            setSelectedDrinkName(menuItem.menuitemname);
+            setSelectedDrinkPrice(menuItem.menuitemprice);
+            setSelectedDrinkID(menuItem.menuitemid);
+          }
         }}
       />
     ));
 
     const placeholderCount = 20 - menuItems.length;
-    const placeholderItems = Array.from({ length: placeholderCount }, (_, index) => (
-      // Use a template literal to combine the index with a string, ensuring uniqueness
-      <button key={`placeholder-${index}`} className="drink button-no-hover" style={{ backgroundColor: "#fcfcf2" }} disabled> </button>
-    ));
+    const placeholderItems = Array.from({ length: placeholderCount }, (_, index) => {
+      // <button key={`placeholder-${index}`} className="drink button-no-hover" style={{ backgroundColor: "#fcfcf2" }} disabled> </button>
+      if (view === "Manager View" && index === 0) {
+        // Render the first button for Manager View
+        return (
+          <button key={`placeholder-${index}`} className="drink" style={{ backgroundColor: "rgba(211,211,211)", position: "relative" }} onClick={() => setisAddMenuItemSelected(true)}>
+            <FontAwesomeIcon icon={faPlus} style={{fontSize: "40px"}} className="checkIcon" />
+          </button>
+        );
+      } else {
+        // Render other buttons as before
+        return (
+          <button key={`placeholder-${index}`} className="drink button-no-hover" style={{ backgroundColor: "#fcfcf2" }} disabled> </button>
+        );
+      }
+  });
 
     itemsToRender = [...itemsToRender, ...placeholderItems];
   } else {
@@ -229,10 +372,83 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
 
   return (
     <>
+      {isAddMenuItemSelected && (
+        <>
+          <div className="overlay"></div>
+          <div className="Popup">
+          
+            <div className="addMenuItemConatiner">
+            <form onSubmit={(e) => {e.preventDefault(); handleSubmit();}}>
+              <div className="d-flex ">
+                <div className="d-flex flex-column addMenuIteminputCol">
+                  
+                  <div className="d-flex addMenuItemRow">
+                    Drink Name:
+                    <AutoCompleteCustom data={menuItems.map((item: any) => item.menuitemname)} label="Drink Name" freeSolo={true} required={true} handleChange={(value) => handleInputChange("drinkName", value)} />
+                  </div>
+                  <div className="d-flex addMenuItemRow">
+                    Drink Price:
+                    <input required type="number" className="addMenuInput" onChange={(e) => handleInputChange('drinkPrice', e.target.value)} placeholder="in $" min="0" step="0.01" />
+                  </div>
+                  <div className="d-flex addMenuItemRow">
+                    Drink Calories:
+                    <input required type="number" className="addMenuInput" onChange={(e) => handleInputChange('drinkCalories', e.target.value)} min="0" step="1" />
+                  </div>
+                  <div className="d-flex addMenuItemRow">
+                    Drink Category:
+                    <input disabled type="text" value={seriesName} className="addMenuInput" />
+                  </div>
+                  <div className="d-flex addMenuItemRow">
+                    Has Caffeine:
+                    <select
+                      required
+                      className="addMenuInput"
+                      onChange={(e) => handleInputChange('hasCaffeine', e.target.value === 'true')}
+                      value={formData.hasCaffeine.toString()}
+                    >
+                      <option value="true">True</option>
+                      <option value="false">False</option>
+                    </select>
+                    </div>
+                  </div>
+                  <div className="d-flex flex-column addMenuIteminputCol mt-1">
+                    {formData.ingredients.map((ingredient, index) => (
+                      <div className="d-flex addMenuItemRow" key={index}>
+                        Ingredient {index + 1}:
+                        <AutoCompleteCustom
+                          data={inventory}
+                          label={`Ingredient ${index + 1}`}
+                          handleChange={(value) => handleIngredientChange(index, 'name', value)}
+                        />
+                        <input
+                          type="number"
+                          className="addMenuMeasurementInput"
+                          value={ingredient.measurement}
+                          onChange={(e) => handleIngredientChange(index, 'measurement', e.target.value)}
+                          placeholder="Oz."
+                          min = "0"
+                          step = "0.5"
+                        />
+                      </div>
+                    ))}
+
+                  </div>
+                </div>
+                <div className="addMenuBottomBar">
+                  <div className=" bottomOverlay">
+                    <button className=" bottomOverlayBack" type="button" onClick={handleAddDrinkBack}>Back</button>
+                    <button className=" bottomOverlayBack" type="submit">Submit</button>
+                </div>
+              </div>
+            </form>
+            </div>
+          </div>
+        </>
+      )}
       {isDrinkSelected && (
         <>
           <div className="overlay"></div>
-          <div className="drinkPopup">
+          <div className="Popup">
             <div className="row-9 d-flex">
               <div className="col-4 d-flex flex-column drinkProp">
                 <span className="drinkPropText">Size</span>
