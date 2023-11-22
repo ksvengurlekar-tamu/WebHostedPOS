@@ -188,7 +188,7 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
     formData.drinkCategory = seriesName;
     formData.ingredients = formData.ingredients.filter(ingredient => ingredient.name !== '' && ingredient.measurement !== '');
     try {
-      var insert_url = "http://localhost:9000/addOrUpdateDrink";
+      var insert_url = "https://gong-cha-server.onrender.com/addOrUpdateDrink";
       console.log(formData);
       await axios.post(insert_url,formData);    
     } catch (error) {
@@ -235,7 +235,7 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
     // Load inventory
     async function loadInventory()  {
       try {
-        const response = await fetch("http://localhost:9000/inventory");
+        const response = await fetch("https://gong-cha-server.onrender.com/inventory");
         const data = await response.json();
         const inventoryNames = data.map((item: any) => item.inventoryname);
         setinventory(inventoryNames);
