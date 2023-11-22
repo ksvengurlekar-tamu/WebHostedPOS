@@ -82,6 +82,10 @@ function Inventory() {
     const saved = sessionStorage.getItem("showSalesReport");
     return saved === "true"; // If saved is the string 'true', return true, otherwise return false
   });
+  const [showExcessReport, setShowExcessReport] = useState(() => {
+    const saved = sessionStorage.getItem("showExcessReport");
+    return saved === "true"; // If saved is the string 'true', return true, otherwise return false
+  });
   const [showRestockReport, setShowRestockReport] = useState(() => {
     const saved = sessionStorage.getItem("showRestockReport");
     return saved === "true"; // If saved is the string 'true', return true, otherwise return false
@@ -103,13 +107,15 @@ function Inventory() {
     inStock: true, // Default value set to true
     supplier: ''
   });
+
   const [dates, setDates] = useState({
     startDate: new Date(new Date().setDate(new Date().getDate() - 7)).toISOString().substring(0, 10),
     endDate: new Date().toISOString().substring(0, 10)
   });
   const [pairedProducts, setPairedProducts] = useState<PairedProduct[]>([]);
+  const [targetDate, setTargetDate] = useState('');
   
-
+  const [excessReportData, setExcessReportData] = useState<InventoryItem[]>([]);
 
   
   useEffect(() => {
@@ -161,6 +167,50 @@ function Inventory() {
   useEffect(() => {
     sessionStorage.setItem("showPairProducts", showPairProducts.toString());
   }, [showPairProducts]);
+  useEffect(() => {
+    sessionStorage.setItem("showExcessReport", showExcessReport.toString());
+  }, [showExcessReport]);
+
+  const handleTargetDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const selectedDate = new Date(e.target.value);
+  const currentDate = new Date();
+  currentDate.setHours(0, 0, 0, 0); // Reset time to start of the day
+
+  let correctedDate = selectedDate;
+
+  if (selectedDate > currentDate) {
+    alert("Target date must not be in the future.");
+    correctedDate = currentDate; // Set to current date
+    e.target.value = currentDate.toISOString().split('T')[0]; // Update the GUI element directly
+  }
+
+  setTargetDate(correctedDate.toISOString().split('T')[0]); // Update state to trigger re-render
+  fetchExcessReportData(correctedDate.toISOString().split('T')[0]); // Pass the corrected date directly
+};
+
+const fetchExcessReportData = async (date: string) => {
+  try {
+    const response = await axios.get('http://localhost:9000/excessReport', {
+      params: { targetDate: date }
+    });
+    let data = response.data;
+    data = [...data].sort((a, b) => a.inventoryid - b.inventoryid);
+    data = data.map((item: InventoryItem) => ({
+      ...item,
+      inventoryreceiveddate: item.inventoryreceiveddate.substring(0, 10),
+      inventoryexpirationdate: item.inventoryexpirationdate.substring(
+        0,
+        10
+      ),
+      inventoryinstock: item.inventoryinstock ? "Yes" : "No",
+    }));
+    console.log(data);
+    setExcessReportData(data);
+  } catch (error) {
+    console.error("Error fetching excess report:", error);
+  }
+};
+
 
   const handleMenuItemSelect = async (inputMenuItem?: string, inputStartDate?: string, inputEndDate?: string) => {
 
@@ -404,11 +454,6 @@ function Inventory() {
   };
   
 
-
-  const HandleExcessReport = () => {};
-
-  const HandlePairProduct = () => {};
-
   
 
   return (
@@ -500,7 +545,24 @@ function Inventory() {
             </div>
           </>
         )}
-        
+        {showExcessReport && ( // Excess Report products popup
+          <>
+            <div className="overlay"></div>
+            <div className="Popup d-flex flex-column">
+              <div className="excessRow">
+                <span className="excessCol">
+                  Target Date:
+                  <input type="date" className="addInventoryInput" onChange={handleTargetDateChange} name="targetDate"  value={targetDate}  />
+                </span>
+              </div>
+              <GenericTable<InventoryItem>
+                data={excessReportData}
+                columns={inventoryColumns}
+                />
+              <div className="bottomOverlay"><button className="drinkPropButton" onClick={() => setShowExcessReport(false)}>Back</button></div>
+            </div>
+          </>
+        )}
         {showSalesReport && ( // sales report popup
           <>
             <div className="overlay"></div>
@@ -534,7 +596,7 @@ function Inventory() {
 
         <div className="bottomNavBar">
           <button onClick={() => setShowSalesReport(true)}>Sales Report</button>
-          <button onClick={HandleExcessReport}>Excess Report</button>
+          <button onClick={() => setShowExcessReport(true)}>Excess Report</button>
           <button onClick={handleRestockReport}>Restock Report</button>
           <button onClick={() => setShowPairProducts(true)}>Pair Product</button>
           <button onClick={() => setShowAddInventory(true)}>Add/Update</button>

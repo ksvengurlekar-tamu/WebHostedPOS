@@ -331,6 +331,66 @@ app.get('/pairProducts', async (req, res) => {
   }
 });
 
+app.get('/excessReport', async (req, res) => {
+  try {
+    const targetDate = req.query.targetDate as string;
+    if (!targetDate) {
+      return res.status(400).send('Target date is required');
+    }
+
+    // Step 1: Iterate through all the sales after the targetDate
+    const salesSql = `
+      SELECT mi.menuItemID, mi.menuItemName, mi.menuItemPrice, mi.menuItemCalories, 
+             mi.menuItemCategory, mi.hasCaffeine, m.inventoryID, m.measurement
+      FROM Sales s
+      JOIN menuItems mi ON s.menuItemID = mi.menuItemID
+      JOIN menuItems_Inventory m ON mi.menuItemID = m.menuItemID
+      WHERE s.saleDate >= $1;
+    `;
+
+    const salesResult = await db(salesSql, [targetDate]);
+    const ingredientUsedQuantity = new Map<number, number>();
+
+    for (const row of salesResult.rows) {
+      const inventoryID = row.inventoryid;
+      const measurement = row.measurement;
+      const saleQuantity = 1.0; 
+
+      const usedQuantity = saleQuantity * measurement;
+      ingredientUsedQuantity.set(inventoryID, (ingredientUsedQuantity.get(inventoryID) || 0) + usedQuantity);
+    }
+
+    // Step 2: Iterate through the inventory
+    const inventorySql = `SELECT * FROM Inventory;`;
+    const inventoryResult = await db(inventorySql);
+
+    const excessData = [];
+
+    for (const row of inventoryResult.rows) {
+      const inventoryID = row.inventoryid;
+      const stockedQuantity = row.inventoryquantity;
+      const usedQuantity = ingredientUsedQuantity.get(inventoryID) || 0;
+      const receivedDate = new Date(row.inventoryreceiveddate);
+
+      if (receivedDate > new Date(targetDate)) {
+        continue;
+      }
+
+      if (usedQuantity < (stockedQuantity * 0.1)) {
+        // Prepare data for excess report
+        excessData.push(row);
+      }
+    }
+
+    res.json(excessData);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error generating excess report');
+  }
+});
+
+
 async function getInventoryID(inventoryName: string): Promise<number> {
   const query = 'SELECT inventoryid FROM Inventory WHERE inventoryname = $1';
   const results = await db(query, [inventoryName]);
