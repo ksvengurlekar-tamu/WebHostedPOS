@@ -95,7 +95,7 @@ app.get('/salesReport', async (req, res) => {
     startDate: string;
     endDate: string;
   };
-  
+
   // Ensure all required parameters are provided
   if (!menuItem || !startDate || !endDate) {
     return res.status(400).json({ error: 'Missing required query parameters' });
@@ -123,16 +123,16 @@ app.post('/sales', async (req, res) => { // To add a sale into the database (wit
     let newOrderId; // INCREMENT ORDER ID
     let newOrderNo; // stay static
     const currentDate = new Date();
-  
+
     // Format the date as YYYY-MM-DD in local timezone
-    const formattedDate = currentDate.getFullYear() + '-' + 
-                          (currentDate.getMonth() + 1).toString().padStart(2, '0') + '-' + 
-                          currentDate.getDate().toString().padStart(2, '0');
+    const formattedDate = currentDate.getFullYear() + '-' +
+      (currentDate.getMonth() + 1).toString().padStart(2, '0') + '-' +
+      currentDate.getDate().toString().padStart(2, '0');
 
     // Format the time as HH:MI:SS in local timezone
-    const formattedTime = currentDate.getHours().toString().padStart(2, '0') + ':' + 
-                          currentDate.getMinutes().toString().padStart(2, '0') + ':' + 
-                          currentDate.getSeconds().toString().padStart(2, '0');
+    const formattedTime = currentDate.getHours().toString().padStart(2, '0') + ':' +
+      currentDate.getMinutes().toString().padStart(2, '0') + ':' +
+      currentDate.getSeconds().toString().padStart(2, '0');
 
     const result = await db('SELECT MAX(orderid) as maxorderid, MAX(orderno) as maxorderno FROM sales');
     if (result.rows[0]) {
@@ -147,11 +147,11 @@ app.post('/sales', async (req, res) => { // To add a sale into the database (wit
 
     const { employeeId, drinks } = req.body;
     let employeeIdInt = parseInt(employeeId);
-    
+
     for (const drink of drinks) {
       // add to sales
       await db('INSERT INTO sales (orderid, orderno, saledate, saletime, employeeid, saleprice, islarge, menuitemid) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
-          [newOrderId, newOrderNo, formattedDate, formattedTime, employeeIdInt, drink.quantity * drink.price, drink.size === "Large", drink.id]);
+        [newOrderId, newOrderNo, formattedDate, formattedTime, employeeIdInt, drink.quantity * drink.price, drink.size === "Large", drink.id]);
 
 
       // find corresponding ingredients and their respective quantities
@@ -161,18 +161,18 @@ app.post('/sales', async (req, res) => { // To add a sale into the database (wit
         var quantity = mr.measurement;
         var id = mr.inventoryid;
 
-        if(drink.size === "Large"){
+        if (drink.size === "Large") {
           quantity = quantity * 1.5;
         }
-        
+
         await db('UPDATE inventory SET inventoryquantity = inventoryquantity - $1 WHERE inventoryid = $2', [parseInt(quantity), id]);
 
-        
+
         // check if stock is exceeded
         const inventoryCheckSet = await db('SELECT inventoryQuantity FROM inventory WHERE inventoryid = $1', [id]);
         var remaining = inventoryCheckSet.rows[0].inventoryquantity;
         //console.log(remaining)
-        
+
         // should just be 1 value: SELECT inventoryQuantity
         if (remaining <= 50) {
           await db('UPDATE inventory SET inventoryinstock = $1 WHERE inventoryid = $2', [false, id]);
@@ -188,21 +188,21 @@ app.post('/sales', async (req, res) => { // To add a sale into the database (wit
           }
         }
       }
-  
-       newOrderId++;
+
+      newOrderId++;
     }
 
 
     res.json({ success: true, message: 'Data inserted successfully' });
   } catch (error) {
-    
+
     console.log("THE SQL NO WORK BUT AT THIS LINE");
   }
 });
 
 
 //inventory
-app.get('/inventory', async (_req, res) => { 
+app.get('/inventory', async (_req, res) => {
   try {
     const result = await db('SELECT * FROM inventory');
     res.json(result.rows);
@@ -231,6 +231,8 @@ app.post('/inventory', async (req, res) => { // add inventory
 
 app.put('/inventory/:inventoryName', async (req, res) => { //upadate inventory
   try {
+    console.log('Updating inventory');
+    
     const inventoryName = req.params.inventoryName;
     const { quantity, receivedDate, expirationDate, inStock, supplier } = req.body;
 
@@ -244,13 +246,44 @@ app.put('/inventory/:inventoryName', async (req, res) => { //upadate inventory
       return res.status(404).json({ error: 'Inventory item not found' });
     }
 
+    console.log('Got to update the drinks!');
+
+    if (inStock) {
+      console.log('Checking if any drinks can be restocked');
+      var id = await db('SELECT inventoryid FROM inventory WHERE inventoryname = $1', [inventoryName]);
+      console.log("Checking inventoryid ", id.rows[0].inventoryid);
+
+      const drinks = await db('SELECT menuitemid FROM menuitems_inventory WHERE inventoryid = $1', [id.rows[0].inventoryid]);
+      console.log("Checking drinks ", drinks);
+
+      for (const drink of drinks.rows) {
+        const ingredientsToCheck = await db('SELECT inventoryid FROM menuitems_inventory WHERE menuitemid = $1', [drink.menuitemid])
+        console.log("Checking ingredients for drink ", drink.menuitemid, ") ", ingredientsToCheck);
+
+        var isAllInStock = true;
+
+        for (const ingredient of ingredientsToCheck.rows) {
+          var isInStock = await db('SELECT inventoryinstock FROM inventory WHERE inventoryid = $1', [ingredient.inventoryid]);
+
+          if (!isInStock) {
+            isAllInStock = false;
+            break;
+          }
+        }
+
+        if (isAllInStock) {
+          await db('UPDATE menuitems SET menuiteminstock = $1 WHERE menuitemid = $2', [true, drink.menuitemid]);
+        }
+      }
+    }
+
     res.json({ message: 'Inventory item updated successfully' });
   } catch (error) {
     res.status(500).json({ error: 'Failed to update inventory item' });
   }
 });
 
-app.get('/inventory/:itemName', async (req, res) => { 
+app.get('/inventory/:itemName', async (req, res) => {
   const itemName = req.params.itemName;
 
   try {
@@ -258,7 +291,7 @@ app.get('/inventory/:itemName', async (req, res) => {
     const result = await db(query, [itemName]);
 
     if (result.rows.length > 0) {
-      res.json(result.rows[0]); 
+      res.json(result.rows[0]);
     }
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch inventory data' });
@@ -270,41 +303,41 @@ app.get('/inventory/:itemName', async (req, res) => {
 app.post('/addOrUpdateDrink', async (req, res) => {
   const { drinkName, drinkPrice, drinkCalories, drinkCategory, hasCaffeine, ingredients }: DrinkRequest = req.body;
 
- 
+
   const price = parseFloat(drinkPrice);
   const calories = parseInt(drinkCalories);
 
   try {
-      // Check if the drink exists
-      const checkQuery = 'SELECT menuitemid FROM menuItems WHERE menuItemName = $1';
-      const existingDrink = await db(checkQuery, [drinkName]);
-      let menuItemID
+    // Check if the drink exists
+    const checkQuery = 'SELECT menuitemid FROM menuItems WHERE menuItemName = $1';
+    const existingDrink = await db(checkQuery, [drinkName]);
+    let menuItemID
 
-      if (existingDrink.rows.length > 0) {
-          // Drink exists, update it
-          menuItemID = existingDrink.rows[0].menuitemid;
-          const updateQuery = 'UPDATE menuItems SET menuItemPrice = $1, menuItemCalories = $2, hasCaffeine = $3 WHERE menuItemID = $4';
-          await db(updateQuery, [drinkPrice, drinkCalories, hasCaffeine, menuItemID]);
-      } else {
-          // Drink does not exist, insert it
+    if (existingDrink.rows.length > 0) {
+      // Drink exists, update it
+      menuItemID = existingDrink.rows[0].menuitemid;
+      const updateQuery = 'UPDATE menuItems SET menuItemPrice = $1, menuItemCalories = $2, hasCaffeine = $3 WHERE menuItemID = $4';
+      await db(updateQuery, [drinkPrice, drinkCalories, hasCaffeine, menuItemID]);
+    } else {
+      // Drink does not exist, insert it
 
-          const randomColor = getRandomColor();
-          const maxIdResult = await db('SELECT MAX(menuitemid) as maxid FROM menuitems');
-          menuItemID =  maxIdResult.rows[0].maxid + 1; 
-          const insertQuery = 'INSERT INTO menuItems (menuItemID, menuItemName, menuItemPrice, menuItemCalories, menuItemCategory, hasCaffeine, color) VALUES ($1, $2, $3, $4, $5, $6, $7)';
-          await db(insertQuery, [menuItemID, drinkName, drinkPrice, drinkCalories, drinkCategory, hasCaffeine, randomColor]);
-      }
+      const randomColor = getRandomColor();
+      const maxIdResult = await db('SELECT MAX(menuitemid) as maxid FROM menuitems');
+      menuItemID = maxIdResult.rows[0].maxid + 1;
+      const insertQuery = 'INSERT INTO menuItems (menuItemID, menuItemName, menuItemPrice, menuItemCalories, menuItemCategory, hasCaffeine, color) VALUES ($1, $2, $3, $4, $5, $6, $7)';
+      await db(insertQuery, [menuItemID, drinkName, drinkPrice, drinkCalories, drinkCategory, hasCaffeine, randomColor]);
+    }
 
-      // Update ingredients in the junction table
-      for (const ingredient of ingredients) {
-          /// Assuming getInventoryID is a function that returns the inventoryID for a given ingredient name
-          const inventoryID = await getInventoryID(ingredient.name);
-          const ingredientUpdateQuery = 'INSERT INTO menuItems_Inventory (menuItemID, inventoryID, measurement) VALUES ($1, $2, $3) ON CONFLICT (menuItemID, inventoryID) DO UPDATE SET measurement = $4';
-          await db(ingredientUpdateQuery, [menuItemID, inventoryID, ingredient.measurement, ingredient.measurement]);
-      }
+    // Update ingredients in the junction table
+    for (const ingredient of ingredients) {
+      /// Assuming getInventoryID is a function that returns the inventoryID for a given ingredient name
+      const inventoryID = await getInventoryID(ingredient.name);
+      const ingredientUpdateQuery = 'INSERT INTO menuItems_Inventory (menuItemID, inventoryID, measurement) VALUES ($1, $2, $3) ON CONFLICT (menuItemID, inventoryID) DO UPDATE SET measurement = $4';
+      await db(ingredientUpdateQuery, [menuItemID, inventoryID, ingredient.measurement, ingredient.measurement]);
+    }
 
   } catch (error) {
-      console.error(error);
+    console.error(error);
   }
 });
 
@@ -354,7 +387,7 @@ app.get('/excessReport', async (req, res) => {
     for (const row of salesResult.rows) {
       const inventoryID = row.inventoryid;
       const measurement = row.measurement;
-      const saleQuantity = 1.0; 
+      const saleQuantity = 1.0;
 
       const usedQuantity = saleQuantity * measurement;
       ingredientUsedQuantity.set(inventoryID, (ingredientUsedQuantity.get(inventoryID) || 0) + usedQuantity);
