@@ -32,7 +32,7 @@ function CartView({ InputDrinks, onRemoveDrink, onClearCart, onSubmit }: CartVie
 
   const fetchTopping = async (toppingName: string): Promise<Topping> => {
     try {
-      const response = await fetch(`https://gong-cha-server.onrender.com/menuitems/${toppingName}`);
+      const response = await fetch(`http://localhost:9000/menuitems/${toppingName}`);
       const data = await response.json();
       const topping = data[0];
       return { id: topping.menuitemid, name: topping.menuitemname, price: topping.menuitemprice };

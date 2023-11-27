@@ -121,7 +121,7 @@ function Inventory() {
   useEffect(() => {
     const fetchInventoryItems = async () => {
       try {
-        const response = await fetch("https://gong-cha-server.onrender.com/inventory");
+        const response = await fetch("http://localhost:9000/inventory");
         let data = await response.json();
         data = [...data].sort((a, b) => a.inventoryid - b.inventoryid);
         data = data.map((item: InventoryItem) => ({
@@ -143,7 +143,7 @@ function Inventory() {
     const fetchMenuItems = async () => {
       try {
         const menuItems = await fetch(
-          "https://gong-cha-server.onrender.com/menuitems"
+          "http://localhost:9000/menuitems"
         );
         const data = await menuItems.json();
         const menuItemNames = data.map((item: any) => item.menuitemname);
@@ -190,7 +190,7 @@ function Inventory() {
 
 const fetchExcessReportData = async (date: string) => {
   try {
-    const response = await axios.get('https://gong-cha-server.onrender.com/excessReport', {
+    const response = await axios.get('http://localhost:9000/excessReport', {
       params: { targetDate: date }
     });
     let data = response.data;
@@ -231,7 +231,7 @@ const fetchExcessReportData = async (date: string) => {
     }
 
     try {
-      const response = await axios.get('https://gong-cha-server.onrender.com/salesReport', {
+      const response = await axios.get('http://localhost:9000/salesReport', {
         params: {
           menuItem: fetchMenuItem,
           startDate: fetchStartDate,
@@ -262,7 +262,7 @@ const fetchExcessReportData = async (date: string) => {
   };
 
   const handleRestockReport = async () => {
-    const response = await fetch("https://gong-cha-server.onrender.com/inventory");
+    const response = await fetch("http://localhost:9000/inventory");
     let data = await response.json();
 
     data = [...data].sort((a, b) => a.inventoryid - b.inventoryid); // sort
@@ -305,7 +305,7 @@ const fetchExcessReportData = async (date: string) => {
   const fetchPairedProducts = async (startDate: string, endDate: string) => {
     try {
       console.log(startDate, endDate);
-      const response = await axios.get('https://gong-cha-server.onrender.com/pairProducts', {
+      const response = await axios.get('http://localhost:9000/pairProducts', {
         params: { startDate, endDate }
       });
       if (response.data) {
@@ -319,7 +319,7 @@ const fetchExcessReportData = async (date: string) => {
 
   const fetchInventoryItemDetails = async (itemName: string) => {
     try {
-      const response = await axios.get(`https://gong-cha-server.onrender.com/inventory/${itemName}`);
+      const response = await axios.get(`http://localhost:9000/inventory/${itemName}`);
   
       if (response.data) {
         const itemDetails = response.data;
@@ -424,7 +424,7 @@ const fetchExcessReportData = async (date: string) => {
   
 
   const handleAddInventory = async () => {
-    const endpoint = isNewItem ? 'https://gong-cha-server.onrender.com/inventory' : `https://gong-cha-server.onrender.com/inventory/${inventoryFormData.inventoryName}`;
+    const endpoint = isNewItem ? 'http://localhost:9000/inventory' : `http://localhost:9000/inventory/${inventoryFormData.inventoryName}`;
     const method = isNewItem ? 'post' : 'put';
     console.log(endpoint);
     console.log(method);

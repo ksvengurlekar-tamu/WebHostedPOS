@@ -3,6 +3,7 @@ import LeftNavBar from "../components/leftnavbar.tsx";
 import TopBar from "../components/topBar.tsx";
 import BottomBar from "../components/bottomBar.tsx";
 import CategoryGrid from "../components/categoryGrid.tsx";
+import CustomerGrid from "../components/categoryCustomer.tsx";
 import CartView from "../components/cartView.tsx";
 import "../components/components.css";
 import gongChaImg from "../assets/images/GongChaLogo.png";
@@ -61,7 +62,7 @@ function CustomerView() {
       if (!found && drink === drinkName) {
         found = true; // Set the flag to true when the drink is found
         return false; // This drink will be removed
-      }
+      } 
       return true; // All other drinks will be kept
     });
     console.log(updatedDrinks);
@@ -103,7 +104,7 @@ function CustomerView() {
       <div className="col d-flex flex-column vh-100 p-0 main-content">
           <TopBar isBackButtonVisible = {showBackButton} view={view} series={series} onBackClick={handleBackFromTopBar} />
           <div className="row">
-              <CategoryGrid addToCart={addToCart} setShowBackButton={setShowBackButton} setHandleBackFromTopBar={setHandleBackFromTopBar} setSeries={setSeries} triggerBackAction={triggerBackAction} resetTriggerBackAction={() => setTriggerBackAction(false)}  view={view} />
+          <CustomerGrid addToCart={addToCart} setShowBackButton={setShowBackButton} setHandleBackFromTopBar={setHandleBackFromTopBar} setSeries={setSeries} triggerBackAction={triggerBackAction} resetTriggerBackAction={() => setTriggerBackAction(false)}  view={view} />
               {!isCheckoutView && !showBackButton &&
                 <div className="col-7 img"> <img src={gongChaImg}></img> </div>
               }
