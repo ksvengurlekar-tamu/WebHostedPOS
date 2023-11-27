@@ -657,4 +657,34 @@
     margin-left: 20px;
   }
 
-  
+  .customer-order-menuboard {
+    display: flex;
+    font-size: 1.5em;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #98101f;
+    color: #fcfcf1;
+    text-align: center;
+    padding: 70px;
+  }
+
+  .customer-login {
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    align-items: end;
+    background-color: #98101f;
+    text-align: center;
+    color: #fcfcf1;
+    font-size: 1em;
+    padding: 20px;
+  }
+
+  .left-image {
+    height: 160px; /* Adjust as needed */
+    justify-content: center;
+    align-items: center;
+    object-fit: cover; /* This will ensure that the image covers the entire space without distorting the aspect ratio */
+  }
+
