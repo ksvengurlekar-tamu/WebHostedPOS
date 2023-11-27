@@ -12,15 +12,15 @@ function Landing() {
         <Link to="/customerView" className="btn btn-primary mb-3 customer-order-menuboard">Order</Link>
         <Link to="/menu-board" className="btn btn-primary customer-order-menuboard">Menu Board</Link>
       </div>
-      <div className="col-6 d-flex justify-content-center align-items-center vh-100 logoDiv">
+      <div className="col-4 d-flex justify-content-center align-items-center vh-100 logoDiv">
         <img
           src={gongChaLogo}
           alt="GongCha Logo"
-          width="70%"
+          width="60%"
           className="img-fluid"
         />
       </div>
-      <div className="col d-flex flex-column justify-content-end align-items-end vh-100 pr-3 pb-3">
+      <div className="col-1.9 d-flex flex-column justify-content-end align-items-end vh-100 pr-3 pb-3">
         <Link to="/login" className="btn btn-primary customer-login">Log In</Link>
       </div>
     </div>

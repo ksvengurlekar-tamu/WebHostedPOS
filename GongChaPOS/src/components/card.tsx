@@ -43,7 +43,8 @@ function Card({ className, menuItemName, color, onSelect }: CardDetails) {
 
 
   return (
-    <button className={className} style={cardStyle} onClick={onSelect}> {menuItemName} </button>
+    <button className={className} style={cardStyle} onClick={onSelect}> 
+    {menuItemName} </button>
   );
 };
 

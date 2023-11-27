@@ -15,7 +15,6 @@ interface Drink {
   quantity: number;
 }
 
-
 function CustomerView() {
 
   const [drinks, setDrinks] = useState<Drink[]>([]);
@@ -78,7 +77,7 @@ function CustomerView() {
 
   const submitOrder = async () => {
     //var insert_url = "https://gong-cha-server.onrender.com/sales";
-    var insert_url = "http://localhost:9000/sales";
+    var insert_url = "https://gong-cha-server.onrender.com/sales";
     
     const employeeId = sessionStorage.getItem("employeeId");
 

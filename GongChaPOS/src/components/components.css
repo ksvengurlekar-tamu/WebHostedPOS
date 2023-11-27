@@ -677,7 +677,14 @@
     background-color: #98101f;
     text-align: center;
     color: #fcfcf1;
-    font-size: 1.5em;
+    font-size: 1em;
     padding: 20px;
+  }
+
+  .left-image {
+    height: 160px; /* Adjust as needed */
+    justify-content: center;
+    align-items: center;
+    object-fit: cover; /* This will ensure that the image covers the entire space without distorting the aspect ratio */
   }
 

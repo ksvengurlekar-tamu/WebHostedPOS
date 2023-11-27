@@ -15,7 +15,7 @@ function Login() {
     event.preventDefault();
     try {
       console.log("connect");
-      const response = await fetch('http://localhost:9000/employees', {mode: 'cors'});
+      const response = await fetch('https://gong-cha-server.onrender.com/employees', {mode: 'cors'});
       const data = await response.json();
       let isLoginSuccessful = false; // flag to track successful login
 
