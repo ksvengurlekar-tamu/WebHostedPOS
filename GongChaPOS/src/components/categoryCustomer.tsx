@@ -5,6 +5,32 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import AutoCompleteCustom from "./autoCompleteCustom.tsx";
 import axios from "axios";
 
+// import coffeeMilkTeaImage from "../assets/images/Coffee/Coffee Milk Tea.png";
+// import dolceMilkTeaImage from "../assets/images/Coffee/Dolce Milk Tea.png";
+// import milkCoffeeImage from "../assets/images/Coffee/Milk Coffee.png";
+// import milkFoamBlackCoffeeImage from "../assets/images/Coffee/Milk Foam Black Coffee.png";
+
+// import blackTeaImage from "../assets/images/Milk Foam/Black Tea.png";
+// import cremeBruleeBrownSugarMilkImage from "../assets/images/Milk Foam/Creme Brulee Brown Sugar Milk Tea.png";
+// import cremeBruleeStrawberryMilkImage from "../assets/images/Milk Foam/Creme Brulee Strawberry Milk.png";
+// import earlGreyTeaImage from "../assets/images/Milk Foam/Earl Grey Tea.png";
+// import greenTeaImage from "../assets/images/Milk Foam/Green Tea.png";
+// import oolongTeaImage from "../assets/images/Milk Foam/Oolong Tea.png";
+// import wintermellonTeaImage from "../assets/images/Milk Foam/Wintermellon Tea.png";
+
+// import blackMilkTeaImage from "../assets/images/Milk Tea/Black Milk Tea.png";
+// import brownSugarMilkTeaImage from "../assets/images/Milk Tea/Brown Sugar Milk Tea.png";
+// import caramelMilkTeaImage from "../assets/images/Milk Tea/Caramel Milk Tea.png";
+// import earlGreyMilkTeaImage from "../assets/images/Milk Tea/Earl Grey Milk Tea.png";
+// import earlGreyMilkTeaW3 from "../assets/images/Milk Tea/Earl Grey Milk Tea with 3 J's.png";
+// import greenMilkTeaImage from "../assets/images/Milk Tea/Green Milk Tea.png";
+// import oolongMilkTeaImage from "../assets/images/Milk Tea/Oolong Milk Tea.png";
+// import pearlMilkTeaImage from "../assets/images/Milk Tea/Pearl Milk Tea.png";
+// import strawberryMilkTeaImage from "../assets/images/Milk Tea/Strawberry Milk Tea.png";
+
+
+
+
 interface Drink {
   id: number;
   name: string;
@@ -287,22 +313,25 @@ function CustomerGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
     ));
   } else if (isSeriesSelected) {
     itemsToRender = menuItems.map((menuItem: any) => (
-      
-      <Card
-        // className="drink"
-        className={menuItem.menuiteminstock ? 'drink' : ' drink button-disabled'}
-        key={menuItem.menuitemid}
-        menuItemName={menuItem.menuitemname}
-        color={menuItem.color}
-        onSelect={() => {
-          if (menuItem.menuiteminstock) {
-            setDrinkSelected(true);
-            setSelectedDrinkName(menuItem.menuitemname);
-            setSelectedDrinkPrice(menuItem.menuitemprice);
-            setSelectedDrinkID(menuItem.menuitemid);
-          }
-        }}
-      />
+      <div>
+        <img src={encodeURI(`/images/${menuItem.menuitemcategory}/${menuItem.menuitemname}.png`)} alt="Image" className="left-image" />
+        {/* <img src={"../assets/images/" + menuItem.menuitemcategory + "/" + menuItem.menuitemname + ".png"} alt="Image" className="left-image"></img> */}
+        <Card
+          // className="drink"
+          className={menuItem.menuiteminstock ? 'drink' : ' drink button-disabled'}
+          key={menuItem.menuitemid}
+          menuItemName={menuItem.menuitemname}
+          color={menuItem.color}
+          onSelect={() => {
+            if (menuItem.menuiteminstock) {
+              setDrinkSelected(true);
+              setSelectedDrinkName(menuItem.menuitemname);
+              setSelectedDrinkPrice(menuItem.menuitemprice);
+              setSelectedDrinkID(menuItem.menuitemid);
+            }
+          }}
+        />
+      </div>
     ));
   } else {
     itemsToRender = (
