@@ -1,10 +1,10 @@
 import  { useEffect, useState } from "react";
 import TopBar from "../components/topBar.tsx";
-import CustomerGrid from "../components/categoryCustomer.tsx";
 import CartView from "../components/cartView.tsx";
 import "../components/components.css";
 import gongChaImg from "../assets/images/GongChaLogo.png";
 import axios from 'axios';
+import CategoryGrid from "../components/categoryGrid.tsx";
 
 interface Drink {
   id: number;
@@ -97,18 +97,22 @@ function CustomerView() {
 
     <div className="container-fluid d-flex flex-row vh-100 vw-100 p-0 background">
       <div className="col d-flex flex-column vh-100 p-0 main-content">
-          <TopBar isBackButtonVisible = {showBackButton} view={view} series={series} onBackClick={handleBackFromTopBar} />
-          <div className="row">
-          <CustomerGrid addToCart={addToCart} setShowBackButton={setShowBackButton} setHandleBackFromTopBar={setHandleBackFromTopBar} setSeries={setSeries} triggerBackAction={triggerBackAction} resetTriggerBackAction={() => setTriggerBackAction(false)} />
-              {!isCheckoutView && !showBackButton &&
-                <div className="col-7 img"> <img src={gongChaImg}></img> </div>
-              }
-              {isCheckoutView &&
-                <div className="col-md-3 cartViewContainer">
-                  <CartView InputDrinks={drinks} onRemoveDrink={removeDrinkFromCart} onClearCart={clearCart} onSubmit={submitOrder}/>
-                </div>
-              }
+        <TopBar isBackButtonVisible={showBackButton} view={view} series={series} onBackClick={handleBackFromTopBar} />
+        <div className="row">
+          <div className="col-md-5">
+          <CategoryGrid addToCart={addToCart} setShowBackButton={setShowBackButton} setHandleBackFromTopBar={setHandleBackFromTopBar} setSeries={setSeries} triggerBackAction={triggerBackAction} resetTriggerBackAction={() => setTriggerBackAction(false)} view={view} />
           </div>
+          <div className="col-md-7" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+            {!isCheckoutView &&
+              <div className="img"> <img src={gongChaImg}></img> </div>
+            }
+            {isCheckoutView &&
+              <div className="cartViewContainer">
+                <CartView InputDrinks={drinks} onRemoveDrink={removeDrinkFromCart} onClearCart={clearCart} onSubmit={submitOrder} />
+              </div>
+            }
+          </div>
+        </div>
       </div>
     </div>
   );

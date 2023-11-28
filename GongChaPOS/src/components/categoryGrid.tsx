@@ -281,8 +281,9 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
   }, [triggerBackAction, resetTriggerBackAction]);
 
   var itemsToRender;
+  const typeOfCard = view === "Customer View" ? 'customerDrink' : 'drink';
 
-  if (isLoading) {
+  if (isLoading && view != "Customer View") {
     itemsToRender = Array.from({ length: 20 }, (_, index) => (
       <button key={index} className="skeleton-card button-no-hover" disabled>
         <div className="animated-background"></div>
@@ -290,22 +291,25 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
     ));
   } else if (isSeriesSelected) {
     itemsToRender = menuItems.map((menuItem: any) => (
-      
-      <Card
-        // className="drink"
-        className={menuItem.menuiteminstock ? 'drink' : ' drink button-disabled'}
-        key={menuItem.menuitemid}
-        menuItemName={menuItem.menuitemname}
-        color={menuItem.color}
-        onSelect={() => {
-          if (menuItem.menuiteminstock) {
-            setDrinkSelected(true);
-            setSelectedDrinkName(menuItem.menuitemname);
-            setSelectedDrinkPrice(menuItem.menuitemprice);
-            setSelectedDrinkID(menuItem.menuitemid);
-          }
-        }}
-      />
+      <div className="carddiv">
+        {/* conditional for displaying the image */}
+        {(view == "Customer View") && (<img src={encodeURI(`/images/${menuItem.menuitemcategory}/${menuItem.menuitemname}.png`)} alt={menuItem.menuitemname} className="left-image" />)}
+        <Card
+          // className="drink"
+          className={menuItem.menuiteminstock ? typeOfCard : typeOfCard + ' button-disabled'}
+          key={menuItem.menuitemid}
+          menuItemName={menuItem.menuitemname}
+          color={menuItem.color}
+          onSelect={() => {
+            if (menuItem.menuiteminstock) {
+              setDrinkSelected(true);
+              setSelectedDrinkName(menuItem.menuitemname);
+              setSelectedDrinkPrice(menuItem.menuitemprice);
+              setSelectedDrinkID(menuItem.menuitemid);
+            }
+          }}
+        />
+      </div>
     ));
 
     const placeholderCount = 20 - menuItems.length;
@@ -318,7 +322,7 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
             <FontAwesomeIcon icon={faPlus} style={{fontSize: "40px"}} className="checkIcon" />
           </button>
         );
-      } else {
+      } else if (view != "Customer View") {
         // Render other buttons as before
         return (
           <button key={`placeholder-${index}`} className="drink button-no-hover" style={{ backgroundColor: "#fcfcf2" }} disabled> </button>
@@ -329,7 +333,8 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
     itemsToRender = [...itemsToRender, ...placeholderItems];
   } else {
     itemsToRender = (
-      <div className="categoryGrid w-25">
+      // conditional: if customer view, 1 item per row; else, grid view
+      <div className={view != "Customer View" ? "categoryGrid w-25" : "categoryList"}>
         <Card
           className="series"
           menuItemName="Milk Foam"
@@ -447,8 +452,13 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
       )}
       {isDrinkSelected && (
         <>
-          <div className="overlay"></div>
-          <div className="Popup">
+          {view != "Customer View" && (<div className="overlay"></div>)}
+          <div className={view != "Customer View" ? "Popup" : "right-side-menu"}>
+            {view === "Customer View" && (<div className="overlay-customer">
+              {/* <img src={encodeURI(`/images/${menuItem.menuitemcategory}/${menuItem.menuitemname}.png`)} alt={menuItem.menuitemname} className="big-image" /> */}
+              {/* the goal here is to show data about the drink clicked: image, calories, price, caffeine, etc */}
+              {/* how do we get this data?????? I HAVE NO IDEA:)))))))) */}
+            </div>)}
             <div className="row-9 d-flex">
               <div className="col-4 d-flex flex-column drinkProp">
                 <span className="drinkPropText">Size</span>
@@ -588,7 +598,7 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
       )}
 
       {(isSeriesSelected || isLoading) && (
-        <div className="menuItemGrid w-75">{itemsToRender}</div>
+        <div className={view != "Customer View" ? "menuItemGrid w-75" : "categoryList"}>{itemsToRender}</div>
       )}
       {!isSeriesSelected && itemsToRender}
     </>

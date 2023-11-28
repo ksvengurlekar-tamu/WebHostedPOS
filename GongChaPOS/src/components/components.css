@@ -231,8 +231,9 @@
     margin: 5px;
     padding: 5px;
     justify-content: center;
+
     border-radius: 10px;
-    border: 3px solid var(--gc-eggshell);
+    border: 1px solid var(--gc-eggshell);
  }
 
   .menuItemGrid {
@@ -688,3 +689,20 @@
     object-fit: cover; /* This will ensure that the image covers the entire space without distorting the aspect ratio */
   }
 
+/* for card + image formatting; border stuff moved from className "drink" */
+/* .carddiv {
+    background-color: var(--gc-eggshell);
+} */
+
+.categoryList {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+}
+
+.right-side-menu {
+  position: absolute;
+  width: 50%;
+  background-color: white;
+  height: 100vh; /* Set the height to 100% of the viewport height */
+  right: 0; /* Align the element to the right */
+}
