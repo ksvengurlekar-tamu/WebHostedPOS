@@ -29,7 +29,7 @@ function bottomBar({ onCheckout }: BottomBarProps) {
 
   return (
     <div className="bottomNavBar">
-      <button onClick={onCheckout}>NOT CHECKOUT</button>
+      <button onClick={onCheckout}>Checkout</button>
       <button onClick={handleTransactions}>Transactions</button>
       <button onClick={handleOrders}>Orders</button>
       <button onClick={handleNotifications}>Notifications</button>

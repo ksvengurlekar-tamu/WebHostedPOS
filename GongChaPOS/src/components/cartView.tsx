@@ -20,9 +20,10 @@ interface CartViewProps {
   onRemoveDrink: (drinkName: Drink) => void;
   onClearCart: () => void;
   onSubmit: () => void;
+  view: string;
 }
 
-function CartView({ InputDrinks, onRemoveDrink, onClearCart, onSubmit }: CartViewProps) {
+function CartView({ InputDrinks, onRemoveDrink, onClearCart, onSubmit, view}: CartViewProps) {
   const [drinks, setDrinks] = useState<Drink[]>([]);
   const [toppings, setToppings] = useState<Topping[]>(); // this will align with the topping list
   const [selectedDrink, setSelectedDrink] = useState<Drink | null>(null);
@@ -127,6 +128,8 @@ function CartView({ InputDrinks, onRemoveDrink, onClearCart, onSubmit }: CartVie
 
   return (
     <>
+      {view === "Customer View" && (<div className="overlay"></div>)}
+      <div className={view != "Customer View" ? "" : "Popup"}></div>
       <h4 className="m-0">Cart</h4>
       <div className="cartView">
         {drinks.map((drink, index) => (
@@ -142,6 +145,8 @@ function CartView({ InputDrinks, onRemoveDrink, onClearCart, onSubmit }: CartVie
                 <span className="item-price">${drink.price.toFixed(2)}</span> 
               </div>
               <div className="item-toppings-container">
+                {drink.size === "Large" && (<div style={{fontSize: "20px"}}>Large</div>)}
+                {drink.size != "Large" && (<div style={{fontSize: "20px"}}>Medium</div>)}
                 {drink.topping_names.map((toppingName, toppingIndex) => {
                   const topping = toppings?.find(t => t.name === toppingName);
                   return (
@@ -168,7 +173,7 @@ function CartView({ InputDrinks, onRemoveDrink, onClearCart, onSubmit }: CartVie
           <button className="cartViewButton" onClick={() => selectedDrink && decrementQuantity(selectedDrink)}>Less</button>   
       </div>
         <button className="cartViewButton" onClick={clearCart}>Clear Cart</button>
-        <button className="cartViewButton " onClick={submitOrder}>Sumbit</button> {/* submit logic to replace clearCart*/}
+        <button className="cartViewButton " onClick={submitOrder}>Submit</button>
       </div>
       
     </>

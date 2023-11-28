@@ -113,7 +113,7 @@ function CashierView({ view }: CartViewProps) {
               }
               {isCheckoutView &&
                 <div className="col-md-3 cartViewContainer">
-                  <CartView InputDrinks={drinks} onRemoveDrink={removeDrinkFromCart} onClearCart={clearCart} onSubmit={submitOrder}/>
+                  <CartView InputDrinks={drinks} onRemoveDrink={removeDrinkFromCart} onClearCart={clearCart} onSubmit={submitOrder} view={"Cashier View"}/>
                 </div>
               }
           </div>

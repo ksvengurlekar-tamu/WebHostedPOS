@@ -455,7 +455,7 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
           {view != "Customer View" && (<div className="overlay"></div>)}
           <div className={view != "Customer View" ? "Popup" : "right-side-menu"}>
             {view === "Customer View" && (<div className="overlay-customer">
-              {/* <img src={encodeURI(`/images/${menuItem.menuitemcategory}/${menuItem.menuitemname}.png`)} alt={menuItem.menuitemname} className="big-image" /> */}
+              {/* <img src={encodeURI(`/images/${menuItem.menuitemcategory}/${menuItem.menuitemname}.png`)} alt={menuItem.menuitemname} className="big-image" />}
               {/* the goal here is to show data about the drink clicked: image, calories, price, caffeine, etc */}
               {/* how do we get this data?????? I HAVE NO IDEA:)))))))) */}
             </div>)}

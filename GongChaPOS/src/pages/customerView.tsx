@@ -108,7 +108,7 @@ function CustomerView() {
             }
             {isCheckoutView &&
               <div className="cartViewContainer">
-                <CartView InputDrinks={drinks} onRemoveDrink={removeDrinkFromCart} onClearCart={clearCart} onSubmit={submitOrder} />
+                <CartView InputDrinks={drinks} onRemoveDrink={removeDrinkFromCart} onClearCart={clearCart} onSubmit={submitOrder} view={"Customer View"}/>
               </div>
             }
           </div>
