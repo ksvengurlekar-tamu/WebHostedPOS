@@ -6,6 +6,7 @@ import CashierView from "./pages/cashierView.tsx";
 import Inventory from "./pages/inventory.tsx";
 import Landing from "./pages/landing.tsx";
 import CustomerView from "./pages/customerView.tsx";
+import MenuBoard from "./pages/menuBoard.tsx";
 import "bootstrap/dist/css/bootstrap.css";
 
 
@@ -19,6 +20,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <Route path="/managerView" element={<CashierView view="Manager View" />} />
         <Route path="/inventory" element={<Inventory />} />
         <Route path="/customerView" element={<CustomerView />} />
+        <Route path="/menuBoard" element={<MenuBoard />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
