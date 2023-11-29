@@ -10,7 +10,7 @@ function Landing() {
     <div className="container-fluid d-flex flex-row vh-100 vw-100 p-0 background">
       <div className="col-6 d-flex flex-column justify-content-center align-items-center vh-100">
         <Link to="/customerView" className="btn btn-primary mb-3 customer-order-menuboard">Order</Link>
-        <Link to="/menu-board" className="btn btn-primary customer-order-menuboard">Menu Board</Link>
+        <Link to="/menuBoard" className="btn btn-primary customer-order-menuboard">Menu Board</Link>
       </div>
       <div className="col-4 d-flex justify-content-center align-items-center vh-100 logoDiv">
         <img
