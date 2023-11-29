@@ -705,3 +705,54 @@
   height: 100vh; /* Set the height to 100% of the viewport height */
   right: 0; /* Align the element to the right */
 }
+
+.menu-board {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #d7c9af;
+  color: black;
+  text-align: center;
+  padding: 50px;
+}
+
+.menu-category {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #d7c9af;
+  color: black;
+  text-align: center;
+  padding: 50px;
+}
+
+.menu-item-image {
+  height: 50px; /* Adjust as needed */
+  justify-content: center;
+  align-items: center;
+  object-fit: cover; /* This will ensure that the image covers the entire space without distorting the aspect ratio */
+}
+
+.menu-categories-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+
+.menu-item-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.menu-item-image {
+  width: 50px; /* Adjust the width as needed */
+  margin-right: 10px;
+}
+
+.menu-categories-left,
+.menu-categories-right {
+  padding: 20px;
+}
