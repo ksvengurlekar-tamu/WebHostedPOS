@@ -12,6 +12,7 @@ interface Drink {
   size: string;
   topping_names: string[];
   quantity: number;
+  imgurl: string;
 }
 interface Ingredient {
   name: string;
@@ -81,6 +82,7 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
   const [selectedDrinkName, setSelectedDrinkName] = useState<string>("");
   const [selectedDrinkPrice, setSelectedDrinkPrice] = useState<number>(0);    
   const [selectedDrinkID, setSelectedDrinkID] = useState<number>(0); 
+  const [selectedDrinkIMG, setSelectedDrinkIMG] = useState<string>("");
   
 
   const handleSeriesClick = async (SeriesName: string) => {
@@ -153,6 +155,7 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
       size: selectedSize,
       topping_names: selectedToppings,
       quantity: 1, // Assuming the default quantity is 1
+      imgurl: selectedDrinkIMG
     };
     addToCart(newDrink);
     // Reset
@@ -306,6 +309,7 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
               setSelectedDrinkName(menuItem.menuitemname);
               setSelectedDrinkPrice(menuItem.menuitemprice);
               setSelectedDrinkID(menuItem.menuitemid);
+              setSelectedDrinkIMG("/images/" + menuItem.menuitemcategory+ "/" + menuItem.menuitemname + ".png");
             }
           }}
         />

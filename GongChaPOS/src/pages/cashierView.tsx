@@ -16,6 +16,7 @@ interface Drink {
   size: string;
   topping_names: string[];
   quantity: number;
+  imgurl: string;
 }
 
 interface CartViewProps {
