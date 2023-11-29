@@ -13,6 +13,7 @@ interface Drink {
   size: string;
   topping_names: string[];
   quantity: number;
+  imgurl: string;
 }
 
 interface CartViewProps {
@@ -127,11 +128,11 @@ function CartView({ InputDrinks, onRemoveDrink, onClearCart, onSubmit, view}: Ca
   }
 
   return (
-    <>
-      {view === "Customer View" && (<div className="overlay"></div>)}
-      <div className={view != "Customer View" ? "" : "Popup"}></div>
-      <h4 className="m-0">Cart</h4>
-      <div className="cartView">
+    <div className={view != "Customer View" ? "" : "right-side-menu"}>
+      {/* {view === "Customer View" && (<div className="overlay"></div>)}
+      <div className={view != "Customer View" ? "" : "Popup"}></div> */}
+      <h4 className={view != "Customer View" ? "m-0" : "customerm-0"}>Cart</h4>
+      <div className={view != "Customer View" ? "cartView" : "customerCart"}>
         {drinks.map((drink, index) => (
             <button className="cart-item" key={index} onClick={() => setSelectedDrink(drink)}>
               <div className="item-name-quantity-container">
@@ -144,6 +145,7 @@ function CartView({ InputDrinks, onRemoveDrink, onClearCart, onSubmit, view}: Ca
                   {drink.name} <span style={{opacity: "0.5", fontSize: '20px' }}>x{drink.quantity}</span></span>
                 <span className="item-price">${drink.price.toFixed(2)}</span> 
               </div>
+              {(view == "Customer View") && (<img src={encodeURI(drink.imgurl)} alt={""} className="left-image" />)}
               <div className="item-toppings-container">
                 {drink.size === "Large" && (<div style={{fontSize: "20px"}}>Large</div>)}
                 {drink.size != "Large" && (<div style={{fontSize: "20px"}}>Medium</div>)}
@@ -163,7 +165,7 @@ function CartView({ InputDrinks, onRemoveDrink, onClearCart, onSubmit, view}: Ca
 
         ))}
       </div>
-      <div className="cartText">
+      <div className={view != "Customer View" ? "cartText" : "customerCartText"}>
         <span className="spaced"><span>Subtotal:</span> <span>${subtotal.toFixed(2)}</span></span>
         <span className="spaced"><span>Tax:</span> <span>${tax.toFixed(2)}</span></span>
         <span className="spaced"><span>Total:</span> <span>${total.toFixed(2)}</span></span>
@@ -171,12 +173,12 @@ function CartView({ InputDrinks, onRemoveDrink, onClearCart, onSubmit, view}: Ca
           <button className="cartViewButton" onClick={() => selectedDrink && removeDrink(selectedDrink)}>Remove</button>
           <button className="cartViewButton" onClick={() => selectedDrink && incrementQuantity(selectedDrink)}>Add More</button>
           <button className="cartViewButton" onClick={() => selectedDrink && decrementQuantity(selectedDrink)}>Less</button>   
-      </div>
+        </div>
         <button className="cartViewButton" onClick={clearCart}>Clear Cart</button>
         <button className="cartViewButton " onClick={submitOrder}>Submit</button>
       </div>
       
-    </>
+    </div>
   );
 };
 

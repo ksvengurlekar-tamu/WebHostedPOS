@@ -13,6 +13,7 @@ interface Drink {
   size: string;
   topping_names: string[];
   quantity: number;
+  imgurl: string;
 }
 
 function CustomerView() {
@@ -48,6 +49,8 @@ function CustomerView() {
     let updatedDrinks = [...drinks, drink];
     setDrinks(updatedDrinks);
     sessionStorage.setItem('drinks', JSON.stringify(updatedDrinks));
+    setTriggerBackAction(true); 
+    setSeries("");
   };
   
   const removeDrinkFromCart = (drinkName: Drink) => {
@@ -60,7 +63,6 @@ function CustomerView() {
       } 
       return true; // All other drinks will be kept
     });
-    console.log(updatedDrinks);
     setDrinks(updatedDrinks);
     sessionStorage.setItem("drinks", JSON.stringify(updatedDrinks));
   };
@@ -102,14 +104,14 @@ function CustomerView() {
           <div className="col-md-5">
           <CategoryGrid addToCart={addToCart} setShowBackButton={setShowBackButton} setHandleBackFromTopBar={setHandleBackFromTopBar} setSeries={setSeries} triggerBackAction={triggerBackAction} resetTriggerBackAction={() => setTriggerBackAction(false)} view={view} />
           </div>
-          <div className="col-md-7" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-            {!isCheckoutView &&
-              <div className="img"> <img src={gongChaImg}></img> </div>
-            }
-            {isCheckoutView &&
-              <div className="cartViewContainer">
-                <CartView InputDrinks={drinks} onRemoveDrink={removeDrinkFromCart} onClearCart={clearCart} onSubmit={submitOrder} view={"Customer View"}/>
+          <div className="col-md-7" style={{ display: "flex", }}>
+            {(drinks.length != 0) && (!showBackButton) && 
+              <div className="col-md-3 cartViewContainer">
+                <CartView InputDrinks={drinks} onRemoveDrink={removeDrinkFromCart} onClearCart={clearCart} onSubmit={submitOrder} view={view}/>
               </div>
+            }
+            {((drinks.length === 0) || (showBackButton)) &&
+              <div className="img"> <img src={gongChaImg}></img> </div>
             }
           </div>
         </div>

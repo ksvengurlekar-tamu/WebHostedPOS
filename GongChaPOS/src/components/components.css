@@ -681,6 +681,7 @@
     padding: 20px;
   }
 
+  /* images in customer view of menu items*/
   .left-image {
     height: 160px; /* Adjust as needed */
     justify-content: center;
@@ -693,17 +694,55 @@
     background-color: var(--gc-eggshell);
 } */
 
+
+/* makes the drinks appear in a column */
 .categoryList {
     display: grid;
     grid-template-columns: repeat(1, 1fr);
 }
 
+
+/* toppings menu in customer page */
 .right-side-menu {
   position: absolute;
-  width: 50%;
+  width: 35%;
   background-color: white;
   height: 100vh; /* Set the height to 100% of the viewport height */
   right: 0; /* Align the element to the right */
+}
+
+/* cart in the customer page */
+.customerCart {
+  background-color: white;
+
+  /* width: 50%; */
+  
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; /* Align items to the right */
+  justify-content: flex-start; /* Align items to the top */
+
+  /* height: 100vh; Set the height to 100% of the viewport height */
+}
+
+.customerCartText {
+  background-color: var(--gc-gray);
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; /* Align items to the right */
+  justify-content: flex-start; /* Align items to the top */
+  /* width: 50%; */
+}
+
+.customerm-0{
+  background-color: var(--gc-gray);
+  /* width: 50%; */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; /* Align items to the right */
+  justify-content: flex-start; /* Align items to the top */
 }
 
 .menu-board {
