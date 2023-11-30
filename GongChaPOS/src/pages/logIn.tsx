@@ -3,6 +3,8 @@ import { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import './logIn.css';
 import { useNavigate  } from 'react-router-dom';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
 
 import gongChaLogo from '../assets/images/GongChaLogo.png';
 
@@ -56,9 +58,18 @@ function Login() {
     }
   };
 
+  const onBackClick = () => {
+    navigate("/");
+  };
+
 
   return (
     <div className="container-fluid d-flex flex-row vh-100 vw-100 p-0 background">
+      <div>
+        <button className="back-button" onClick={onBackClick}>
+          <FontAwesomeIcon icon={faArrowLeftLong} className="Back-icon" />
+        </button>
+      </div>
       <div className="col-4 d-flex justify-content-center align-items-center vh-100 logoDiv">
         <img
           src={gongChaLogo}

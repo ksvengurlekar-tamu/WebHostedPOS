@@ -5,6 +5,9 @@ import "../components/components.css";
 import gongChaImg from "../assets/images/GongChaLogo.png";
 import axios from 'axios';
 import CategoryGrid from "../components/categoryGrid.tsx";
+import { useNavigate  } from 'react-router-dom';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
 
 interface Drink {
   id: number;
@@ -29,6 +32,7 @@ function CustomerView() {
   const [series, setSeries] = useState("");
   
   const view = "Customer View";
+  const navigate = useNavigate();
 
   useEffect(() => {
     const savedDrinks = sessionStorage.getItem('drinks');
@@ -94,12 +98,19 @@ function CustomerView() {
     
   };
 
+  const onBackClick = () => {
+    navigate("/");
+  };
+
 
   return (
 
     <div className="container-fluid d-flex flex-row vh-100 vw-100 p-0 background">
       <div className="col d-flex flex-column vh-100 p-0 main-content">
         <TopBar isBackButtonVisible={showBackButton} view={view} series={series} onBackClick={handleBackFromTopBar} />
+        <button className="back-button" onClick={onBackClick}>
+          <FontAwesomeIcon icon={faArrowLeftLong} className="Back-icon" />
+        </button>
         <div className="row">
           <div className="col-md-5">
           <CategoryGrid addToCart={addToCart} setShowBackButton={setShowBackButton} setHandleBackFromTopBar={setHandleBackFromTopBar} setSeries={setSeries} triggerBackAction={triggerBackAction} resetTriggerBackAction={() => setTriggerBackAction(false)} view={view} />

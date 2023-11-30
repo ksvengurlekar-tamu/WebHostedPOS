@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import "../components/components.css";
+import { useNavigate  } from 'react-router-dom';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
 
 interface MenuItem {
     menuitemid: number;
@@ -12,6 +15,7 @@ interface MenuItem {
 
 function MenuBoard() {
     const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         // Fetch menu items from the server
@@ -48,8 +52,15 @@ function MenuBoard() {
         </div>
     );
 
+    const onBackClick = () => {
+        navigate("/");
+    };
+
     return (
         <div className="menu-board">
+            <button className="back-button" onClick={onBackClick}>
+                <FontAwesomeIcon icon={faArrowLeftLong} className="Back-icon" />
+            </button>
             <h2>Gong Cha Menu Items</h2>
             <div className="menu-categories-container">
                 <div className="menu-categories-left">
