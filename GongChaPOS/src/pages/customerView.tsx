@@ -99,6 +99,7 @@ function CustomerView() {
   };
 
   const onBackClick = () => {
+    sessionStorage.clear();
     navigate("/");
   };
 
@@ -109,7 +110,7 @@ function CustomerView() {
       <div className="col d-flex flex-column vh-100 p-0 main-content">
         <TopBar isBackButtonVisible={showBackButton} view={view} series={series} onBackClick={handleBackFromTopBar} />
         <button className="back-button" onClick={onBackClick}>
-          <FontAwesomeIcon icon={faArrowLeftLong} className="Back-icon" />
+          <FontAwesomeIcon icon={faArrowLeftLong} className="Back-icon" /> Back To Home
         </button>
         <div className="row">
           <div className="col-md-5">
