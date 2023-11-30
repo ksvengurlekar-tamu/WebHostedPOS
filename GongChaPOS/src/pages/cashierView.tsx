@@ -1,4 +1,4 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import LeftNavBar from "../components/leftnavbar.tsx";
 import TopBar from "../components/topBar.tsx";
 import BottomBar from "../components/bottomBar.tsx";
@@ -28,12 +28,14 @@ function CashierView({ view }: CartViewProps) {
   const [drinks, setDrinks] = useState<Drink[]>([]);
   const [showBackButton, setShowBackButton] = useState(false);
   const [triggerBackAction, setTriggerBackAction] = useState(false);
-  const [handleBackFromTopBar, setHandleBackFromTopBar] = useState(() => () => {});
+  const [handleBackFromTopBar, setHandleBackFromTopBar] = useState(() => () => { });
   const [isCheckoutView, setIsCheckoutView] = useState(() => {
     const saved = sessionStorage.getItem("isCheckoutView");
     return saved === "true"; // If saved is the string 'true', return true, otherwise return false
   });
   const [series, setSeries] = useState("");
+  const [discounts, setDiscounts] = useState<string[]>([]);
+
 
   useEffect(() => {
     const savedDrinks = sessionStorage.getItem('drinks');
@@ -41,21 +43,41 @@ function CashierView({ view }: CartViewProps) {
     if (savedDrinks) {
       updatedDrinks = [...JSON.parse(savedDrinks), ...drinks];
     }
+    if (discounts.length === 0) {
+      setDiscounts(determineDiscounts());
+    }
     setDrinks(updatedDrinks);
   }, []);
 
-
+  const determineDiscounts = (): string[] => {
+    // Replace this with your actual logic
+    var discounts = ["First"];
+    axios.get('http://localhost:9000/weather/forecast')
+      .then(response => {
+        if (response.data.temperatureMin < 60.0) {
+          discounts.push('Cold');
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching weather data:', error);
+      });
+    return discounts;
+  }
 
   const addToCart = (drink: Drink): void => {
     if (drink.size === "Large") {
       drink.price += 0.75;
     }
 
+    if (discounts.includes("Cold") && drink.name === "Caramel Chocolate Drink") {
+      drink.price = 0;
+    }
+
     let updatedDrinks = [...drinks, drink];
     setDrinks(updatedDrinks);
     sessionStorage.setItem('drinks', JSON.stringify(updatedDrinks));
   };
-  
+
   const removeDrinkFromCart = (drinkName: Drink) => {
     let found = false; // This flag will indicate if the drink has been found and removed
     console.log(drinks);
@@ -84,18 +106,18 @@ function CashierView({ view }: CartViewProps) {
   const submitOrder = async () => {
     //var insert_url = "https://gong-cha-server.onrender.com/sales";
     var insert_url = "https://gong-cha-server.onrender.com/sales";
-    
+
     const employeeId = sessionStorage.getItem("employeeId");
 
     await axios.post(insert_url, {
       employeeId,
       drinks,
-    });    
+    });
 
-    setTriggerBackAction(true); 
+    setTriggerBackAction(true);
     setSeries("");
     clearCart();
-    
+
   };
 
 
@@ -106,20 +128,20 @@ function CashierView({ view }: CartViewProps) {
         <LeftNavBar view={view} />
       </div>
       <div className="col d-flex flex-column vh-100 p-0 main-content">
-          <TopBar isBackButtonVisible = {showBackButton} view={view} series={series} onBackClick={handleBackFromTopBar} />
-          <div className="row">
-              <CategoryGrid addToCart={addToCart} setShowBackButton={setShowBackButton} setHandleBackFromTopBar={setHandleBackFromTopBar} setSeries={setSeries} triggerBackAction={triggerBackAction} resetTriggerBackAction={() => setTriggerBackAction(false)}  view={view} />
-              {!isCheckoutView && !showBackButton &&
-                <div className="col-7 img"> <img src={gongChaImg}></img> </div>
-              }
-              {isCheckoutView &&
-                <div className="col-md-3 cartViewContainer">
-                  <CartView InputDrinks={drinks} onRemoveDrink={removeDrinkFromCart} onClearCart={clearCart} onSubmit={submitOrder} view={"Cashier View"}/>
-                </div>
-              }
-          </div>
-          
-          <BottomBar onCheckout={handleCheckoutButton} />
+        <TopBar isBackButtonVisible={showBackButton} view={view} series={series} onBackClick={handleBackFromTopBar} />
+        <div className="row">
+          <CategoryGrid addToCart={addToCart} setShowBackButton={setShowBackButton} setHandleBackFromTopBar={setHandleBackFromTopBar} setSeries={setSeries} triggerBackAction={triggerBackAction} resetTriggerBackAction={() => setTriggerBackAction(false)} view={view} />
+          {!isCheckoutView && !showBackButton &&
+            <div className="col-7 img"> <img src={gongChaImg}></img> </div>
+          }
+          {isCheckoutView &&
+            <div className="col-md-3 cartViewContainer">
+              <CartView InputDrinks={drinks} onRemoveDrink={removeDrinkFromCart} onClearCart={clearCart} onSubmit={submitOrder} view={"Cashier View"} />
+            </div>
+          }
+        </div>
+
+        <BottomBar onCheckout={handleCheckoutButton} />
       </div>
     </div>
   );
