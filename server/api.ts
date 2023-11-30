@@ -1,6 +1,7 @@
 import express, { Router } from 'express';
 import cors from 'cors';
 import { db } from './server.ts';
+import axios from 'axios';
 
 
 const app = express();
@@ -446,6 +447,48 @@ function getRandomColor(): string {
   return color;
 }
 
+// Weather API
+
+app.get('/weather/forecast', async (req, res) => {
+  try {
+    const response = await axios.get(
+      `http://pro.openweathermap.org/data/2.5/forecast/daily?APPID=3bae41e3c0a26fd66b67c191f065532a&units=imperial&id=4682464&cnt=1`
+    );
+
+    const dailyForecast = response.data.list[0];
+
+    // Extract temperature range and weather description data for the current day
+    const temperatureMin = dailyForecast.temp.min;
+    const temperatureMax = dailyForecast.temp.max;
+    const weatherDescription = dailyForecast.weather[0].description;
+
+    // Send the temperature range and weather description for the current day in the response
+    res.json({ temperatureMin, temperatureMax, weatherDescription });
+  } catch (error) {
+    console.error('Error fetching weather data:', error);
+    res.status(500).json({ error: 'Error fetching weather data' });
+  }
+})
+
+app.get('/weather/current', async (req, res) => {
+  try {
+    const response = await axios.get(
+      `http://pro.openweathermap.org/data/2.5/weather?APPID=3bae41e3c0a26fd66b67c191f065532a&units=imperial&id=4682464`
+    );
+
+    const currentData = response.data;
+
+    // Extract temperature range and weather description data for the current day
+    const currentTemperature = currentData.main.temp;
+    const weatherDescription = currentData.weather[0].description;
+
+    // Send the temperature range and weather description for the current day in the response
+    res.json({ currentTemperature, weatherDescription });
+  } catch (error) {
+    console.error('Error fetching weather data:', error);
+    res.status(500).json({ error: 'Error fetching weather data' });
+  }
+})
 
 
 app.listen(port, () => {
