@@ -795,3 +795,56 @@
 .menu-categories-right {
   padding: 20px;
 }
+
+.alert{
+  position: absolute;
+  top: 10px;
+  left: 20px;
+  margin: 0px;
+  padding: 0px;
+
+}
+
+.close{
+  background-color: transparent;
+  margin: 0px;
+  padding: 10px;
+}
+.container {
+  background-color: #333; /* Dark background */
+  
+}
+.widgetText{
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+.widgetTextCity{
+  font-size: 30px;
+}
+.card-body{
+  padding-top: 10px;
+}
+
+.widget{
+  position: absolute;
+  background-color: var(--gc-red); /* Dark background */
+  right: 10px;
+  top: 255px;
+  opacity: 0.8;
+}
+
+.fade-in {
+  animation: fadeInAnimation ease 1s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fadeInAnimation {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
