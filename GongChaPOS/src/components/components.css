@@ -667,6 +667,7 @@
     color: #fcfcf1;
     text-align: center;
     padding: 70px;
+    min-width: 440px;
   }
 
   .customer-login {
@@ -744,6 +745,103 @@
   align-items: flex-end; /* Align items to the right */
   justify-content: flex-start; /* Align items to the top */
 }
+
+.menuBoardContainer{
+  display: flex;
+  flex-direction: row;
+  /* justify-content: space-between; */
+  align-items: center;
+  margin: 0px;
+  padding: 0px;
+}
+
+.menuBoardColLeft{
+  display: flex;
+  flex-direction: column;
+  justify-content:space-around;
+  margin: 0px;
+  padding: 0px;
+  max-width: 400px;
+  min-width: 300px;
+}
+
+.menuBoardDrinksContainer{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  align-content: center;
+  margin: 0px;
+  padding: 0px;
+  background-color: var(--gc-eggshell);
+  height: 870px;
+}
+.menuBoardDrinksTitle{
+  background-color: var(--gc-red);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.rightInfo{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items:flex-end;
+
+}
+.menuBoardDrinksTitle span{
+  color: var(--gc-tan);
+}
+
+.menuBoardDrinks{
+  display: flex;
+  flex-direction: column;
+  margin: 0px;
+  padding: 0px;
+  background-color: var(--gc-eggshell);
+  overflow-y: scroll;
+}
+
+.menuItemContainer{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 0px;
+  
+  padding: 0px;
+  background-color: var(--gc-tan);
+  border-radius: 0px;
+  border: 2px solid var(--gc-eggshell);
+  border-radius: 5px;
+}
+.menuItemImg{
+  margin-right: 80px;
+  background-color: var(--gc-eggshell);
+  border-radius: 10px;
+  border: 2px solid var(--gc-red);
+}
+
+
+.menuBoardButton{
+  background-color: var(--gc-red);
+  color: var(--gc-eggshell);
+  font-size: 30px;
+  padding: 0px;
+  width: 250px;
+  height: 100px;
+  margin: 10px;
+  margin-bottom: 20px;
+  margin-left: 20px;
+  border-radius: 10px;
+  z-index: 2;
+}
+.selectedSeriesButton {
+  background-color: black;
+  color: white;
+}
+
+
 
 .menu-board {
   display: flex;

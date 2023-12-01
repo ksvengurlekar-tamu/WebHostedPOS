@@ -117,7 +117,7 @@ function Landing() {
       
       {showAlert && (
         <div className="alert alert-warning alert-dismissible fade-in show" role="alert">
-          <span style={{margin: '5px', fontSize: '30px'}}>Since it is {currTemp} outside, we are offering a 10% discount on our {discountedDrink}! </span>
+          <span style={{margin: '5px', fontSize: '30px'}}>Since it is {currTemp} outside, we are offering a 100% discount on our {discountedDrink}! </span>
           <button type="button" className="close" onClick={() => setShowAlert(false)} aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>

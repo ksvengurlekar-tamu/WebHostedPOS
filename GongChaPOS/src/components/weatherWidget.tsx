@@ -40,7 +40,7 @@ const [weatherIconUrl, setWeatherIconUrl] = useState<string>('');
 
               <div className="d-flex flex-row align-items-center">
                   <p className="mb-0 me-4 widgetText">{weatherInfo.weatherDescription.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</p>
-                  {/* <i className="fas fa-cloud fa-3x" style={{ color: "#eee" }}></i> */}
+
                   {weatherIconUrl && <img src={weatherIconUrl} alt="Weather Icon" />}
               </div>
           </div>

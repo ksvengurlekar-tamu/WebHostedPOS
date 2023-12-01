@@ -5,7 +5,6 @@ import './logIn.css';
 import { useNavigate  } from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
-
 import gongChaLogo from '../assets/images/GongChaLogo.png';
 
 function Login() {
