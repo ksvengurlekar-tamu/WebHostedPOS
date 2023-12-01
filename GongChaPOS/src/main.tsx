@@ -9,6 +9,7 @@ import CustomerView from "./pages/customerView.tsx";
 import MenuBoard from "./pages/menuBoard.tsx";
 import "bootstrap/dist/css/bootstrap.css";
 import { LanguageProvider } from './components/languageContext';
+import PrivateRoute from "./components/privateRoute.tsx";
 
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
@@ -18,9 +19,26 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/cashierView" element={<CashierView view="Cashier View" />} />
-          <Route path="/managerView" element={<CashierView view="Manager View" />} />
-          <Route path="/inventory" element={<Inventory />} />
+
+          <Route path="/cashierView" element={
+              <PrivateRoute>
+                <CashierView view="Cashier View" />
+              </PrivateRoute>
+            } 
+          />
+          <Route path="/managerView" element={
+              <PrivateRoute>
+                <CashierView view="Manager View" />
+              </PrivateRoute>
+            } 
+          />
+          <Route path="/inventory" element={
+              <PrivateRoute>
+                <Inventory />
+              </PrivateRoute>
+            } 
+          />
+
           <Route path="/customerView" element={<CustomerView />} />
           <Route path="/menuBoard" element={<MenuBoard />} />
         </Routes>
