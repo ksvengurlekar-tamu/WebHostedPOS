@@ -1,4 +1,4 @@
-:root {
+  :root {
     --gc-red: hsl(353, 81%, 33%) ;
     --gc-red-darker: hsl(353, 81%, 23%) ; /* for hover */
     --gc-red-darkest: hsl(353, 81%, 13%) ; /* for active */
@@ -320,8 +320,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width:100%;
     
   }
+
   .item-toppings-container{
     display: flex;
     flex-direction: column;
@@ -667,6 +669,7 @@
     color: #fcfcf1;
     text-align: center;
     padding: 70px;
+    min-width: 440px;
   }
 
   .customer-login {
@@ -745,6 +748,103 @@
   justify-content: flex-start; /* Align items to the top */
 }
 
+.menuBoardContainer{
+  display: flex;
+  flex-direction: row;
+  /* justify-content: space-between; */
+  align-items: center;
+  margin: 0px;
+  padding: 0px;
+}
+
+.menuBoardColLeft{
+  display: flex;
+  flex-direction: column;
+  justify-content:space-around;
+  margin: 0px;
+  padding: 0px;
+  max-width: 400px;
+  min-width: 300px;
+}
+
+.menuBoardDrinksContainer{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  align-content: center;
+  margin: 0px;
+  padding: 0px;
+  background-color: var(--gc-eggshell);
+  height: 870px;
+}
+.menuBoardDrinksTitle{
+  background-color: var(--gc-red);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.rightInfo{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items:flex-end;
+
+}
+.menuBoardDrinksTitle span{
+  color: var(--gc-tan);
+}
+
+.menuBoardDrinks{
+  display: flex;
+  flex-direction: column;
+  margin: 0px;
+  padding: 0px;
+  background-color: var(--gc-eggshell);
+  overflow-y: scroll;
+}
+
+.menuItemContainer{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 0px;
+  
+  padding: 0px;
+  background-color: var(--gc-tan);
+  border-radius: 0px;
+  border: 2px solid var(--gc-eggshell);
+  border-radius: 5px;
+}
+.menuItemImg{
+  margin-right: 80px;
+  background-color: var(--gc-eggshell);
+  border-radius: 10px;
+  border: 2px solid var(--gc-red);
+}
+
+
+.menuBoardButton{
+  background-color: var(--gc-red);
+  color: var(--gc-eggshell);
+  font-size: 30px;
+  padding: 0px;
+  width: 250px;
+  height: 100px;
+  margin: 10px;
+  margin-bottom: 20px;
+  margin-left: 20px;
+  border-radius: 10px;
+  z-index: 2;
+}
+.selectedSeriesButton {
+  background-color: black;
+  color: white;
+}
+
+
+
 .menu-board {
   display: flex;
   flex-direction: column;
@@ -794,4 +894,242 @@
 .menu-categories-left,
 .menu-categories-right {
   padding: 20px;
+}
+
+.alert{
+  position: absolute;
+  top: 10px;
+  left: 20px;
+  margin: 0px;
+  padding: 0px;
+
+}
+
+.close{
+  background-color: transparent;
+  margin: 0px;
+  padding: 10px;
+}
+.container {
+  background-color: #333; /* Dark background */
+}
+.widgetText{
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+.widgetTextCity{
+  font-size: 30px;
+}
+.card-body{
+  padding-top: 10px;
+}
+
+.widget{
+  position: absolute;
+  background-color: var(--gc-red); /* Dark background */
+  right: 10px;
+  top: 255px;
+  opacity: 0.8;
+}
+
+.fade-in {
+  animation: fadeInAnimation ease 1s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fadeInAnimation {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.customerViewContainer{
+  background-color: var(--gc-tan);
+  width:fit-content;
+  overflow: hidden;
+}
+
+.customerViewMainContent{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around; /* Adjust this to space-around or space-between to change the spacing between the two columns */
+  justify-content: center;
+  align-items: center;
+  padding: 30px; /* Add padding to the container if needed */
+}
+
+.customerCard{
+  display: flex;
+  align-items: center;
+  align-content: center;
+  width: 700px;
+  height: 200px;
+  padding: 0px;
+  cursor: pointer; /* Change the cursor on hover */
+  position: relative; 
+  border-radius: 3px;
+  border: 3px solid white;
+  margin: 30px 50px;
+}
+
+
+.customerCard span{
+  font-size: 50px;
+
+}
+
+.cardImg{
+  margin-right: auto; 
+  height: 150px; 
+  width: auto; 
+  margin-bottom: 0px;
+  margin-left: 10px;
+}
+
+.cardText {
+  position: absolute;
+  width: 100%; /* Take up full width to center content */
+  justify-content: center;
+  left: 0; /* Align with the left edge of the parent */
+}
+
+.customerViewDrinks{
+  background-color: var(--gc-tan);
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around; /* This will spread out the buttons evenly */
+  align-items: flex-start;
+  align-self: flex-start;
+  align-content: flex-start;
+  height: calc(100vh - 90px); /* Replace [TopBarHeight] with the actual height of your top bar */  overflow-y: auto;
+}
+.customerViewDrinks::after {
+  content: "";
+  width: 800px;
+}
+
+.skeletonCardCustomer {
+  width: 700px;
+  height: 200px;
+  margin: 30px 50px;
+  background-color: var(--gc-eggshell);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.customerDrinkPopUp{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0px;
+  padding: 0px;
+  height: 100%;
+  width: 100%;
+}
+
+.customerDrinkText_Pic{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  align-content: center;
+  margin: 0px;
+  padding: 0px;
+  height: 30%;
+  width: 100%;
+}
+
+.customerDrinkDetails{
+  display: flex;
+  flex-direction: row;
+  background-color: #fcfcf1;
+  height: 50%;
+  width: 100%;
+  border: 4px solid black;
+  border-radius: 5px;
+}
+
+.customerDrinkDetailsCol{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+ 
+  border-right: 2px solid black;
+  border-left: 2px solid black;
+  
+}
+.customerDrinkDetailsColRight{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  border-right: 2px solid black;
+  border-left: 2px solid black;
+  overflow-y: scroll;
+  padding-bottom: 80px; /* Add padding to the bottom */
+}
+
+.customerDrinkDetailsButton{
+  margin: 20px;
+  width: 700px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--gc-red);
+  color: var(--gc-eggshell);
+}
+.rightButton{
+  background-color: #fcfcf1;
+  color: black;
+  border: 4px solid black;
+  border-radius: 20px;;
+}
+.rightButton:hover{
+  background-color: black;
+  color: white;
+}
+
+.customerDrinkDetailsButtonActive{
+  background-color: black;
+  color: white;
+}
+
+.customerDrinkBottomBar{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 15%;
+  width: 100%;
+  padding: 10px ;
+  background-color: #fcfcf1;
+}
+
+.customerViewButton{
+  background-color: hsl(203, 85%, 58%);
+  font-size: 30px;
+  padding: 0px;
+  width: 350px;
+  height: 60px;
+  border-color: transparent;
+}
+
+.customerViewCart{
+  position: absolute;
+  right: 0px;
+  z-index: 10;
+  background-color: var(--gc-tan);
+  min-width: 450px;
+  height: 91%;
+  opacity: 1;
+  padding:10px ;
+  box-shadow:  0 0 10px black;
 }

@@ -4,13 +4,13 @@ import "./components.css";
 interface CardDetails {
   className: string;
   menuItemName: string;
-  color: string;
+  color?: string;
   onSelect: () => void; // Add this line
 }
 
 function Card({ className, menuItemName, color, onSelect }: CardDetails) {
   // let cardColor = generateRandomColor();
-  let cardColor = color;
+  let cardColor = '';
 
   switch (menuItemName) {
     case "Milk Foam":
@@ -32,7 +32,7 @@ function Card({ className, menuItemName, color, onSelect }: CardDetails) {
       cardColor = "#ead1dc";
       break;
     default:
-      cardColor = color;
+      cardColor = color || "#fff2cc";
       break;
   }
 
@@ -44,7 +44,8 @@ function Card({ className, menuItemName, color, onSelect }: CardDetails) {
 
   return (
     <button className={className} style={cardStyle} onClick={onSelect}> 
-    {menuItemName} </button>
+      {menuItemName} 
+    </button>
   );
 };
 

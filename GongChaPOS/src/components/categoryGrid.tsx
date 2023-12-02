@@ -223,8 +223,7 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
   }
 
   useEffect(() => {
-    const savedSeriesSelected =
-      sessionStorage.getItem("isSeriesSelected") === "true";
+    const savedSeriesSelected = sessionStorage.getItem("isSeriesSelected") === "true";
     if (savedSeriesSelected) {
       // If the series was previously selected, we should load the menu items
       const savedMenuItems = sessionStorage.getItem("menuItems");
@@ -309,7 +308,7 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
               setSelectedDrinkName(menuItem.menuitemname);
               setSelectedDrinkPrice(menuItem.menuitemprice);
               setSelectedDrinkID(menuItem.menuitemid);
-              setSelectedDrinkIMG("/images/" + menuItem.menuitemcategory+ "/" + menuItem.menuitemname + ".png");
+              setSelectedDrinkIMG("/images/" + menuItem.menuitemcategory + "/" + menuItem.menuitemname + ".png");
             }
           }}
         />
@@ -323,7 +322,7 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
         // Render the first button for Manager View
         return (
           <button key={`placeholder-${index}`} className="drink" style={{ backgroundColor: "rgba(211,211,211)", position: "relative" }} onClick={() => setisAddMenuItemSelected(true)}>
-            <FontAwesomeIcon icon={faPlus} style={{fontSize: "40px"}} className="checkIcon" />
+            <FontAwesomeIcon icon={faPlus} style={{ fontSize: "40px" }} className="checkIcon" />
           </button>
         );
       } else if (view != "Customer View") {
@@ -332,7 +331,7 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
           <button key={`placeholder-${index}`} className="drink button-no-hover" style={{ backgroundColor: "#fcfcf2" }} disabled> </button>
         );
       }
-  });
+    });
 
     itemsToRender = [...itemsToRender, ...placeholderItems];
   } else {
@@ -342,37 +341,37 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
         <Card
           className="series"
           menuItemName="Milk Foam"
-          color="#fff2cc"
+
           onSelect={() => handleSeriesClick("Milk Foam")}
         />
         <Card
           className="series"
           menuItemName="Milk Tea"
-          color="#fce5cd"
+
           onSelect={() => handleSeriesClick("Milk Tea")}
         />
         <Card
           className="series"
           menuItemName="Slush"
-          color="#d9ead3"
+
           onSelect={() => handleSeriesClick("Slush")}
         />
         <Card
           className="series"
           menuItemName="Seasonal"
-          color="#c9daf8"
+
           onSelect={() => handleSeriesClick("Seasonal")}
         />
         <Card
           className="series"
           menuItemName="Tea Latte"
-          color="#d9d2e9"
+
           onSelect={() => handleSeriesClick("Tea Latte")}
         />
         <Card
           className="series"
           menuItemName="Coffee"
-          color="#ead1dc"
+
           onSelect={() => handleSeriesClick("Coffee")}
         />
       </div>

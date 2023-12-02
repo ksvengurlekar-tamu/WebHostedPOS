@@ -148,6 +148,8 @@ app.post('/sales', async (req, res) => { // To add a sale into the database (wit
 
     const { employeeId, drinks } = req.body;
     let employeeIdInt = parseInt(employeeId);
+    console.log("employeeId: " + employeeIdInt);
+    console.log("drinks: " + drinks);
 
     for (const drink of drinks) {
       // add to sales
@@ -461,16 +463,20 @@ app.get('/weather/forecast', async (req, res) => {
     const temperatureMin = dailyForecast.temp.min;
     const temperatureMax = dailyForecast.temp.max;
     const weatherDescription = dailyForecast.weather[0].description;
+    const weatherIcon = dailyForecast.weather[0].icon;
+
+    const cityName = response.data.city.name;
+    const countryName = response.data.city.country;
 
     // Send the temperature range and weather description for the current day in the response
-    res.json({ temperatureMin, temperatureMax, weatherDescription });
+    res.json({ temperatureMin, temperatureMax, weatherDescription, weatherIcon, cityName, countryName });
   } catch (error) {
     console.error('Error fetching weather data:', error);
     res.status(500).json({ error: 'Error fetching weather data' });
   }
 })
 
-app.get('/weather/current', async (req, res) => {
+app.get('/weather/current', async (req, res) => { //
   try {
     const response = await axios.get(
       `http://pro.openweathermap.org/data/2.5/weather?APPID=3bae41e3c0a26fd66b67c191f065532a&units=imperial&id=4682464`
@@ -480,10 +486,10 @@ app.get('/weather/current', async (req, res) => {
 
     // Extract temperature range and weather description data for the current day
     const currentTemperature = currentData.main.temp;
-    const weatherDescription = currentData.weather[0].description;
+    const feelsLike = currentData.main.feels_like;
 
     // Send the temperature range and weather description for the current day in the response
-    res.json({ currentTemperature, weatherDescription });
+    res.json({ currentTemperature, feelsLike });
   } catch (error) {
     console.error('Error fetching weather data:', error);
     res.status(500).json({ error: 'Error fetching weather data' });
