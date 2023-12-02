@@ -1010,3 +1010,112 @@
   content: "";
   width: 800px;
 }
+
+.skeletonCardCustomer {
+  width: 700px;
+  height: 200px;
+  margin: 30px 50px;
+  background-color: var(--gc-eggshell);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.customerDrinkPopUp{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0px;
+  padding: 0px;
+  height: 100%;
+  width: 100%;
+}
+
+.customerDrinkText_Pic{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  align-content: center;
+  margin: 0px;
+  padding: 0px;
+  height: 30%;
+  width: 100%;
+}
+
+.customerDrinkDetails{
+  display: flex;
+  flex-direction: row;
+  background-color: #fcfcf1;
+  height: 50%;
+  width: 100%;
+  border: 4px solid black;
+  border-radius: 5px;
+}
+
+.customerDrinkDetailsCol{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+ 
+  border-right: 2px solid black;
+  border-left: 2px solid black;
+  
+}
+.customerDrinkDetailsColRight{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  border-right: 2px solid black;
+  border-left: 2px solid black;
+  overflow-y: scroll;
+  padding-bottom: 80px; /* Add padding to the bottom */
+}
+
+.customerDrinkDetailsButton{
+  margin: 20px;
+  width: 700px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--gc-red);
+  color: var(--gc-eggshell);
+}
+.rightButton{
+  background-color: #fcfcf1;
+  color: black;
+  border: 4px solid black;
+  border-radius: 20px;;
+}
+.rightButton:hover{
+  background-color: black;
+  color: white;
+}
+
+.customerDrinkDetailsButtonActive{
+  background-color: black;
+  color: white;
+}
+
+.customerDrinkBottomBar{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 15%;
+  width: 100%;
+  padding: 10px ;
+  background-color: #fcfcf1;
+}
+
+.customerViewButton{
+  background-color: hsl(203, 85%, 58%);
+  font-size: 30px;
+  padding: 0px;
+  width: 350px;
+  height: 60px;
+  border-color: transparent;
+}
