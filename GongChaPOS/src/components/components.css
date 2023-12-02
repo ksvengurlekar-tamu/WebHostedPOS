@@ -1,4 +1,4 @@
-:root {
+  :root {
     --gc-red: hsl(353, 81%, 33%) ;
     --gc-red-darker: hsl(353, 81%, 23%) ; /* for hover */
     --gc-red-darkest: hsl(353, 81%, 13%) ; /* for active */
@@ -910,7 +910,6 @@
 }
 .container {
   background-color: #333; /* Dark background */
-  
 }
 .widgetText{
   font-size: 20px;
@@ -946,3 +945,68 @@
   }
 }
 
+.customerViewContainer{
+  background-color: var(--gc-tan);
+  width:fit-content;
+  overflow: hidden;
+}
+
+.customerViewMainContent{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around; /* Adjust this to space-around or space-between to change the spacing between the two columns */
+  justify-content: center;
+  align-items: center;
+  padding: 30px; /* Add padding to the container if needed */
+}
+
+.customerCard{
+  display: flex;
+  align-items: center;
+  align-content: center;
+  width: 700px;
+  height: 200px;
+  padding: 0px;
+  cursor: pointer; /* Change the cursor on hover */
+  position: relative; 
+  border-radius: 3px;
+  border: 3px solid white;
+  margin: 30px 50px;
+}
+
+
+.customerCard span{
+  font-size: 50px;
+
+}
+
+.cardImg{
+  margin-right: auto; 
+  height: 150px; 
+  width: auto; 
+  margin-bottom: 0px;
+  margin-left: 10px;
+}
+
+.cardText {
+  position: absolute;
+  width: 100%; /* Take up full width to center content */
+  justify-content: center;
+  left: 0; /* Align with the left edge of the parent */
+}
+
+.customerViewDrinks{
+  background-color: var(--gc-tan);
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around; /* This will spread out the buttons evenly */
+  align-items: flex-start;
+  align-self: flex-start;
+  align-content: flex-start;
+  height: calc(100vh - 90px); /* Replace [TopBarHeight] with the actual height of your top bar */  overflow-y: auto;
+}
+.customerViewDrinks::after {
+  content: "";
+  width: 800px;
+}

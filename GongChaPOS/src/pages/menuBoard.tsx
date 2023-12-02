@@ -3,7 +3,6 @@ import "../components/components.css";
 import { useNavigate } from 'react-router-dom';
 import TopBar from '../components/topBar';
 import gongChaLogo from '../assets/images/GongChaLogo.png';
-import { SvgIcon, dividerClasses } from '@mui/material';
 
 
 interface MenuItem {

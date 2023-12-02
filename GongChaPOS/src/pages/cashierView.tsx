@@ -53,7 +53,6 @@ function CashierView({ view }: CartViewProps) {
       drink.price += 0.75;
     }
     const savedDiscountedDrink = localStorage.getItem('discountedDrink');
-    console.log(savedDiscountedDrink);
     if (drink.name === savedDiscountedDrink) {
       drink.price = 0;
     }

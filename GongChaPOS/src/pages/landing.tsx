@@ -25,7 +25,7 @@ function Landing() {
     return savedCurrTemp || "";
   });
   const [discountedDrink, setDiscountedDrink] = useState<string>(() => {
-    const savedDiscountedDrink = localStorage.getItem('discountedDrink');
+    const savedDiscountedDrink = sessionStorage.getItem('discountedDrink');
     return savedDiscountedDrink || "";
   });
   const [showAlert, setShowAlert] = useState(true);
@@ -33,7 +33,7 @@ function Landing() {
   const [weatherInfo, setWeatherInfo] = useState<weatherInfo>();
   
   useEffect(() => { //determine current temperature
-    const savedDiscountedDrink = localStorage.getItem('discountedDrink');
+    const savedDiscountedDrink = sessionStorage.getItem('discountedDrink');
     const fetchWeatherData = async () => {
       try {
         const dailyWeatherInfo = await axios.get('http://localhost:9000/weather/forecast');
@@ -83,7 +83,7 @@ function Landing() {
     localStorage.setItem("currTemp", currTemp.toString());
   }, [currTemp]);
   useEffect(() => {
-    localStorage.setItem("discountedDrink", discountedDrink.toString());
+    sessionStorage.setItem("discountedDrink", discountedDrink.toString());
   }, [discountedDrink]);
 
   useEffect(() => {
