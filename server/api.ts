@@ -148,6 +148,8 @@ app.post('/sales', async (req, res) => { // To add a sale into the database (wit
 
     const { employeeId, drinks } = req.body;
     let employeeIdInt = parseInt(employeeId);
+    console.log("employeeId: " + employeeIdInt);
+    console.log("drinks: " + drinks);
 
     for (const drink of drinks) {
       // add to sales

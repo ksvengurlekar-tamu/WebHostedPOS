@@ -320,8 +320,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width:100%;
     
   }
+
   .item-toppings-container{
     display: flex;
     flex-direction: column;
@@ -1118,4 +1120,16 @@
   width: 350px;
   height: 60px;
   border-color: transparent;
+}
+
+.customerViewCart{
+  position: absolute;
+  right: 0px;
+  z-index: 10;
+  background-color: var(--gc-tan);
+  min-width: 450px;
+  height: 91%;
+  opacity: 1;
+  padding:10px ;
+  box-shadow:  0 0 10px black;
 }

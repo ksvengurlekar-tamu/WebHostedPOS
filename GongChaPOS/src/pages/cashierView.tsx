@@ -88,7 +88,9 @@ function CashierView({ view }: CartViewProps) {
   }
 
   const submitOrder = async () => {
-    //var insert_url = "https://gong-cha-server.onrender.com/sales";
+    setTriggerBackAction(true);
+    setSeries("");
+    console.log(drinks); 
     var insert_url = "https://gong-cha-server.onrender.com/sales";
 
     const employeeId = sessionStorage.getItem("employeeId");
@@ -98,8 +100,7 @@ function CashierView({ view }: CartViewProps) {
       drinks,
     });
 
-    setTriggerBackAction(true);
-    setSeries("");
+    
     clearCart();
 
   };

@@ -1,8 +1,9 @@
-import  { MouseEvent, useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import TopBar from "../components/topBar.tsx";
 import "../components/components.css";
 import axios from 'axios';
 import { useNavigate  } from 'react-router-dom';
+import CartView from "../components/cartView.tsx";
 
 interface Drink {
   id: number;
@@ -57,6 +58,10 @@ function CustomerView() {
     const saved = sessionStorage.getItem("isLoading"); 
     return saved === "true"; 
   });
+  const [isCart, setIsCart] = useState(() => {
+    const saved = sessionStorage.getItem("isCart"); 
+    return saved === "true"; 
+  });
   const [activeDetail, setActiveDetail] = useState<DrinkDetail>(() => {
     const saved = sessionStorage.getItem("activeDetail");
     return saved as DrinkDetail || "";
@@ -88,7 +93,10 @@ function CustomerView() {
   }, [selectedMenuItem]);
   useEffect(() => {
     sessionStorage.setItem("isDrinkPopUp", JSON.stringify(isDrinkPopUp));
-  }, [isLoading]);
+  }, [isDrinkPopUp]);
+  useEffect(() => {
+    sessionStorage.setItem("isCart", JSON.stringify(isCart));
+  }, [isCart]);
   useEffect(() => {
     sessionStorage.setItem("isLoading", JSON.stringify(isLoading));
   }, [isLoading]);
@@ -98,6 +106,9 @@ function CustomerView() {
   useEffect(() => {
     sessionStorage.setItem("customization", JSON.stringify(customization));
   }, [customization]);
+  useEffect(() => {
+    sessionStorage.setItem("cartInfo", JSON.stringify(cartInfo));
+  }, [cartInfo]);
 
 
   useEffect(() => {
@@ -164,46 +175,43 @@ function CustomerView() {
   }
 
   
-  // const removeDrinkFromCart = (drinkName: Drink) => {
-  //   let found = false; // This flag will indicate if the drink has been found and removed
-  //   console.log(drinks);
-  //   const updatedDrinks = drinks.filter((drink) => {
-  //     if (!found && drink === drinkName) {
-  //       found = true; // Set the flag to true when the drink is found
-  //       return false; // This drink will be removed
-  //     } 
-  //     return true; // All other drinks will be kept
-  //   });
-  //   setDrinks(updatedDrinks);
-  //   sessionStorage.setItem("drinks", JSON.stringify(updatedDrinks));
-  // };
+  const removeDrinkFromCart = (drinkName: Drink) => {
+    let found = false; // This flag will indicate if the drink has been found and removed
+;
+    const updatedDrinks = cartInfo.filter((drink) => {
+      if (!found && drink === drinkName) {
+        found = true; // Set the flag to true when the drink is found
+        return false; // This drink will be removed
+      } 
+      return true; // All other drinks will be kept
+    });
+    setCartInfo(updatedDrinks);
+    sessionStorage.setItem('cartInfo', JSON.stringify(updatedDrinks));
+  };
 
-  // const clearCart = () => {
-  //   setDrinks([]);
-  //   sessionStorage.removeItem('drinks');
-  // };
+  const clearCart = () => {
+    setCartInfo([]);
+    sessionStorage.removeItem('cartInfo');
+  };
 
-  // const handleCheckoutButton = () => {
-  //   setIsCheckoutView(!isCheckoutView);
-  //   sessionStorage.setItem("isCheckoutView", (!isCheckoutView).toString());
-  // }
 
-  // const submitOrder = async () => {
-  //   //var insert_url = "https://gong-cha-server.onrender.com/sales";
-  //   var insert_url = "https://gong-cha-server.onrender.com/sales";
+  const submitOrder = async () => {
+    onBackClick(); 
+    setSeriesName("");
+    console.log(cartInfo);
+    var insert_url = "https://gong-cha-server.onrender.com/sales";
     
-  //   const employeeId = sessionStorage.getItem("employeeId");
+    const employeeId = -1;
+    let drinks = cartInfo // idk why but doesn't work without it 
+    await axios.post(insert_url, {
+      employeeId,
+      drinks,
+    });    
 
-  //   await axios.post(insert_url, {
-  //     employeeId,
-  //     drinks,
-  //   });    
-
-  //   setTriggerBackAction(true); 
-  //   setSeries("");
-  //   clearCart();
     
-  // };
+    clearCart();
+  };
+
   const handleSeriesClick = (seriesName: string) => {
     setSeriesName(seriesName);
     setMenuItems([]);
@@ -266,6 +274,11 @@ function CustomerView() {
       <div>
         <TopBar isBackButtonVisible={true} view={"Customer View"} series={seriesName + " series"} onBackClick={onBackClick} />
       </div>
+      {(isCart && !isDrinkView) &&
+        <div className="customerViewCart">
+          <CartView InputDrinks={cartInfo} onRemoveDrink={removeDrinkFromCart} onClearCart={clearCart} onSubmit={submitOrder}  />
+        </div>
+          }
       {(!isDrinkView && !isDrinkPopUp) &&
         <>
           <div className="customerViewMainContent vw-100">
@@ -301,6 +314,9 @@ function CustomerView() {
 
             </div>
           </div>
+          <div className="bottomOverlay" style={{height: "130px"}}> 
+              <button className="btn btn-primary drinkPropButton" style={{margin:"20px", height:"100px"}} onClick={() => setIsCart(!isCart)}>Cart</button>
+          </div>
         </>
       }
       {(isDrinkView && !isDrinkPopUp) && (
@@ -325,8 +341,8 @@ function CustomerView() {
         </div>
       )}
       {isDrinkPopUp && (
-        <div className="customerDrinkPopUp vw-100">
-          <div className="customerDrinkText_Pic">
+        <div className="customerDrinkPopUp vw-100" style={{backgroundColor: selectedMenuItem.color}}>
+          <div className="customerDrinkText_Pic" style={{backgroundColor: selectedMenuItem.color}}>
             <img src={"/images/" + seriesName + "/" + selectedMenuItem.menuitemname + ".png"} height={"254px"} width={"170px"} />
             <span style={{ fontSize: "50px", fontWeight: "1000" }}>{selectedMenuItem.menuitemname}</span>
           </div>

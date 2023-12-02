@@ -36,11 +36,11 @@ function Landing() {
     const savedDiscountedDrink = sessionStorage.getItem('discountedDrink');
     const fetchWeatherData = async () => {
       try {
-        const dailyWeatherInfo = await axios.get('http://localhost:9000/weather/forecast');
-        const currWeatherInfo = await axios.get('http://localhost:9000/weather/current');
+        const dailyWeatherInfo = await axios.get('https://gong-cha-server.onrender.com/weather/forecast');
+        const currWeatherInfo = await axios.get('https://gong-cha-server.onrender.com/weather/current');
         console.log(savedDiscountedDrink);
         if (!savedDiscountedDrink) {
-          const menuItems = await axios.get('http://localhost:9000/category/Seasonal');
+          const menuItems = await axios.get('https://gong-cha-server.onrender.com/category/Seasonal');
           const menuItemsData = menuItems.data;
           const randomIndex = Math.floor(Math.random() * menuItemsData.length);
           const randomDrink = menuItemsData[randomIndex].menuitemname;
