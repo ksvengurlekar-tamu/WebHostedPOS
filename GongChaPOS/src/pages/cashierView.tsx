@@ -52,7 +52,7 @@ function CashierView({ view }: CartViewProps) {
     if (drink.size === "Large") {
       drink.price += 0.75;
     }
-    const savedDiscountedDrink = localStorage.getItem('discountedDrink');
+    const savedDiscountedDrink = sessionStorage.getItem('discountedDrink');
     if (drink.name === savedDiscountedDrink) {
       drink.price = 0;
     }

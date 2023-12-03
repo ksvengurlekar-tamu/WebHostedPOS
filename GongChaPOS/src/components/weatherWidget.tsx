@@ -33,14 +33,12 @@ const [weatherIconUrl, setWeatherIconUrl] = useState<string>('');
   return (
       <div className="card widget">
           <div className="card-body">
-              <strong className="mb-1 sfw-normal widgetTextCity">{weatherInfo.cityName}, {weatherInfo.countryName} </strong>
-              <p className="mb-1 widgetText">Current temperature: <strong className="widgetText">{weatherInfo.currentTemp.toPrecision(2)}°F</strong></p>
-              <p className="widgetText">Feels like: <strong className="widgetText">{weatherInfo.feelsLike.toPrecision(2)}°F</strong></p>
-              <p className="widgetText"> Min: <strong className="widgetText">{weatherInfo.minTemp.toPrecision(2)}°F</strong>, Max: <strong className="widgetText">{weatherInfo.maxTemp.toPrecision(2)}°F</strong></p>
-
+              <strong role="heading" aria-level={1} className="mb-1 sfw-normal widgetTextCity">{weatherInfo.cityName}, {weatherInfo.countryName} </strong>
+              <p role="heading" aria-level={2} className="mb-1 widgetText">Current temperature: <strong aria-level={2} className="widgetText">{weatherInfo.currentTemp.toPrecision(2)}°F</strong></p>
+              <p role="heading" aria-level={2} className="widgetText">Feels like: <strong aria-level={2} className="widgetText">{weatherInfo.feelsLike.toPrecision(2)}°F</strong></p>
+              <p role="heading" aria-level={2} className="widgetText"> Min: <strong aria-level={2} className="widgetText">{weatherInfo.minTemp.toPrecision(2)}°F</strong>, Max: <strong className="widgetText">{weatherInfo.maxTemp.toPrecision(2)}°F</strong></p>
               <div className="d-flex flex-row align-items-center">
-                  <p className="mb-0 me-4 widgetText">{weatherInfo.weatherDescription.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</p>
-
+                  <p role="heading" aria-level={2} className="mb-0 me-4 widgetText">{weatherInfo.weatherDescription.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</p>
                   {weatherIconUrl && <img src={weatherIconUrl} alt="Weather Icon" />}
               </div>
           </div>

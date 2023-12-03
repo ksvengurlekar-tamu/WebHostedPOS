@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import "../components/components.css";
 import { useNavigate } from 'react-router-dom';
 import TopBar from '../components/topBar';
@@ -14,7 +14,31 @@ interface MenuItem {
     menuitemhascaffeine: boolean;
 }
 
+function determineNextSeries(currentSeries: string): string {
+    // Logic to determine the next series
+    // This should return the name of the next series based on your own series logic
+    // For example:
+    const seriesOrder = ['Milk Foam', 'Milk Tea', 'Slush', 'Seasonal', 'Tea Latte', 'Coffee'];
+    const currentSeriesIndex = seriesOrder.findIndex(series => series === currentSeries);
+    const nextSeriesIndex = (currentSeriesIndex + 1) % seriesOrder.length;
+    return seriesOrder[nextSeriesIndex];
+}
+
+
 function MenuBoard() {
+    // const [autoScroll, setAutoScroll] = useState(true);
+    // const [scrollPosition, setScrollPosition] = useState(0);
+    // const scrollIntervalRef = useRef<number | null>(null);
+    // const menuBoardRef = useRef<HTMLDivElement>(null); // Add this ref to your menuBoardDrinks div
+    // const userInteractedRef = useRef(false);
+    // const [startAutoScroll, setStartAutoScroll] = useState(false);
+    const [autoScroll, setAutoScroll] = useState<boolean>(false);
+    const [scrollIntervalRef, setScrollIntervalRef] = useState<number | null>(null);
+    const menuBoardRef = useRef<HTMLDivElement | null>(null);
+    const [scrollPosition, setScrollPosition] = useState(0);
+    const userHasInteracted = useRef(false);
+
+    
     const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
     const [isSeriesSelected, setIsSeriesSelected] = useState(() => {
         const saved = sessionStorage.getItem("isSeriesSelected2");
@@ -22,9 +46,66 @@ function MenuBoard() {
     });
     const [selectedSeries, setSelectedSeries] = useState<string>(() => {
         const savedSelectedSeries = sessionStorage.getItem('selectedSeries');
-        return savedSelectedSeries || "Menu Board";
+        return savedSelectedSeries || "Milk Foam";
     });
     const navigate = useNavigate();
+
+    const handleAutoScroll = () => {
+        if (!menuBoardRef.current) return;
+
+        const menuBoard = menuBoardRef.current;
+        const maxScroll = menuBoard.scrollHeight - menuBoard.clientHeight;
+
+        if (scrollPosition < maxScroll) {
+            setScrollPosition(prev => prev + 1); // Increment scroll position
+        } else {
+            goToNextSeries(); // When end is reached, go to next series
+            setScrollPosition(0); // Reset scroll position
+        }
+
+        menuBoard.scrollTop = scrollPosition; // Apply the scroll
+    };
+
+    const goToNextSeries = () => {
+        if (userHasInteracted.current) return; // Skip if user has interacted
+
+        const nextSeries = determineNextSeries(selectedSeries);
+        setSelectedSeries(nextSeries);
+        setScrollPosition(0); // Reset scroll position
+    };
+
+    useEffect(() => {
+        // Handle auto-scrolling
+        if (autoScroll) {
+            const intervalId = window.setInterval(handleAutoScroll, 50);
+            setScrollIntervalRef(intervalId);
+        } else {
+            if (scrollIntervalRef) {
+                clearInterval(scrollIntervalRef);
+            }
+        }
+        return () => {
+            if (scrollIntervalRef) {
+                clearInterval(scrollIntervalRef);
+            }
+        };
+    }, [autoScroll, scrollPosition]);
+
+    // Fetch menu items whenever the selected series changes
+    useEffect(() => {
+        fetchMenuItems();
+    }, [selectedSeries]);
+
+    useEffect(() => {
+        // Auto-scroll starts after 2 seconds if the user hasn't interacted
+        const timeoutId = setTimeout(() => {
+            if (!userHasInteracted.current) {
+                setAutoScroll(true);
+                setIsSeriesSelected(true);
+            }
+        }, 2000);
+        return () => clearTimeout(timeoutId);
+    }, []);
 
     useEffect(() => {
         sessionStorage.setItem("isSeriesSelected2", isSeriesSelected.toString());
@@ -37,6 +118,8 @@ function MenuBoard() {
         // Fetch menu items from the server
         fetchMenuItems();
     }, [selectedSeries]);
+
+
 
     const fetchMenuItems = async () => {
         try {
@@ -51,8 +134,18 @@ function MenuBoard() {
 
 
     const handleSeriesClick = (seriesName: string) => {
+        userHasInteracted.current = true; // Mark as interacted
+
+        if (scrollIntervalRef) {
+            clearInterval(scrollIntervalRef); // Clear any existing interval
+        }
         setSelectedSeries(seriesName);
         setIsSeriesSelected(true);
+        setAutoScroll(false); // Disable auto-scroll when user selects a series
+        const _timeoutId = setTimeout(() => {
+                setAutoScroll(true);
+                setIsSeriesSelected(true);
+        }, 4000);
     };
 
     const onBackClick = () => {
@@ -85,7 +178,7 @@ function MenuBoard() {
                                 <span style={{ marginLeft: "170px", marginRight: "30px" }}>Price</span>
                             </span>
                         </div>
-                        <div className="menuBoardDrinks h-100 w-100">
+                        <div className="menuBoardDrinks h-100 w-100 " ref={menuBoardRef}>
                             {menuItems.map((menuItem) => (
                                 <button key={menuItem.menuitemid} className="menuItemContainer">
                                     <img

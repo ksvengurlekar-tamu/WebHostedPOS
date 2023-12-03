@@ -152,7 +152,7 @@ function CustomerView() {
     if (newDrink.size === "Large") {
       newDrink.price += 0.75;
     }
-    const savedDiscountedDrink = localStorage.getItem('discountedDrink');
+    const savedDiscountedDrink = sessionStorage.getItem('discountedDrink');
     if (newDrink.name === savedDiscountedDrink) {
       newDrink.price = 0;
     }
@@ -177,7 +177,6 @@ function CustomerView() {
   
   const removeDrinkFromCart = (drinkName: Drink) => {
     let found = false; // This flag will indicate if the drink has been found and removed
-;
     const updatedDrinks = cartInfo.filter((drink) => {
       if (!found && drink === drinkName) {
         found = true; // Set the flag to true when the drink is found
