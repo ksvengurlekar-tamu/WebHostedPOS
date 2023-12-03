@@ -283,29 +283,29 @@ function CustomerView() {
           <div className="customerViewMainContent vw-100">
             <div className="customerViewSeriesCol">
               <button className="customerCard" style={{ backgroundColor: "#fff2cc" }} onClick={() => handleSeriesClick("Milk Foam")}>
-                <img src={"/images/Milk Foam/Creme Brulee Strawberry Milk Tea.png"} className="cardImg" style={{ marginBottom: "20px" }} />
+                <img src={"/images/Milk Foam/Creme Brulee Strawberry Milk Tea.png"} className="cardImg" style={{ marginBottom: "20px" }} alt="Series Image" />
                 <span className="cardText">Milk Foam</span>
               </button>
               <button className="customerCard" style={{ backgroundColor: "#d9ead3" }} onClick={() => handleSeriesClick("Slush")}>
-                <img src={"/images/Slush/Taro Milk.png"} className="cardImg" />
+                <img src={"/images/Slush/Taro Milk.png"} className="cardImg" alt="Series Image" />
                 <span className="cardText">Slush</span>
               </button>
               <button className="customerCard" style={{ backgroundColor: "#d9d2e9" }} onClick={() => handleSeriesClick("Tea Latte")}>
-                <img src={"/images/Tea Latte/Green Tea Latte.png"} className="cardImg" />
+                <img src={"/images/Tea Latte/Green Tea Latte.png"} className="cardImg" alt="Series Image" />
                 <span className="cardText">Tea Latte</span>
               </button>
             </div>
             <div className="customerViewSeriesCol">
               <button className="customerCard" style={{ backgroundColor: "#fce5cd" }} onClick={() => handleSeriesClick("Milk Tea")}>
-                <img src={"/images/Milk Tea/Pearl Milk Tea.png"} className="cardImg" />
+                <img src={"/images/Milk Tea/Pearl Milk Tea.png"} className="cardImg" alt="Series Image" />
                 <span className="cardText">Milk Tea</span>
               </button>
               <button className="customerCard" style={{ backgroundColor: "#c9daf8" }} onClick={() => handleSeriesClick("Seasonal")}>
-                <img src={"/images/Seasonal/Taro Drink.png"} className="cardImg" />
+                <img src={"/images/Seasonal/Taro Drink.png"} className="cardImg" alt="Series Image" />
                 <span className="cardText">Seasonal</span>
               </button>
               <button className="customerCard" style={{ backgroundColor: "#ead1dc" }} onClick={() => handleSeriesClick("Coffee")}>
-                <img src={"/images/Coffee/Milk Foam Black Coffee.png"} className="cardImg" />
+                <img src={"/images/Coffee/Milk Foam Black Coffee.png"} className="cardImg" alt="Series Image" />
                 <span className="cardText">Coffee</span>
               </button>
             </div>
@@ -332,7 +332,7 @@ function CustomerView() {
             // Show actual cards once data is loaded
             menuItems.map((menuItem) => (
               <button key={menuItem.menuitemid} className={`customerCard ${menuItem.menuiteminstock ? "" : "button-disabled"}`} style={{ backgroundColor: menuItem.color }} onClick={() => handleDrinkClick(menuItem)}>
-                <img src={`/images/${seriesName}/${menuItem.menuitemname}.png`} className="cardImg" alt={menuItem.menuitemname} />
+                <img src={`/images/${seriesName}/${menuItem.menuitemname}.png`} className="cardImg" alt={menuItem.menuitemname+" image "}/>
                 <span className="cardText" style={menuItem.menuitemname.length > 20 ? { fontSize: "30px" } : {}}>{menuItem.menuitemname} {!menuItem.menuiteminstock ? "(out of stock)" : ""}</span>
               </button>
             ))

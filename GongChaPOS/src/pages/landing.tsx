@@ -125,8 +125,8 @@ function Landing() {
       )}
       
       <div className="col-6 d-flex flex-column justify-content-center align-items-center vh-100">
-        <Link to="/customerView" className="btn btn-primary mb-3 customer-order-menuboard">Order</Link>
-        <Link to="/menuBoard" className="btn btn-primary customer-order-menuboard">Menu Board</Link>
+        <Link to="/customerView" className="btn btn-primary mb-3 customer-order-menuboard" aria-label="Order Menu">Order</Link>
+        <Link to="/menuBoard" className="btn btn-primary customer-order-menuboard" aria-label="View Menu Board">Menu Board</Link>
         <div id="google_translate_element"></div>
       </div>
       <div className="col-4 d-flex justify-content-center align-items-center vh-100 logoDiv">
@@ -139,7 +139,7 @@ function Landing() {
       </div>
       {weatherInfo ? <WeatherWidget weatherInfo={weatherInfo} /> : <div className='widget'>Loading...</div>}
       <div className="col-1.9 d-flex flex-column justify-content-end align-items-end vh-100 pr-3 pb-3">
-        <Link to="/login" className="btn btn-primary customer-login">Log In</Link>
+        <Link to="/login" className="btn btn-primary customer-login" aria-label="Log In to Account">Log In</Link>
       </div>
     </div>
   );

@@ -117,7 +117,7 @@ function CashierView({ view }: CartViewProps) {
         <div className="row">
           <CategoryGrid addToCart={addToCart} setShowBackButton={setShowBackButton} setHandleBackFromTopBar={setHandleBackFromTopBar} setSeries={setSeries} triggerBackAction={triggerBackAction} resetTriggerBackAction={() => setTriggerBackAction(false)} view={view} />
           {!isCheckoutView && !showBackButton &&
-            <div className="col-7 img"> <img src={gongChaImg}></img> </div>
+            <div className="col-7 img"> <img src={gongChaImg} alt="Gong-Cha Logo"></img> </div>
           }
           {isCheckoutView &&
             <div className="col-md-3 cartViewContainer">
