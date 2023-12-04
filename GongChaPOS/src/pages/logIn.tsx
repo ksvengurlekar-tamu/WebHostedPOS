@@ -14,6 +14,40 @@ function Login() {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
+  const handleGoogleSignIn = async (userName: string) => {    
+    try {
+      console.log("connect");
+      const response = await fetch('https://gong-cha-server.onrender.com/employees', {mode: 'cors'});
+      const data = await response.json();
+      let isLoginSuccessful = false; // flag to track successful login
+
+      data.forEach((employee: any) => {
+        if (userName === employee.employeename && employee.ismanager) {
+          console.log("Login successful");
+          isLoginSuccessful = true; // set the flag to true if matching user found
+          sessionStorage.setItem("employeeId",employee.employeeid)
+          sessionStorage.setItem("userRole","manager")
+          navigate('/managerView');
+        }
+        else if (userName === employee.employeename) {
+          console.log("Login successful");
+          isLoginSuccessful = true; // set the flag to true if matching user found
+          sessionStorage.setItem("employeeId",employee.employeeid)
+          sessionStorage.setItem("userRole","cashier")
+          navigate('/cashierView');
+        }
+      });
+
+      if (!isLoginSuccessful) {
+        console.log("Login failed");
+        alert("Login failed");
+      }
+
+    } catch (error) {
+      console.error("Failed to fetch employees:", error);
+    }
+  };
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {

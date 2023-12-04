@@ -1,7 +1,6 @@
 import React from 'react';
-import { RouteProps, Navigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import CashierView from './../pages/cashierView'; // Import the ManagerView component
-import inventory from './../pages/inventory'; // Import the Inventory component
 import Inventory from './../pages/inventory';
 
 // const PrivateRoute: React.FC<RouteProps> = ( { children }) => {
