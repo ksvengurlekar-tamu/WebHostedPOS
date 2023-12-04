@@ -5,7 +5,7 @@ import './logIn.css';
 import { useNavigate  } from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
-import GoogleLogIn2 from '../components/googleLogIn2';
+import GoogleLogIn from '../components/googleLogIn';
 
 import gongChaLogo from '../assets/images/GongChaLogo.png';
 
@@ -27,12 +27,14 @@ function Login() {
           console.log("Login successful");
           isLoginSuccessful = true; // set the flag to true if matching user found
           sessionStorage.setItem("employeeId",employee.employeeid)
+          sessionStorage.setItem("userRole","manager")
           navigate('/managerView');
         }
         else if (username === employee.employeeusername && password === employee.employeeuserpassword) {
           console.log("Login successful");
           isLoginSuccessful = true; // set the flag to true if matching user found
           sessionStorage.setItem("employeeId",employee.employeeid)
+          sessionStorage.setItem("userRole","cashier")
           navigate('/cashierView');
         }
       });
@@ -123,7 +125,7 @@ function Login() {
             Submit
           </button>
           <div className="mt-3">
-            <GoogleLogIn2 />
+            <GoogleLogIn />
           </div>
         </form>
       </div>

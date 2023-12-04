@@ -21,19 +21,19 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           <Route path="/login" element={<Login />} />
 
           <Route path="/cashierView" element={
-              <PrivateRoute>
+              <PrivateRoute toRender="cashierView" role="cashier">
                 <CashierView view="Cashier View" />
               </PrivateRoute>
             } 
           />
           <Route path="/managerView" element={
-              <PrivateRoute>
+              <PrivateRoute toRender="managerView" role="manager">
                 <CashierView view="Manager View" />
               </PrivateRoute>
             } 
           />
           <Route path="/inventory" element={
-              <PrivateRoute>
+              <PrivateRoute toRender="inventory" role="manager">
                 <Inventory />
               </PrivateRoute>
             } 
