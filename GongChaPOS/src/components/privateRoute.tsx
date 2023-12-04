@@ -5,7 +5,7 @@ import { RouteProps, Navigate } from 'react-router-dom';
 const PrivateRoute: React.FC<RouteProps> = ({ children }) => {
   
 
-  const isAuthenticated = false; // Code for authentication goes here
+  const isAuthenticated = true; // Code for authentication goes here
 
   if (isAuthenticated) {
     return children;

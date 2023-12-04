@@ -5,9 +5,6 @@ import { Link } from 'react-router-dom';
 import "../components/components.css";
 import { useLanguageContext } from '../components/languageContext';
 
-
-import GoogleLogin from '../components/googleLogIn';
-
 function Landing() {
   const { selectedLanguage } = useLanguageContext();
 
@@ -56,11 +53,6 @@ function Landing() {
       <div className="col-1.9 d-flex flex-column justify-content-end align-items-end vh-100 pr-3 pb-3">
         <Link to="/login" className="btn btn-primary customer-login">Log In</Link>
       </div>
-
-
-      <div className="mt-3">
-            <GoogleLogin />
-          </div>
     </div>
   );
 }
