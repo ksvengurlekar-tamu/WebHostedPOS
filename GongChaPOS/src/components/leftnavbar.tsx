@@ -5,23 +5,28 @@ import { Link } from "react-router-dom";
 function LeftNavBar({ view }: { view: string }) {
 
   return (
-    <>
-      <nav className="leftNavBar vh-100">
-        <ul className="navbar-nav">
+    <nav className="leftNavBar vh-100" aria-label="Main Navigation">
+      <ul className="navbar-nav">
+        <li className="nav-item">
+          <Link className="leftNavButton" to={view === "Manager View" ? "/managerView" : "/cashierView"} aria-current={view === "Manager View" ? "page" : undefined}>
+            Main Menu
+          </Link>
+        </li>
+        <li className="nav-item m-1">
+          <Link className="leftNavButton" to="/nutritionalFacts" aria-current={view === "Nutritional Facts" ? "page" : undefined}>
+            Nutritional Facts
+          </Link>
+        </li>
+        {view === "Manager View" &&
           <li className="nav-item">
-            <Link className="leftNavButton" to={view == "Manager View" ? "/managerView" : "/cashierView"}>Main Menu</Link>
+            <Link className="leftNavButton" to="/inventory">
+              Inventory
+            </Link>
           </li>
-          <li className="nav-item m-1">
-            <Link className="leftNavButton" to="/nutritionalFacts">Nutritional Facts</Link>
-          </li>
-          { view === "Manager View" &&
-            <li className="nav-item">
-              <Link className="leftNavButton" to="/inventory">Inventory</Link>
-            </li>
-          }
-        </ul>
-      </nav>
-    </>
+        }
+      </ul>
+    </nav>
+
   );
 }
 

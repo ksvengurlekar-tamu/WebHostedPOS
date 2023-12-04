@@ -109,25 +109,25 @@ function CashierView({ view }: CartViewProps) {
   return (
 
     <div className="container-fluid d-flex flex-row vh-100 vw-100 p-0 background">
-      <div className="col-2 d-flex flex-column vh-100 p-0">
+      <nav className="col-2 d-flex flex-column vh-100 p-0">
         <LeftNavBar view={view} />
-      </div>
-      <div className="col d-flex flex-column vh-100 p-0 main-content">
+      </nav>
+      <main className="col d-flex flex-column vh-100 p-0 main-content">
         <TopBar isBackButtonVisible={showBackButton} view={view} series={series} onBackClick={handleBackFromTopBar} />
-        <div className="row">
+        <div className="row"  aria-label="Product Categories">
           <CategoryGrid addToCart={addToCart} setShowBackButton={setShowBackButton} setHandleBackFromTopBar={setHandleBackFromTopBar} setSeries={setSeries} triggerBackAction={triggerBackAction} resetTriggerBackAction={() => setTriggerBackAction(false)} view={view} />
           {!isCheckoutView && !showBackButton &&
             <div className="col-7 img"> <img src={gongChaImg} alt="Gong-Cha Logo"></img> </div>
           }
           {isCheckoutView &&
-            <div className="col-md-3 cartViewContainer">
+            <aside className="col-md-3 cartViewContainer" aria-label="Shopping Cart">
               <CartView InputDrinks={drinks} onRemoveDrink={removeDrinkFromCart} onClearCart={clearCart} onSubmit={submitOrder} view={"Cashier View"} />
-            </div>
+            </aside>
           }
         </div>
 
         <BottomBar onCheckout={handleCheckoutButton} />
-      </div>
+      </main>
     </div>
   );
 }

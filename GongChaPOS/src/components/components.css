@@ -1092,6 +1092,8 @@
   width: 700px;
   height: 80px;
   display: flex;
+  font-size: 40px;
+  border-radius: 20px;
   justify-content: center;
   align-items: center;
   background-color: var(--gc-red);

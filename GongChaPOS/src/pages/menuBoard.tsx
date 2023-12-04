@@ -47,7 +47,7 @@ function MenuBoard() {
     });
     const [selectedSeries, setSelectedSeries] = useState<string>(() => {
         const savedSelectedSeries = sessionStorage.getItem('selectedSeries');
-        return savedSelectedSeries || "Milk Foam";
+        return savedSelectedSeries || "Menu Board";
     });
     const navigate = useNavigate();
 
@@ -166,33 +166,33 @@ function MenuBoard() {
             </div>
             <div className="menuBoardContainer">
                 <div className="menuBoardColLeft ">
-                    <button className={`btn btn-primary menuBoardButton mt-4 ${selectedSeries === "Milk Foam" ? "selectedSeriesButton" : ""}`} onClick={() => handleSeriesClick("Milk Foam")}>Milk Foam</button>
-                    <button className={`btn btn-primary menuBoardButton ${selectedSeries === "Milk Tea" ? "selectedSeriesButton" : ""}`} onClick={() => handleSeriesClick("Milk Tea")}>Milk Tea</button>
-                    <button className={`btn btn-primary menuBoardButton ${selectedSeries === "Slush" ? "selectedSeriesButton" : ""}`} onClick={() => handleSeriesClick("Slush")}>Slush</button>
-                    <button className={`btn btn-primary menuBoardButton ${selectedSeries === "Seasonal" ? "selectedSeriesButton" : ""}`} onClick={() => handleSeriesClick("Seasonal")}>Seasonal</button>
-                    <button className={`btn btn-primary menuBoardButton ${selectedSeries === "Tea Latte" ? "selectedSeriesButton" : ""}`} onClick={() => handleSeriesClick("Tea Latte")}>Tea Latte</button>
-                    <button className={`btn btn-primary menuBoardButton mb-3 ${selectedSeries === "Coffee" ? "selectedSeriesButton" : ""}`} onClick={() => handleSeriesClick("Coffee")}>Coffee</button>
+                    <button className={`btn btn-primary menuBoardButton mt-4 ${selectedSeries === "Milk Foam" ? "selectedSeriesButton" : ""}`} onClick={() => handleSeriesClick("Milk Foam")} role="tab" aria-selected={selectedSeries === "Milk Foam"} aria-controls="drink-options" id="tab-milk-foam" >Milk Foam</button>
+                    <button className={`btn btn-primary menuBoardButton ${selectedSeries === "Milk Tea" ? "selectedSeriesButton" : ""}`} onClick={() => handleSeriesClick("Milk Tea")} role="tab" aria-selected={selectedSeries === "Milk Tea"} aria-controls="drink-options" id="tab-milk-tea" >Milk Tea</button>
+                    <button className={`btn btn-primary menuBoardButton ${selectedSeries === "Slush" ? "selectedSeriesButton" : ""}`} onClick={() => handleSeriesClick("Slush")} role="tab" aria-selected={selectedSeries === "Slush"} aria-controls="drink-options" id="tab-slush" >Slush</button>
+                    <button className={`btn btn-primary menuBoardButton ${selectedSeries === "Seasonal" ? "selectedSeriesButton" : ""}`} onClick={() => handleSeriesClick("Seasonal")} role="tab" aria-selected={selectedSeries === "Seasonal"} aria-controls="drink-options" id="tab-seasonal" >Seasonal</button>
+                    <button className={`btn btn-primary menuBoardButton ${selectedSeries === "Tea Latte" ? "selectedSeriesButton" : ""}`} onClick={() => handleSeriesClick("Tea Latte")} role="tab" aria-selected={selectedSeries === "Tea Latte"} aria-controls="drink-options" id="tab-tea-latte">Tea Latte</button>
+                    <button className={`btn btn-primary menuBoardButton mb-3 ${selectedSeries === "Coffee" ? "selectedSeriesButton" : ""}`} onClick={() => handleSeriesClick("Coffee")} role="tab" aria-selected={selectedSeries === "Coffee"} aria-controls="drink-options" id="tab-coffee">Coffee</button>
 
                 </div>
                 {isSeriesSelected && (
-                    <div className='menuBoardDrinksContainer vw-100'>
-                        <div className="menuBoardDrinksTitle w-100">
+                    <div className='menuBoardDrinksContainer vw-100' role="tabpanel" id="drink-options" aria-labelledby="tab-milk-foam">
+                        <div className="menuBoardDrinksTitle w-100" role="heading" aria-level={2}>
                             <span style={{ marginLeft: "173px" }}>Drink Name</span>
                             <span className='rightInfo w-25'>
                                 <span>Calories</span>
                                 <span style={{ marginLeft: "170px", marginRight: "30px" }}>Price</span>
                             </span>
                         </div>
-                        <div className="menuBoardDrinks h-100 w-100 " ref={menuBoardRef}>
+                        <div className="menuBoardDrinks h-100 w-100 " ref={menuBoardRef} role="list">
                             {isLoading ? (
                                 Array(4).fill(0).map((_, index) => (
                                     <button key={index} className="skeletonCardCustomer button-no-hover" disabled style={{ width:"1400px",margin: "0px" }}>
-                                        <div className="animated-background"></div>
+                                        <div className="animated-background" role="alert" aria-busy="true"></div>
                                     </button>
                                 ))
                             ) : (
                                 menuItems.map((menuItem) => (
-                                    <button key={menuItem.menuitemid} className="menuItemContainer">
+                                    <button key={menuItem.menuitemid} className="menuItemContainer" role="listitem">
                                         <img
                                             src={`/images/${selectedSeries}/${menuItem.menuitemname}.png`}
                                             width="8%"

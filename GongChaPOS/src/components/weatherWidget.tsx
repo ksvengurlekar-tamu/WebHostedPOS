@@ -31,18 +31,26 @@ const [weatherIconUrl, setWeatherIconUrl] = useState<string>('');
   }, []); // Empty dependency array means this effect runs once on component mount
 
   return (
-      <div className="card widget">
-          <div className="card-body">
-              <strong role="heading" aria-level={1} className="mb-1 sfw-normal widgetTextCity">{weatherInfo.cityName}, {weatherInfo.countryName} </strong>
-              <p role="heading" aria-level={2} className="mb-1 widgetText">Current temperature: <strong aria-level={2} className="widgetText">{weatherInfo.currentTemp.toPrecision(2)}°F</strong></p>
-              <p role="heading" aria-level={2} className="widgetText">Feels like: <strong aria-level={2} className="widgetText">{weatherInfo.feelsLike.toPrecision(2)}°F</strong></p>
-              <p role="heading" aria-level={2} className="widgetText"> Min: <strong aria-level={2} className="widgetText">{weatherInfo.minTemp.toPrecision(2)}°F</strong>, Max: <strong className="widgetText">{weatherInfo.maxTemp.toPrecision(2)}°F</strong></p>
-              <div className="d-flex flex-row align-items-center">
-                  <p role="heading" aria-level={2} className="mb-0 me-4 widgetText">{weatherInfo.weatherDescription.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</p>
-                  {weatherIconUrl && <img src={weatherIconUrl} alt="Weather Icon" />}
-              </div>
-          </div>
+    <div className="card widget" role="complementary">
+      <div className="card-body">
+        <h2 className="mb-1 sfw-normal widgetTextCity">{weatherInfo.cityName}, {weatherInfo.countryName}</h2>
+        <p className="mb-1 widgetText">
+          Current temperature: <strong>{weatherInfo.currentTemp.toPrecision(2)}°F</strong>
+        </p>
+        <p className="widgetText">
+          Feels like: <strong>{weatherInfo.feelsLike.toPrecision(2)}°F</strong>
+        </p>
+        <p className="widgetText">
+          Min: <strong>{weatherInfo.minTemp.toPrecision(2)}°F</strong>, Max: <strong>{weatherInfo.maxTemp.toPrecision(2)}°F</strong>
+        </p>
+        <div className="d-flex flex-row align-items-center">
+          <p className="mb-0 me-4 widgetText">
+            {weatherInfo.weatherDescription.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+          </p>
+          {weatherIconUrl && <img src={weatherIconUrl} alt={`Weather icon representing ${weatherInfo.weatherDescription}`} />}
+        </div>
       </div>
+    </div>
   )
 }
 

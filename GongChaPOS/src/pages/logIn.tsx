@@ -16,7 +16,7 @@ function Login() {
     event.preventDefault();
     try {
       console.log("connect");
-      const response = await fetch('https://gong-cha-server.onrender.com/employees', {mode: 'cors'});
+      const response = await fetch('https://gong-cha-server.onrender.com/employees', { mode: 'cors' });
       const data = await response.json();
       let isLoginSuccessful = false; // flag to track successful login
 
@@ -24,13 +24,13 @@ function Login() {
         if (username === employee.employeeusername && password === employee.employeeuserpassword && employee.ismanager) {
           console.log("Login successful");
           isLoginSuccessful = true; // set the flag to true if matching user found
-          sessionStorage.setItem("employeeId",employee.employeeid)
+          sessionStorage.setItem("employeeId", employee.employeeid)
           navigate('/managerView');
         }
         else if (username === employee.employeeusername && password === employee.employeeuserpassword) {
           console.log("Login successful");
           isLoginSuccessful = true; // set the flag to true if matching user found
-          sessionStorage.setItem("employeeId",employee.employeeid)
+          sessionStorage.setItem("employeeId", employee.employeeid)
           navigate('/cashierView');
         }
       });
@@ -65,8 +65,8 @@ function Login() {
   return (
     <div className="container-fluid d-flex flex-row vh-100 vw-100 p-0 background">
       <div>
-        <button className="back-button" onClick={onBackClick}>
-          <FontAwesomeIcon icon={faArrowLeftLong} className="Back-icon" />
+        <button className="back-button" onClick={onBackClick} aria-label="Go back">
+          <FontAwesomeIcon icon={faArrowLeftLong} className="Back-icon" aria-hidden="true" />
         </button>
       </div>
       <div className="col-4 d-flex justify-content-center align-items-center vh-100 logoDiv">
@@ -78,9 +78,9 @@ function Login() {
         />
       </div>
       <div className="col d-flex flex-column align-items-center vh-100 loginForm">
-        <div className="w-100 text-center my-2 loginText"> Log-In </div>
+        <h1 className="w-100 text-center my-2 loginText">Log-In</h1> {/* Use heading for section title */}
         <form className="w-75 mt-4" onSubmit={handleSubmit}>
-          <div className="mb-3">
+          <div className="mb-3 mt-5">
             <label htmlFor="username" className="form-label mb-1">
               Username
             </label>
@@ -92,6 +92,7 @@ function Login() {
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Please enter username here"
               required
+              aria-required="true" // Explicitly mark the field as required for screen readers
             />
           </div>
           <div className="mb-3">
@@ -106,6 +107,7 @@ function Login() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Please enter password here"
               required
+              aria-required="true"
             />
           </div>
           <div className="mb-3">
@@ -114,6 +116,7 @@ function Login() {
               id="showPassword"
               className="form-check-input"
               onChange={togglePasswordVisibility}
+              aria-checked="false" // Reflect the state of the checkbox for screen readers
             />
             <label className="form-check-label" htmlFor="showPassword">Show Password</label>
           </div>
@@ -123,6 +126,7 @@ function Login() {
         </form>
       </div>
     </div>
+
   );
 }
 

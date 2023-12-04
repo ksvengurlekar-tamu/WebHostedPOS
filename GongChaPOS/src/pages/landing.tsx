@@ -114,34 +114,39 @@ function Landing() {
 
   return (
     <div className="container-fluid d-flex flex-row vh-100 vw-100 p-0 background">
-      
+
       {showAlert && (
-        <div className="alert alert-warning alert-dismissible fade-in show" role="alert">
-          <span role="heading" aria-level={1} style={{margin: '5px', fontSize: '30px'}}>Since it is {currTemp} outside, we are offering a 100% discount on our {discountedDrink}! </span>
-          <button type="button" className="close" onClick={() => setShowAlert(false)} aria-label="Close">
+        <div className="alert alert-warning alert-dismissible fade show" role="alert">
+          <span role="heading" aria-level={1} style={{ margin: '5px', fontSize: '30px' }}>
+            Since it is {currTemp} outside, we are offering a 100% discount on our {discountedDrink}!
+          </span>
+          <button type="button" className="close" onClick={() => setShowAlert(false)} aria-label="Close alert">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
       )}
-      
+
       <div className="col-6 d-flex flex-column justify-content-center align-items-center vh-100">
-        <Link to="/customerView" className="btn btn-primary mb-3 customer-order-menuboard"  aria-label="Order Menu">Order</Link>
+        <Link to="/customerView" className="btn btn-primary mb-3 customer-order-menuboard" aria-label="Order Menu">Order</Link>
         <Link to="/menuBoard" className="btn btn-primary customer-order-menuboard" aria-label="View Menu Board">Menu Board</Link>
-        <div id="google_translate_element"></div>
+        <div id="google_translate_element" role="application"></div>
       </div>
+
       <div className="col-4 d-flex justify-content-center align-items-center vh-100 logoDiv">
         <img
           src={gongChaLogo}
-          alt="GongCha Logo"
+          alt="Gong Cha Logo"
           width="60%"
           className="img-fluid"
         />
       </div>
-      {weatherInfo ? <WeatherWidget weatherInfo={weatherInfo} /> : <div className='widget'>Loading...</div>}
+      {weatherInfo ? <WeatherWidget weatherInfo={weatherInfo} /> : <div className="widget" role="alert" aria-busy="true">Loading...</div>}
+
       <div className="col-1.9 d-flex flex-column justify-content-end align-items-end vh-100 pr-3 pb-3">
         <Link to="/login" className="btn btn-primary customer-login" aria-label="Log In to Account">Log In</Link>
       </div>
     </div>
+
   );
 }
 

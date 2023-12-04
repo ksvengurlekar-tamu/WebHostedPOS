@@ -321,14 +321,14 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
       if (view === "Manager View" && index === 0) {
         // Render the first button for Manager View
         return (
-          <button key={`placeholder-${index}`} className="drink" style={{ backgroundColor: "rgba(211,211,211)", position: "relative" }} onClick={() => setisAddMenuItemSelected(true)}>
+          <button key={`placeholder-${index}`} className="drink" style={{ backgroundColor: "rgba(211,211,211)", position: "relative" }} onClick={() => setisAddMenuItemSelected(true)} aria-label="Add Menu Item">
             <FontAwesomeIcon icon={faPlus} style={{ fontSize: "40px" }} className="checkIcon" />
           </button>
         );
       } else if (view != "Customer View") {
         // Render other buttons as before
         return (
-          <button key={`placeholder-${index}`} className="drink button-no-hover" style={{ backgroundColor: "#fcfcf2" }} disabled> </button>
+          <button key={`placeholder-${index}`} className="drink button-no-hover" style={{ backgroundColor: "#fcfcf2" }} aria-hidden="true" disabled> </button>
         );
       }
     });
@@ -347,31 +347,26 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
         <Card
           className="series"
           menuItemName="Milk Tea"
-
           onSelect={() => handleSeriesClick("Milk Tea")}
         />
         <Card
           className="series"
           menuItemName="Slush"
-
           onSelect={() => handleSeriesClick("Slush")}
         />
         <Card
           className="series"
           menuItemName="Seasonal"
-
           onSelect={() => handleSeriesClick("Seasonal")}
         />
         <Card
           className="series"
           menuItemName="Tea Latte"
-
           onSelect={() => handleSeriesClick("Tea Latte")}
         />
         <Card
           className="series"
           menuItemName="Coffee"
-
           onSelect={() => handleSeriesClick("Coffee")}
         />
       </div>
@@ -382,8 +377,8 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
     <>
       {isAddMenuItemSelected && (
         <>
-          <div className="overlay"></div>
-          <div className="Popup">
+          <div className="overlay" aria-hidden="true"></div>
+          <div className="Popup" role="dialog" aria-labelledby="addMenuItemTitle">
           
             <div className="addMenuItemConatiner">
             <form onSubmit={(e) => {e.preventDefault(); handleSubmit();}}>

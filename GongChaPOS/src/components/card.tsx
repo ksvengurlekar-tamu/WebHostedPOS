@@ -43,7 +43,7 @@ function Card({ className, menuItemName, color, onSelect }: CardDetails) {
 
 
   return (
-    <button className={className} style={cardStyle} onClick={onSelect}> 
+    <button className={className} style={cardStyle} onClick={onSelect} aria-label={`Select ${menuItemName}`}> 
       {menuItemName} 
     </button>
   );

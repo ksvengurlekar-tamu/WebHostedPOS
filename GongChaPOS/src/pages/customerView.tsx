@@ -342,7 +342,7 @@ function CustomerView() {
       {isDrinkPopUp && (
         <div className="customerDrinkPopUp vw-100" style={{backgroundColor: selectedMenuItem.color}}>
           <div className="customerDrinkText_Pic" style={{backgroundColor: selectedMenuItem.color}}>
-            <img src={"/images/" + seriesName + "/" + selectedMenuItem.menuitemname + ".png"} height={"254px"} width={"170px"} />
+            <img src={"/images/" + seriesName + "/" + selectedMenuItem.menuitemname + ".png"} height={"254px"} width={"170px"} alt="Drink Image" />
             <span style={{ fontSize: "50px", fontWeight: "1000" }}>{selectedMenuItem.menuitemname}</span>
           </div>
           <div className="customerDrinkDetails">
