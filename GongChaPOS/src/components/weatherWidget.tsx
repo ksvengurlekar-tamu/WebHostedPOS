@@ -32,25 +32,27 @@ const [weatherIconUrl, setWeatherIconUrl] = useState<string>('');
 
   return (
     <div className="card widget" role="complementary">
-      <div className="card-body">
+      <div className="card-body" role="main">
         <h2 className="mb-1 sfw-normal widgetTextCity">{weatherInfo.cityName}, {weatherInfo.countryName}</h2>
         <p className="mb-1 widgetText">
-          Current temperature: <strong>{weatherInfo.currentTemp.toPrecision(2)}°F</strong>
+          Current temperature: <strong role="heading" aria-level={3}>{weatherInfo.currentTemp.toPrecision(2)}°F</strong>
         </p>
         <p className="widgetText">
-          Feels like: <strong>{weatherInfo.feelsLike.toPrecision(2)}°F</strong>
+          Feels like: <strong role="heading" aria-level={3}>{weatherInfo.feelsLike.toPrecision(2)}°F</strong>
         </p>
         <p className="widgetText">
-          Min: <strong>{weatherInfo.minTemp.toPrecision(2)}°F</strong>, Max: <strong>{weatherInfo.maxTemp.toPrecision(2)}°F</strong>
+          Min: <strong role="heading" aria-level={3}>{weatherInfo.minTemp.toPrecision(2)}°F</strong>,
+          Max: <strong role="heading" aria-level={3}>{weatherInfo.maxTemp.toPrecision(2)}°F</strong>
         </p>
         <div className="d-flex flex-row align-items-center">
-          <p className="mb-0 me-4 widgetText">
+          <span role="heading" aria-level={3} className="mb-0 me-4 widgetText">
             {weatherInfo.weatherDescription.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
-          </p>
+          </span>
           {weatherIconUrl && <img src={weatherIconUrl} alt={`Weather icon representing ${weatherInfo.weatherDescription}`} />}
         </div>
       </div>
     </div>
+
   )
 }
 
