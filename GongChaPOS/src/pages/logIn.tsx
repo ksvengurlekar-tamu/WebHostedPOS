@@ -5,7 +5,7 @@ import './logIn.css';
 import { useNavigate  } from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
-import GoogleLogin from '../components/googleLogIn';
+import GoogleLogIn2 from '../components/googleLogIn2';
 
 import gongChaLogo from '../assets/images/GongChaLogo.png';
 
@@ -123,7 +123,7 @@ function Login() {
             Submit
           </button>
           <div className="mt-3">
-            <GoogleLogin />
+            <GoogleLogIn2 />
           </div>
         </form>
       </div>

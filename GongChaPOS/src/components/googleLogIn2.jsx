@@ -1,13 +1,12 @@
-import { response } from 'express';
 import React, { useEffect } from 'react'
-import jwtDecode from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 
 function GoogleLogIn2() {
   function handleCallBackResponse(response) {
     console.log("Encoded JWT Token: " + response.credential);
-    const decodedToken = jwtDecode(response.credential)
-    console.log("Decoded JWT Token: " + JSON.stringify(decodedToken));
+    var userObject = jwtDecode(response.credential)
+    console.log(userObject);
   }
   
   useEffect(() => {
