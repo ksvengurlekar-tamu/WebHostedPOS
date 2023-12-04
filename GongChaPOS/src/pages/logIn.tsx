@@ -8,6 +8,7 @@ import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
 import GoogleLogIn from '../components/googleLogIn';
 
 import gongChaLogo from '../assets/images/GongChaLogo.png';
+import e from 'cors';
 
 function Login() {
   const [username, setUsername] = useState('');
@@ -20,7 +21,7 @@ function Login() {
       const response = await fetch('https://gong-cha-server.onrender.com/employees', {mode: 'cors'});
       const data = await response.json();
       let isLoginSuccessful = false; // flag to track successful login
-
+      console.log(userName+ "AAAAAAAAAAAA")
       data.forEach((employee: any) => {
         if (userName === employee.employeename && employee.ismanager) {
           console.log("Login successful");
@@ -29,12 +30,17 @@ function Login() {
           sessionStorage.setItem("userRole","manager")
           navigate('/managerView');
         }
-        else if (userName === employee.employeename) {
+        else if (userName === employee.employeename && !employee.ismanager) {
           console.log("Login successful");
           isLoginSuccessful = true; // set the flag to true if matching user found
           sessionStorage.setItem("employeeId",employee.employeeid)
           sessionStorage.setItem("userRole","cashier")
           navigate('/cashierView');
+        }
+        else{
+          console.log("Login successful");
+          isLoginSuccessful = true; // set the flag to true if matching user found
+          navigate('/customerView');
         }
       });
 
@@ -159,7 +165,7 @@ function Login() {
             Submit
           </button>
           <div className="mt-3">
-            <GoogleLogIn />
+            <GoogleLogIn  onSignIn={handleGoogleSignIn}/>
           </div>
         </form>
       </div>
