@@ -32,7 +32,7 @@ const [weatherIconUrl, setWeatherIconUrl] = useState<string>('');
 
   return (
     <div className="card widget" role="complementary">
-      <div className="card-body" role="main">
+      <div className="card-body" role="main" >
         <h2 className="mb-1 sfw-normal widgetTextCity">{weatherInfo.cityName}, {weatherInfo.countryName}</h2>
         <p className="mb-1 widgetText">
           Current temperature: <strong role="heading" aria-level={3}>{weatherInfo.currentTemp.toPrecision(2)}°F</strong>
