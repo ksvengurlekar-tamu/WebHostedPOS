@@ -21,9 +21,8 @@
 
 *{
   font-family: 'Amerigo BT', sans-serif;
-  
 }
-div{
+div, Link{
   font-size: 40px;
   color: var(--gc-eggshell);
 }
@@ -60,10 +59,11 @@ div{
 
 .form-control{
   width: 90%;
+  font-size: 40px;
   min-width: 300px;
 }
 .form-label{
-  font-size: 50px;
+  font-size: 80px;
   color: var(--gc-eggshell)
 }
 
@@ -87,4 +87,9 @@ div{
 .form-check-label{
   font-size: 30px;
   color: var(--gc-eggshell);
+}
+
+.buttonSubmit{
+  font-size: 40px;
+  border-radius: 15px;
 }

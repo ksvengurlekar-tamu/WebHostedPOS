@@ -117,7 +117,7 @@ function Login() {
             />
             <label className="form-check-label" htmlFor="showPassword">Show Password</label>
           </div>
-          <button type="submit" className="btn btn-primary">
+          <button type="submit" className="btn btn-primary buttonSubmit">
             Submit
           </button>
         </form>

@@ -37,6 +37,7 @@ function MenuBoard() {
     const menuBoardRef = useRef<HTMLDivElement | null>(null);
     const [scrollPosition, setScrollPosition] = useState(0);
     const userHasInteracted = useRef(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     
     const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
@@ -135,17 +136,21 @@ function MenuBoard() {
 
     const handleSeriesClick = (seriesName: string) => {
         userHasInteracted.current = true; // Mark as interacted
-
+        setIsLoading(true);
         if (scrollIntervalRef) {
             clearInterval(scrollIntervalRef); // Clear any existing interval
         }
         setSelectedSeries(seriesName);
         setIsSeriesSelected(true);
         setAutoScroll(false); // Disable auto-scroll when user selects a series
-        const _timeoutId = setTimeout(() => {
+        setTimeout(() => {
                 setAutoScroll(true);
                 setIsSeriesSelected(true);
-        }, 4000);
+        }, 6000);
+
+        setTimeout(() => {
+            setIsLoading(false);
+        }, 700);
     };
 
     const onBackClick = () => {
@@ -179,21 +184,30 @@ function MenuBoard() {
                             </span>
                         </div>
                         <div className="menuBoardDrinks h-100 w-100 " ref={menuBoardRef}>
-                            {menuItems.map((menuItem) => (
-                                <button key={menuItem.menuitemid} className="menuItemContainer">
-                                    <img
-                                        src={`/images/${selectedSeries}/${menuItem.menuitemname}.png`}
-                                        width="8%"
-                                        alt={menuItem.menuitemname}
-                                        className="menuItemImg"
-                                    ></img>
-                                    <div className="menuItemName w-50">{menuItem.menuitemname}</div>
-                                    <span className='rightInfo w-100'>
-                                        <div className="menuItemCalories">{menuItem.menuitemcalories}</div>
-                                        <div className="menuItemPrice" style={{ marginLeft: "173px" }}>${menuItem.menuitemprice.toPrecision(3)}</div>
-                                    </span>
-                                </button>
-                            ))}
+                            {isLoading ? (
+                                Array(4).fill(0).map((_, index) => (
+                                    <button key={index} className="skeletonCardCustomer button-no-hover" disabled style={{ width:"1400px",margin: "0px" }}>
+                                        <div className="animated-background"></div>
+                                    </button>
+                                ))
+                            ) : (
+                                menuItems.map((menuItem) => (
+                                    <button key={menuItem.menuitemid} className="menuItemContainer">
+                                        <img
+                                            src={`/images/${selectedSeries}/${menuItem.menuitemname}.png`}
+                                            width="8%"
+                                            alt={menuItem.menuitemname}
+                                            className="menuItemImg"
+                                        ></img>
+                                        <div className="menuItemName w-50">{menuItem.menuitemname}</div>
+                                        <span className='rightInfo w-100'>
+                                            <div className="menuItemCalories">{menuItem.menuitemcalories}</div>
+                                            <div className="menuItemPrice" style={{ marginLeft: "173px" }}>${menuItem.menuitemprice.toPrecision(3)}</div>
+                                        </span>
+                                    </button>
+                                ))
+                            )}
+                            
                         </div>
                     </div>
                 )}

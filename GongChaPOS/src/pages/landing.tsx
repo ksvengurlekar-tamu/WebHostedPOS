@@ -125,7 +125,7 @@ function Landing() {
       )}
       
       <div className="col-6 d-flex flex-column justify-content-center align-items-center vh-100">
-        <Link to="/customerView" className="btn btn-primary mb-3 customer-order-menuboard" aria-label="Order Menu">Order</Link>
+        <Link to="/customerView" className="btn btn-primary mb-3 customer-order-menuboard"  aria-label="Order Menu">Order</Link>
         <Link to="/menuBoard" className="btn btn-primary customer-order-menuboard" aria-label="View Menu Board">Menu Board</Link>
         <div id="google_translate_element"></div>
       </div>

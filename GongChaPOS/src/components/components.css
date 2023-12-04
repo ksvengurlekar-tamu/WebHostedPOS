@@ -669,7 +669,11 @@
     color: #fcfcf1;
     text-align: center;
     padding: 70px;
+    margin: 20px;
     min-width: 440px;
+  }
+  .customer-order-menuboard, .customer-login{
+    border-radius: 15px;
   }
 
   .customer-login {
@@ -742,6 +746,7 @@
 .customerm-0{
   background-color: var(--gc-gray);
   /* width: 50%; */
+  font-size: 40px;
   display: flex;
   flex-direction: column;
   align-items: flex-end; /* Align items to the right */
@@ -914,14 +919,18 @@
   background-color: #333; /* Dark background */
 }
 .widgetText{
-  font-size: 20px;
+  font-size: 22px;
   margin-bottom: 10px;
+  color: var(--gc-eggshell);
 }
 .widgetTextCity{
-  font-size: 30px;
+  font-size: 35px;
+  color: var(--gc-eggshell);
 }
 .card-body{
-  padding-top: 10px;
+
+  padding: 30px 40px 30px 40px;
+  border-radius: 30px;
 }
 
 .widget{
@@ -930,6 +939,7 @@
   right: 10px;
   top: 255px;
   opacity: 0.8;
+  border-radius: 20px;
 }
 
 .fade-in {

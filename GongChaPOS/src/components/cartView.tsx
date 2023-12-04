@@ -131,7 +131,7 @@ function CartView({ InputDrinks, onRemoveDrink, onClearCart, onSubmit, view}: Ca
     <div className={view != "Customer View" ? "" : "right-side-menu"}>
       {/* {view === "Customer View" && (<div className="overlay"></div>)}
       <div className={view != "Customer View" ? "" : "Popup"}></div> */}
-      <h4 className={view != "Customer View" ? "m-0" : "customerm-0"}>Cart</h4>
+      <h4 style={{fontSize: "40px"}}className={view != "Customer View" ? "m-0" : "customerm-0"}>Cart</h4>
       <div className={view != "Customer View" ? "cartView" : "customerCart"}>
         {drinks.map((drink, index) => (
           <button className="cart-item" key={index} onClick={() => setSelectedDrink(drink)}>
