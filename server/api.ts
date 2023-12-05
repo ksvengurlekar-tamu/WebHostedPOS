@@ -29,13 +29,20 @@ interface DrinkRequest {
 }
 
 
-
+/**
+ * Define API routes and their corresponding logic 
+ * @route GET /
+ * @description Root endpoint
+ */
 app.get('/', (_req, res) => {
   res.send('Hello from Express!');
 });
 
 //employees
-
+/**
+ * @route GET /employees
+ * @description Get all employee information
+ */
 app.get('/employees', async (_req, res) => { // To get all employee info
   try {
     const result = await db('SELECT * FROM employees');
@@ -48,7 +55,10 @@ app.get('/employees', async (_req, res) => { // To get all employee info
 
 
 // menu items
-
+/**
+ * @route GET /menuitems
+ * @description Get all menu items
+ */
 app.get('/menuitems', async (_req, res) => { // To get all menu items
   try {
     const result = await db('SELECT * FROM menuitems');
@@ -58,6 +68,11 @@ app.get('/menuitems', async (_req, res) => { // To get all menu items
   }
 });
 
+/**
+ * @route GET /menuitems/:menuitemname
+ * @description Get a specific menu item by name
+ * @param {string} menuitemname - The name of the menu item
+ */
 app.get('/menuitems/:menuitemname', async (req, res) => { // To get a specific menu item
   try {
     const result = await db('SELECT * FROM menuitems WHERE menuitemname = $1', [req.params.menuitemname]);
@@ -67,7 +82,11 @@ app.get('/menuitems/:menuitemname', async (req, res) => { // To get a specific m
   }
 });
 
-
+/**
+ * @route GET /category/:series
+ * @description Get all menu items in a specific category
+ * @param {string} series - The category of menu items
+ */
 app.get('/category/:series', async (req, res) => { // To get all menu items in a specific category
   try {
     const result = await db('SELECT * FROM menuitems WHERE menuitemcategory = $1', [req.params.series]);
@@ -80,7 +99,10 @@ app.get('/category/:series', async (req, res) => { // To get all menu items in a
 
 
 // Sales
-
+/**
+ * @route GET /sales
+ * @description Get all sales
+ */
 app.get('/sales', async (req, res) => { // To get all sales
   try {
     const result = await db('SELECT * FROM sales');
@@ -90,6 +112,13 @@ app.get('/sales', async (req, res) => { // To get all sales
   }
 });
 
+/**
+ * @route GET /salesReport
+ * @description Get sales report based on menu item, start date, and end date
+ * @param {string} menuItem - The name of the menu item
+ * @param {string} startDate - The start date for the report
+ * @param {string} endDate - The end date for the report
+ */
 app.get('/salesReport', async (req, res) => {
   const { menuItem, startDate, endDate } = req.query as {
     menuItem: string;
@@ -119,6 +148,12 @@ app.get('/salesReport', async (req, res) => {
   }
 });
 
+/**
+ * @route POST /sales
+ * @description Add a sale into the database
+ * @param {string} employeeId - The ID of the employee making the sale
+ * @param {Array} drinks - An array of drinks in the sale
+ */
 app.post('/sales', async (req, res) => { // To add a sale into the database (with auto-incremented orderID) ))
   try {
     let newOrderId; // INCREMENT ORDER ID
@@ -205,6 +240,10 @@ app.post('/sales', async (req, res) => { // To add a sale into the database (wit
 
 
 //inventory
+/**
+ * @route GET /inventory
+ * @description Get all inventory items
+ */
 app.get('/inventory', async (_req, res) => {
   try {
     const result = await db('SELECT * FROM inventory');
@@ -214,6 +253,16 @@ app.get('/inventory', async (_req, res) => {
   }
 });
 
+/**
+ * @route POST /inventory
+ * @description Add a new inventory item
+ * @param {string} inventoryName - The name of the inventory item
+ * @param {number} quantity - The quantity of the inventory item
+ * @param {string} receivedDate - The date when the inventory item was received
+ * @param {string} expirationDate - The expiration date of the inventory item
+ * @param {boolean} inStock - Whether the inventory item is in stock or not
+ * @param {string} supplier - The supplier of the inventory item
+ */
 app.post('/inventory', async (req, res) => { // add inventory
   try {
     const { inventoryName, quantity, receivedDate, expirationDate, inStock, supplier } = req.body;
@@ -232,6 +281,11 @@ app.post('/inventory', async (req, res) => { // add inventory
   }
 });
 
+/**
+ * @route PUT /inventory/:inventoryName
+ * @description Update an existing inventory item
+ * @param {string} inventoryName - The name of the inventory item to be updated
+ */
 app.put('/inventory/:inventoryName', async (req, res) => { //upadate inventory
   try {
     console.log('Updating inventory');
@@ -286,6 +340,11 @@ app.put('/inventory/:inventoryName', async (req, res) => { //upadate inventory
   }
 });
 
+/**
+ * @route GET /inventory/:itemName
+ * @description Get information about a specific inventory item by name
+ * @param {string} itemName - The name of the inventory item
+ */
 app.get('/inventory/:itemName', async (req, res) => {
   const itemName = req.params.itemName;
 
@@ -302,6 +361,16 @@ app.get('/inventory/:itemName', async (req, res) => {
   }
 });
 
+/**
+ * @route POST /addOrUpdateDrink
+ * @description Add a new drink or update an existing one
+ * @param {string} drinkName - The name of the drink
+ * @param {string} drinkPrice - The price of the drink
+ * @param {string} drinkCalories - The calories in the drink
+ * @param {string} drinkCategory - The category of the drink
+ * @param {boolean} hasCaffeine - Whether the drink contains caffeine or not
+ * @param {Array} ingredients - An array of ingredients in the drink
+ */
 //addOrUpdateDrink
 app.post('/addOrUpdateDrink', async (req, res) => {
   const { drinkName, drinkPrice, drinkCalories, drinkCategory, hasCaffeine, ingredients }: DrinkRequest = req.body;
@@ -344,6 +413,13 @@ app.post('/addOrUpdateDrink', async (req, res) => {
   }
 });
 
+/**
+ * @route GET /pairProducts
+ * @description Get paired products based on sales within a date range
+ * @param {string} req.query.startDate - The start date for the analysis (YYYY-MM-DD format)
+ * @param {string} req.query.endDate - The end date for the analysis (YYYY-MM-DD format)
+ * @returns {Object[]} An array of paired products with their frequency of being sold together
+ */
 app.get('/pairProducts', async (req, res) => {
   try {
     const { startDate, endDate } = req.query;
@@ -367,6 +443,12 @@ app.get('/pairProducts', async (req, res) => {
   }
 });
 
+/**
+ * @route GET /excessReport
+ * @description Get a report of excess inventory items based on sales and inventory data
+ * @param {string} req.query.targetDate - The target date for the excess report (YYYY-MM-DD format)
+ * @returns {Object[]} An array of excess inventory items
+ */
 app.get('/excessReport', async (req, res) => {
   try {
     const targetDate = req.query.targetDate as string;
@@ -426,19 +508,35 @@ app.get('/excessReport', async (req, res) => {
   }
 });
 
-
+/**
+ * @function getInventoryID
+ * @description Get the inventory ID for a given inventory item name
+ * @param {string} inventoryName - The name of the inventory item
+ * @returns {number | null} The inventory ID or null if not found
+ */
 async function getInventoryID(inventoryName: string): Promise<number> {
   const query = 'SELECT inventoryid FROM Inventory WHERE inventoryname = $1';
   const results = await db(query, [inventoryName]);
   return results.rows.length > 0 ? results.rows[0].inventoryid : null;
 }
 
+/**
+ * @function getMenuItemID
+ * @description Get the menu item ID for a given menu item name
+ * @param {string} menuItemName - The name of the menu item
+ * @returns {number | null} The menu item ID or null if not found
+ */
 async function getMenuItemID(menuItemName: string): Promise<number> {
   const query = 'SELECT menuItemid FROM menuItems WHERE menuitemname = $1';
   const results = await db(query, [menuItemName]);
   return results.rows.length > 0 ? results.rows[0].menuitemid : null;
 }
 
+/**
+ * @function getRandomColor
+ * @description Generate a random hexadecimal color
+ * @returns {string} A random color in hexadecimal format
+ */
 function getRandomColor(): string {
   // Generate a random hexadecimal color
   const letters = '0123456789ABCDEF';
@@ -450,7 +548,11 @@ function getRandomColor(): string {
 }
 
 // Weather API
-
+/**
+ * @route GET /weather/forecast
+ * @description Get the current weather forecast for a specific location
+ * @returns {Object} Object containing temperature range, weather description, and location information
+ */
 app.get('/weather/forecast', async (req, res) => {
   try {
     const response = await axios.get(
@@ -476,6 +578,11 @@ app.get('/weather/forecast', async (req, res) => {
   }
 })
 
+/**
+ * @route GET /weather/current
+ * @description Get the current weather for a specific location
+ * @returns {Object} Object containing current temperature, feels-like temperature, and location information
+ */
 app.get('/weather/current', async (req, res) => { //
   try {
     const response = await axios.get(
@@ -496,7 +603,10 @@ app.get('/weather/current', async (req, res) => { //
   }
 })
 
-
+/**
+ * Start the server on the specified port and log the server's URL.
+ * @param {number} port - The port number on which the server will listen.
+ */
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
