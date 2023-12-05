@@ -14,6 +14,12 @@ interface MenuItem {
     menuitemhascaffeine: boolean;
 }
 
+/**
+ * Determines the next series based on the current series.
+ *
+ * @param {string} currentSeries - The name of the current series.
+ * @returns {string} The name of the next series.
+ */
 function determineNextSeries(currentSeries: string): string {
     // Logic to determine the next series
     // This should return the name of the next series based on your own series logic
@@ -24,7 +30,12 @@ function determineNextSeries(currentSeries: string): string {
     return seriesOrder[nextSeriesIndex];
 }
 
-
+/**
+ * MenuBoard Component: Represents the menu board of the application.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered MenuBoard component.
+ */
 function MenuBoard() {
     // const [autoScroll, setAutoScroll] = useState(true);
     // const [scrollPosition, setScrollPosition] = useState(0);
@@ -51,6 +62,9 @@ function MenuBoard() {
     });
     const navigate = useNavigate();
 
+    /**
+     * Handles auto-scrolling through the menu items.
+     */
     const handleAutoScroll = () => {
         if (!menuBoardRef.current) return;
 
@@ -67,6 +81,9 @@ function MenuBoard() {
         menuBoard.scrollTop = scrollPosition; // Apply the scroll
     };
 
+    /**
+     * Navigates to the next series when auto-scrolling reaches the end.
+     */
     const goToNextSeries = () => {
         if (userHasInteracted.current) return; // Skip if user has interacted
 
@@ -122,6 +139,9 @@ function MenuBoard() {
 
 
 
+    /**
+     * Fetches menu items from the server based on the selected series.
+     */
     const fetchMenuItems = async () => {
         try {
             const response = await fetch(`https://gong-cha-server.onrender.com/category/${selectedSeries}`);
@@ -134,6 +154,11 @@ function MenuBoard() {
     };
 
 
+    /**
+     * Handles the click on a series button.
+     *
+     * @param {string} seriesName - The name of the selected series.
+     */
     const handleSeriesClick = (seriesName: string) => {
         userHasInteracted.current = true; // Mark as interacted
         setIsLoading(true);
@@ -155,6 +180,10 @@ function MenuBoard() {
 
     };
 
+    /**
+     * Handles the click on the back button.
+     * Navigates back to the previous page.
+     */
     const onBackClick = () => {
         setIsSeriesSelected(false);
         sessionStorage.clear();
