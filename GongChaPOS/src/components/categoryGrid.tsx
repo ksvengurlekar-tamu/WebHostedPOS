@@ -1,3 +1,7 @@
+/**
+ * @file CategoryGrid.tsx
+ * @description Component for displaying menu categories, items, and handling interactions.
+ */
 import { useEffect, useState } from "react";
 import Card from "../components/card.tsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -5,6 +9,10 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import AutoCompleteCustom from "./autoCompleteCustom.tsx";
 import axios from "axios";
 
+/**
+ * @interface Drink
+ * @description Interface representing a drink item.
+ */
 interface Drink {
   id: number;
   name: string;
@@ -14,11 +22,20 @@ interface Drink {
   quantity: number;
   imgurl: string;
 }
+
+/**
+ * @interface Ingredient
+ * @description Interface representing an ingredient.
+ */
 interface Ingredient {
   name: string;
   measurement: string;
 }
 
+/**
+ * @interface FormDataType
+ * @description Interface representing the form data for adding a new drink.
+ */
 interface FormDataType {
   drinkName: string;
   drinkPrice: string;
@@ -28,6 +45,10 @@ interface FormDataType {
   ingredients: Ingredient[]; // Array of Ingredient objects
 }
 
+/**
+ * @interface CategoryGridProps
+ * @description Props for configuring the CategoryGrid component.
+ */
 interface CategoryGridProps {
   addToCart: (menuItem: Drink) => void;
   setShowBackButton: any;
@@ -38,6 +59,12 @@ interface CategoryGridProps {
   view: string;
 }
 
+/**
+ * @function CategoryGrid
+ * @description Main component for displaying menu categories, items, and handling interactions.
+ * @param {CategoryGridProps} props - Props for configuring the CategoryGrid component.
+ * @returns {JSX.Element} Rendered CategoryGrid component.
+ */
 function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, setSeries, triggerBackAction, resetTriggerBackAction, view }: CategoryGridProps) {
   const [isSeriesSelected, setSeriesSelected] = useState(() => {
     const saved = sessionStorage.getItem("isSeriesSelected");
@@ -85,6 +112,11 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
   const [selectedDrinkIMG, setSelectedDrinkIMG] = useState<string>("");
   
 
+   /**
+   * Handles the click event for selecting a series and fetching associated menu items.
+   * @param {string} SeriesName - The name of the selected series.
+   * @returns {void}
+   */
   const handleSeriesClick = async (SeriesName: string) => {
     setIsLoading(true);
     setMenuItems([]); // This line clears the drink items
@@ -100,6 +132,12 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
     setIsLoading(false);
   };
 
+  /**
+   * Gets the CSS class name for a button based on its type and value.
+   * @param {string} type - The type of button (e.g., size, ice, sugar, topping).
+   * @param {string} value - The value of the button.
+   * @returns {string} The CSS class name for the button.
+   */
   const getButtonClassName = (type: string, value: string) => {
     switch (type) {
       case "size":
@@ -123,6 +161,11 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
     }
   };
 
+  /**
+   * Handles the click event for selecting a topping.
+   * @param {string} topping - The name of the selected topping.
+   * @returns {void}
+   */
   // Function to handle toppings selection
   const handleToppingClick = (topping: string) => {
     setSelectedToppings((prevToppings) => {
@@ -134,6 +177,10 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
     });
   };
 
+  /**
+   * Handles the click event for the back button.
+   * @returns {void}
+   */
   const handleBackClick = () => {
     console.log(isDrinkSelected, isSeriesSelected);
     if (isDrinkSelected) {
@@ -147,6 +194,10 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
     }
   };
 
+  /**
+   * Handles the click event for adding a custom drink to the cart.
+   * @returns {void}
+   */
   const handleAddClick = () => {
     const newDrink: Drink = {
       id: selectedDrinkID,
@@ -167,6 +218,12 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
     setDrinkSelected(false);
   };
 
+  /**
+   * Handles the change event for form input fields.
+   * @param {keyof FormDataType} name - The name of the form field.
+   * @param {string | boolean} value - The value of the form field.
+   * @returns {void}
+   */
   const handleInputChange = (name: keyof FormDataType, value: string | boolean) => {
     setFormData(prevFormData => ({
       ...prevFormData,
@@ -175,6 +232,13 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
   };
   
 
+  /**
+   * Handles the change event for ingredient input fields.
+   * @param {number} index - The index of the ingredient in the array.
+   * @param {keyof Ingredient} field - The name of the ingredient field (name or measurement).
+   * @param {string} value - The value of the ingredient field.
+   * @returns {void}
+   */
   const handleIngredientChange = (index: number, field: keyof Ingredient, value: string) => {
     setFormData(prevFormData => {
         const updatedIngredients = [...prevFormData.ingredients];
@@ -184,6 +248,10 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
 };
   
 
+  /**
+   * Handles the form submission event for adding a new drink.
+   * @returns {void}
+   */
   const handleSubmit = async () => {
 
     // let drinkPrice = parseFloat(formData.drinkPrice) || 0;
@@ -210,6 +278,10 @@ function CategoryGrid({ addToCart, setShowBackButton, setHandleBackFromTopBar, s
     setSeriesSelected(false);
   };
 
+  /**
+   * Handles the click event for navigating back from the add menu item popup.
+   * @returns {void}
+   */
   const handleAddDrinkBack = () => {
     setFormData({
       drinkName: '',
