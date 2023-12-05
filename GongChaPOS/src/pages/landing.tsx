@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import gongChaLogo from '../assets/images/GongChaLogo.png';
 import 'bootstrap/dist/css/bootstrap.css';
 import { Link } from 'react-router-dom';
