@@ -11,7 +11,15 @@ import "bootstrap/dist/css/bootstrap.css";
 import { LanguageProvider } from './components/languageContext';
 import PrivateRoute from "./components/privateRoute.tsx";
 
-
+/**
+ * Entry point for the React application.
+ *
+ * Renders the application using React Router for navigation.
+ * Includes routes for the landing page, login, cashier view, manager view, inventory,
+ * customer view, and menu board.
+ *
+ * @component
+ */
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <BrowserRouter>
