@@ -1,7 +1,15 @@
+/**
+ * @file autoCompleteCustom.tsx
+ * @description Custom AutoComplete component for the Gong Cha POS project.
+ */
 import "./components.css"
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 
+/**
+ * @interface AutoCompleteCustomProps
+ * @description Interface for the props of the AutoCompleteCustom component.
+ */
 interface AutoCompleteCustomProps{
   data: string[];
   label: string;
@@ -11,6 +19,12 @@ interface AutoCompleteCustomProps{
   onSelectItem?: (value: string) => void;
 }
 
+/**
+ * @function AutoCompleteCustom
+ * @description Custom AutoComplete component with additional styling and functionality.
+ * @param {AutoCompleteCustomProps} props - Props for configuring the AutoCompleteCustom component.
+ * @returns {JSX.Element} Rendered AutoCompleteCustom component.
+ */
 function AutoCompleteCustom({data, label, handleChange, freeSolo = false, required = false, onSelectItem}: AutoCompleteCustomProps) {
   return (
     <Autocomplete
