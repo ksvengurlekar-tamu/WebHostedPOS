@@ -102,13 +102,12 @@ function Landing() {
       if ((window as any).google?.translate?.TranslateElement) {
         new (window as any).google.translate.TranslateElement(
           { pageLanguage: selectedLanguage,
-            layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE
+            // layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE
           },
-          
           'google_translate_element'
         );
       } else {
-        setTimeout(initializeTranslate, 500); // Retry initialization after a delay
+        setTimeout(initializeTranslate, 100); // Retry initialization after a delay
       }
     };
 

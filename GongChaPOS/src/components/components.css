@@ -1164,3 +1164,16 @@
 .goog-te-gadget-icon{
   visibility: hidden;
 }
+
+#google_translate_element{
+  background-color: yellow;
+}
+
+.skiptranslate{
+  /* visibility: hidden; */
+  color: red;
+}
+
+
+
+}
