@@ -106,7 +106,6 @@ function Landing() {
     googleTranslateScript.onload = initializeTranslate;
 
     document.body.appendChild(googleTranslateScript);
-
     return () => {
       document.body.removeChild(googleTranslateScript);
     };
