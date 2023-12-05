@@ -18,6 +18,12 @@ interface weatherInfo{
   weatherIcon: string;
 }
 
+declare global {
+  interface Window {
+    google: any;
+  }
+}
+
 function Landing() {
   const { selectedLanguage } = useLanguageContext();
   const [currTemp, setCurrTemp] = useState<string>(() => {
@@ -91,11 +97,14 @@ function Landing() {
     googleTranslateScript.src =
       '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
     googleTranslateScript.async = true;
-
+    
     const initializeTranslate = () => {
       if ((window as any).google?.translate?.TranslateElement) {
         new (window as any).google.translate.TranslateElement(
-          { pageLanguage: selectedLanguage },
+          { pageLanguage: selectedLanguage,
+            layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE
+          },
+          
           'google_translate_element'
         );
       } else {
@@ -106,10 +115,11 @@ function Landing() {
     googleTranslateScript.onload = initializeTranslate;
 
     document.body.appendChild(googleTranslateScript);
+    console.log('google translate script added');
     return () => {
       document.body.removeChild(googleTranslateScript);
     };
-  }, [selectedLanguage]);
+  }, []);
 
   return (
     <div className="container-fluid d-flex flex-row vh-100 vw-100 p-0 background">
