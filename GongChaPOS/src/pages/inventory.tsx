@@ -6,7 +6,18 @@ import AutoCompleteCustom from "../components/autoCompleteCustom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-
+/**
+ * Represents an item in the inventory.
+ *
+ * @interface
+ * @property {number} inventoryid - The unique identifier of the inventory item.
+ * @property {string} inventoryname - The name of the inventory item.
+ * @property {number} inventoryquantity - The quantity of the inventory item.
+ * @property {string} inventoryreceiveddate - The date when the inventory item was received.
+ * @property {string} inventoryexpirationdate - The expiration date of the inventory item.
+ * @property {boolean} inventoryinstock - Indicates whether the item is currently in stock.
+ * @property {string} inventorysupplier - The supplier of the inventory item.
+ */
 interface InventoryItem {
   inventoryid: number;
   inventoryname: string;
@@ -16,6 +27,13 @@ interface InventoryItem {
   inventoryinstock: boolean;
   inventorysupplier: string;
 }
+
+/**
+ * Columns configuration for the inventory table.
+ *
+ * @constant
+ * @type {Array<{ key: keyof InventoryItem; header: string }>}
+ */
 const inventoryColumns: { key: keyof InventoryItem; header: string }[] = [
   { key: "inventoryid", header: "ID" },
   { key: "inventoryname", header: "Name" },
@@ -26,6 +44,19 @@ const inventoryColumns: { key: keyof InventoryItem; header: string }[] = [
   { key: "inventorysupplier", header: "Supplier" },
 ];
 
+/**
+ * Represents an item in the sales data.
+ *
+ * @interface
+ * @property {number} orderid - The unique identifier of the sales order.
+ * @property {number} orderno - The order number of the sales order.
+ * @property {string} saledate - The date when the sale occurred.
+ * @property {string} saletime - The time when the sale occurred.
+ * @property {number} employeeid - The identifier of the employee associated with the sale.
+ * @property {number} saleprice - The price of the sale.
+ * @property {boolean} islarge - Indicates whether the item sold is large.
+ * @property {number} menuitemid - The identifier of the menu item sold.
+ */
 interface salesItem {
   orderid: number;
   orderno: number;
@@ -36,6 +67,13 @@ interface salesItem {
   islarge: boolean;
   menuitemid: number;
 }
+
+/**
+ * Columns configuration for the sales table.
+ *
+ * @constant
+ * @type {Array<{ key: keyof salesItem; header: string }>}
+ */
 const salesColumns: { key: keyof salesItem; header: string }[] = [
   { key: "orderid", header: "Order ID" },
   { key: "orderno", header: "Order No." },
@@ -47,6 +85,17 @@ const salesColumns: { key: keyof salesItem; header: string }[] = [
   { key: "menuitemid", header: "Menu Item ID" },
 ];
 
+/**
+ * Represents the form data for adding or updating an inventory item.
+ *
+ * @interface
+ * @property {string} inventoryName - The name of the inventory item.
+ * @property {number} quantity - The quantity of the inventory item.
+ * @property {string} receivedDate - The date when the inventory item was received.
+ * @property {string} expirationDate - The expiration date of the inventory item.
+ * @property {boolean} inStock - Indicates whether the item is currently in stock.
+ * @property {string} supplier - The supplier of the inventory item.
+ */
 interface InventoryFormDataType {
   inventoryName: string;
   quantity: number;
@@ -56,18 +105,38 @@ interface InventoryFormDataType {
   supplier: string;
 }
 
+/**
+ * Represents a paired product with information about the items and their frequency.
+ *
+ * @interface
+ * @property {string} item1 - The first item in the pair.
+ * @property {string} item2 - The second item in the pair.
+ * @property {number} frequency - The frequency of the pair occurrence.
+ */
 interface PairedProduct {
   item1: string;
   item2: string;
   frequency: number;
 }
 
+/**
+ * Columns configuration for the paired product table.
+ *
+ * @constant
+ * @type {Array<{ key: keyof PairedProduct; header: string }>}
+ */
 const pairedProductColumns: { key: keyof PairedProduct; header: string }[] = [
   { key: "item1", header: "Item 1" },
   { key: "item2", header: "Item 2" },
   { key: "frequency", header: "Frequency" }
 ];
 
+/**
+ * Main Inventory component.
+ *
+ * @function
+ * @returns {JSX.Element} The rendered Inventory component.
+ */
 function Inventory() {
   const [inventoryItems, setInventoryItems] = useState<InventoryItem[]>([]);
   const [isNewItem, setIsNewItem] = useState<boolean>(true);
@@ -117,7 +186,12 @@ function Inventory() {
   
   const [excessReportData, setExcessReportData] = useState<InventoryItem[]>([]);
 
-  
+  /**
+   * Fetches inventory items and updates the state.
+   *
+   * @function
+   * @async
+   */
   useEffect(() => {
     const fetchInventoryItems = async () => {
       try {
@@ -171,6 +245,12 @@ function Inventory() {
     sessionStorage.setItem("showExcessReport", showExcessReport.toString());
   }, [showExcessReport]);
 
+  /**
+   * Handles the change of the target date for the excess report.
+   *
+   * @function
+   * @param {React.ChangeEvent<HTMLInputElement>} e - The change event.
+   */
   const handleTargetDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   const selectedDate = new Date(e.target.value);
   const currentDate = new Date();
@@ -188,6 +268,13 @@ function Inventory() {
   fetchExcessReportData(correctedDate.toISOString().split('T')[0]); // Pass the corrected date directly
 };
 
+/**
+   * Fetches excess report data based on the specified date.
+   *
+   * @function
+   * @async
+   * @param {string} date - The target date for the excess report.
+   */  
 const fetchExcessReportData = async (date: string) => {
   try {
     const response = await axios.get('https://gong-cha-server.onrender.com/excessReport', {
@@ -212,6 +299,15 @@ const fetchExcessReportData = async (date: string) => {
 };
 
 
+  /**
+   * Handles the selection of a menu item.
+   *
+   * @function
+   * @async
+   * @param {string | undefined} inputMenuItem - The selected menu item.
+   * @param {string | undefined} inputStartDate - The start date for fetching sales data.
+   * @param {string | undefined} inputEndDate - The end date for fetching sales data.
+   */
   const handleMenuItemSelect = async (inputMenuItem?: string, inputStartDate?: string, inputEndDate?: string) => {
 
     // Determine the current or new dates to use for fetching
@@ -454,7 +550,12 @@ const fetchExcessReportData = async (date: string) => {
   };
   
 
-  
+  /**
+   * Renders the Inventory component.
+   *
+   * @function
+   * @returns {JSX.Element} The rendered Inventory component.
+   */
 
   return (
     <div className="container-fluid d-flex flex-row vh-100 vw-100 p-0 background">
