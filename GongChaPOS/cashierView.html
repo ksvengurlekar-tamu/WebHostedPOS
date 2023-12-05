@@ -1,19 +1,32 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />    
+    <!--
+      @file index.html
+      @description HTML file serving as the entry point for the Cashier view in Gong Cha POS.
+    -->
+    <meta charset="UTF-8" /> 
+    <!-- Apple Touch Icon -->
     <link rel="apple-touch-icon" sizes="180x180" href="/src/assets/favIcon/apple-touch-icon.png">
+    <!-- Favicon for Various Platforms -->
     <link rel="icon" type="image/png" sizes="32x32" href="/src/assets/favIcon/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/src/assets/favIcon/favicon-16x16.png">
     <!-- <link rel="manifest" href="GongChaPOS/src/assets/favIcon/site.webmanifest"> -->
+    <!-- Safari Pinned Tab -->
     <link rel="mask-icon" href="GongChaPOS/src/assets/favIcon/safari-pinned-tab.svg" color="#5bbad5">
+    <!-- Microsoft Tile Color -->
     <meta name="msapplication-TileColor" content="#da532c">
+    <!-- Theme Color for Mobile Browsers -->
     <meta name="theme-color" content="#ffffff">
+    <!-- Viewport Configuration -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Page Title -->
     <title> Gong Cha POS - Cashier </title>
   </head>
   <body>
+    <!-- Root Container for React App -->
     <div id="root"></div>
+    <!-- Script Tag for Loading Cashier View -->
     <script type="module" src="/src/cashierView.tsx"></script> 
   </body>
 </html>
