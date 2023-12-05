@@ -1,18 +1,11 @@
 {
-  /*
-   * @file package.json
-   * @description Configuration file for Node.js project Gong Cha POS.
-   * @see {@link https://gong-cha-server.onrender.com/}
-   */
+  
   "name": "gongchapos",
   "private": true,
   "version": "0.0.0",
   "type": "module",
 
-   /*
-   * @property scripts
-   * @description Defines scripts for various development and build tasks.
-   */
+   
   "scripts": {
     "dev": "vite",
     "start": "vite preview",
@@ -20,10 +13,7 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
-  /*
-   * @property dependencies
-   * @description Lists production dependencies required for the project.
-   */
+  
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
@@ -42,10 +32,7 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.17.0"
   },
-  /*
-   * @property devDependencies
-   * @description Lists development dependencies required for the project.
-   */
+  
   "devDependencies": {
     "@types/cors": "^2.8.15",
     "@types/express": "^4.17.20",
