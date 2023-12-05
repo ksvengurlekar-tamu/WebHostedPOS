@@ -28,34 +28,36 @@ function TopBar({ isBackButtonVisible, view, series, onBackClick}: TopBarProps) 
   }, []);
 
   const formattedTime = currentTime.toLocaleTimeString();
+  const formattedTimeISO = currentTime.toISOString();
 
   return (
-    <div className="topNavBar">
+    <nav className="topNavBar" aria-label="Top Navigation Bar">
       {isBackButtonVisible && (
-        <button className="back-button" onClick={onBackClick}>
-          <FontAwesomeIcon icon={faArrowLeftLong} className="Back-icon" />
+        <button className="back-button" onClick={onBackClick} aria-label="Go back">
+          <FontAwesomeIcon icon={faArrowLeftLong} aria-hidden="true" className="Back-icon" />
         </button>
       )}
       {!isBackButtonVisible && (
-        <div style={{ marginLeft: "85px", marginBottom: "66px" }}></div>
+        <div style={{ marginLeft: "85px", marginBottom: "66px" }} aria-hidden="true"></div>
       )}
-      <span>{series || "Bubble Tea Series"}</span>
-      <div className="topBarInfo">
+      <h1 className="visually-hidden">{series ? `${series} - Bubble Tea Series` : "Bubble Tea Series"}</h1>
+      <span aria-hidden="true">{series || "Bubble Tea Series"}</span>
+      <div className="topBarInfo" role="contentinfo">
         <span className="topbarText">
-          <FontAwesomeIcon icon={faCheck} className="checkIcon" />
+          <FontAwesomeIcon icon={faCheck} aria-hidden="true" className="checkIcon" />
           {view}
         </span>
         <span className="topbarText">
-          <FontAwesomeIcon icon={faCheck} className="checkIcon" />
+          <FontAwesomeIcon icon={faCheck} aria-hidden="true" className="checkIcon" />
           Printer
         </span>
         <span className="topbarText">
-          <FontAwesomeIcon icon={faCheck} className="checkIcon" />
+          <FontAwesomeIcon icon={faCheck} aria-hidden="true" className="checkIcon" />
           Customer Display
         </span>
-        <span className="topbarText">{formattedTime}</span>
+        <time dateTime={formattedTimeISO} className="topbarText">{formattedTime}</time>
       </div>
-    </div>
+    </nav>
   );
 }
 

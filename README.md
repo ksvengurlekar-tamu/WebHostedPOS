@@ -2,6 +2,9 @@
 
 A Point Of Sale (POS) system developed for GongCha, implemented using the PERN stack (PostgreSQL, Express, React, and Node.js).
 
+Website Address: https://gong-cha-pos.onrender.com/
+Server Address: https://gong-cha-server.onrender.com/
+
 ![GongCha Logo](GongChaPOS/src/assets/images/GongChaLogo.png)
 
 ## Introduction

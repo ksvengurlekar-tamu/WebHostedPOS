@@ -461,7 +461,7 @@ const fetchExcessReportData = async (date: string) => {
       <div className="col-2 d-flex flex-column vh-100 p-0">
         <LeftNavBar view={"Manager View"} />
       </div>
-      <div className="col d-flex flex-column vh-100 p-0 main-content">
+      <div className="col d-flex flex-column vh-100 p-0 main-content" role="main">
         <TopBar
           isBackButtonVisible={false}
           view={"Manager View"}
@@ -469,8 +469,8 @@ const fetchExcessReportData = async (date: string) => {
         />
         {showAddInventory && ( // add inventory popup
           <>
-            <div className="overlay"></div>
-            <div className="smallPopup d-flex flex-column">
+            <div className="overlay" aria-hidden="true"></div>
+            <div className="smallPopup d-flex flex-column" role="dialog" aria-labelledby="addInventory" aria-modal="true">
               <div className="addInventoryRow m-1">
                 <span>Item Name:</span>
                 <span><AutoCompleteCustom data={inventoryItems.map((item) => item.inventoryname)} label="Item Name" handleChange={(value) => handleInputChange(value, true)} onSelectItem={handleSelectAutocomplete} freeSolo={true} required={true} /></span>
@@ -514,7 +514,7 @@ const fetchExcessReportData = async (date: string) => {
         {showPairProducts && ( // pair products popup
           <>
             <div className="overlay"></div>
-            <div className="Popup d-flex flex-column">
+            <div className="Popup d-flex flex-column" role="dialog" aria-labelledby="pairProducts" aria-modal="true">
               <div className="pairRow">
                 <span className="pairCol">
                   Start Date:
@@ -536,7 +536,7 @@ const fetchExcessReportData = async (date: string) => {
         {showRestockReport && ( // restock report popup
           <>
             <div className="overlay"></div>
-            <div className="Popup d-flex flex-column">
+            <div className="Popup d-flex flex-column" role="dialog" aria-labelledby="restockReport" aria-modal="true">
               <GenericTable<InventoryItem>
                 data={filteredInventoryItems}
                 columns={inventoryColumns}
@@ -548,7 +548,7 @@ const fetchExcessReportData = async (date: string) => {
         {showExcessReport && ( // Excess Report products popup
           <>
             <div className="overlay"></div>
-            <div className="Popup d-flex flex-column">
+            <div className="Popup d-flex flex-column" role="dialog" aria-labelledby="excessReport" aria-modal="true">
               <div className="excessRow">
                 <span className="excessCol">
                   Target Date:
@@ -566,7 +566,7 @@ const fetchExcessReportData = async (date: string) => {
         {showSalesReport && ( // sales report popup
           <>
             <div className="overlay"></div>
-            <div className="Popup d-flex flex-column">
+            <div className="Popup d-flex flex-column" role="dialog" aria-labelledby="salesReport" aria-modal="true">
               <div className="salesInputRow">
                 <AutoCompleteCustom data={menuItems} label="Menu Item" handleChange={handleMenuItemSelect} />
                 <label htmlFor="start-date">

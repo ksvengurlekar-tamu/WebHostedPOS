@@ -28,12 +28,22 @@ function bottomBar({ onCheckout }: BottomBarProps) {
   };
 
   return (
-    <div className="bottomNavBar">
-      <button onClick={onCheckout}>Checkout</button>
-      <button onClick={handleTransactions}>Transactions</button>
-      <button onClick={handleOrders}>Orders</button>
-      <button onClick={handleNotifications}>Notifications</button>
-      <button onClick={handleLogout}>Log Out</button>
+    <div className="bottomNavBar" role="navigation" aria-label="Bottom Navigation">
+      <button onClick={onCheckout} aria-label="Proceed to Checkout">
+        Checkout
+      </button>
+      <button onClick={handleTransactions} aria-label="View Transactions">
+        Transactions
+      </button>
+      <button onClick={handleOrders} aria-label="View Orders">
+        Orders
+      </button>
+      <button onClick={handleNotifications} aria-label="View Notifications">
+        Notifications
+      </button>
+      <button onClick={handleLogout} aria-label="Log Out of Account">
+        Log Out
+      </button>
     </div>
   );
 

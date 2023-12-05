@@ -21,7 +21,7 @@ interface CartViewProps {
   onRemoveDrink: (drinkName: Drink) => void;
   onClearCart: () => void;
   onSubmit: () => void;
-  view: string;
+  view?: string;
 }
 
 function CartView({ InputDrinks, onRemoveDrink, onClearCart, onSubmit, view}: CartViewProps) {
@@ -128,31 +128,32 @@ function CartView({ InputDrinks, onRemoveDrink, onClearCart, onSubmit, view}: Ca
   }
 
   return (
-    <div className={view != "Customer View" ? "" : "right-side-menu"}>
+    <aside className={view != "Customer View" ? "" : "right-side-menu"} role="complementary" aria-label="Shopping Cart">
       {/* {view === "Customer View" && (<div className="overlay"></div>)}
       <div className={view != "Customer View" ? "" : "Popup"}></div> */}
-      <h4 className={view != "Customer View" ? "m-0" : "customerm-0"}>Cart</h4>
+      <h4 style={{fontSize: "40px"}}className={view != "Customer View" ? "m-0" : "customerm-0"}>Cart</h4>
       <div className={view != "Customer View" ? "cartView" : "customerCart"}>
         {drinks.map((drink, index) => (
-            <button className="cart-item" key={index} onClick={() => setSelectedDrink(drink)}>
-              <div className="item-name-quantity-container">
-                <span 
-                className="item-name-quantity"
+          <button className="cart-item" key={index} onClick={() => setSelectedDrink(drink)} aria-labelledby={`drink-name-${index}`}>
+            <div className="item-name-quantity-container">
+              <span
+                className="item-name-quantity d-flex"
                 style={{
                   fontSize: drink.name.length > 30 ? '16px' : '20px' // Ternary operator for font size
                 }}
-                >
-                  {drink.name} <span style={{opacity: "0.5", fontSize: '20px' }}>x{drink.quantity}</span></span>
-                <span className="item-price">${drink.price.toFixed(2)}</span> 
-              </div>
-              {(view == "Customer View") && (<img src={encodeURI(drink.imgurl)} alt={""} className="left-image" />)}
-              <div className="item-toppings-container">
-                {drink.size === "Large" && (<div style={{fontSize: "20px"}}>Large</div>)}
-                {drink.size != "Large" && (<div style={{fontSize: "20px"}}>Medium</div>)}
-                {drink.topping_names.map((toppingName, toppingIndex) => {
-                  const topping = toppings?.find(t => t.name === toppingName);
-                  return (
-                    <div key={toppingIndex} className="toppping-container">
+              >
+                {drink.size === "Large" && (<div style={{ fontSize: "20px", marginRight: "5px" }}>Large</div>)}
+                {drink.size != "Large" && (<div style={{ fontSize: "20px", marginRight: "5px" }}>Medium</div>)}
+                {drink.name} <span style={{ opacity: "0.5", fontSize: '20px', marginLeft: "10px" }}>x{drink.quantity}</span>
+              </span>
+              <span className="item-price">${drink.price.toFixed(2)}</span>
+            </div>
+            {(view == "Customer View") && (<img src={encodeURI(drink.imgurl)} alt={"drink image"} className="left-image" />)}
+            <div className="item-toppings-container" aria-label="Toppings">
+              {drink.topping_names.map((toppingName, toppingIndex) => {
+                const topping = toppings?.find(t => t.name === toppingName);
+                return (
+                  <div key={toppingIndex} className="toppping-container" aria-label={`${toppingName} topping`}>
                       <span className="item-toppings" style={{fontSize: "20px"}}>{toppingName}</span>
                       <span className="item-toppings" style={{fontSize: "20px"}}>
                         +${topping ? topping.price.toFixed(2) : '0.00'}
@@ -178,7 +179,7 @@ function CartView({ InputDrinks, onRemoveDrink, onClearCart, onSubmit, view}: Ca
         <button className="cartViewButton " onClick={submitOrder}>Submit</button>
       </div>
       
-    </div>
+    </aside>
   );
 };
 

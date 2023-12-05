@@ -34,7 +34,6 @@ function CashierView({ view }: CartViewProps) {
     return saved === "true"; // If saved is the string 'true', return true, otherwise return false
   });
   const [series, setSeries] = useState("");
-  const [discounts, setDiscounts] = useState<string[]>([]);
 
 
   useEffect(() => {
@@ -43,33 +42,18 @@ function CashierView({ view }: CartViewProps) {
     if (savedDrinks) {
       updatedDrinks = [...JSON.parse(savedDrinks), ...drinks];
     }
-    if (discounts.length === 0) {
-      setDiscounts(determineDiscounts());
-    }
+
     setDrinks(updatedDrinks);
   }, []);
 
-  const determineDiscounts = (): string[] => {
-    // Replace this with your actual logic
-    var discounts = ["First"];
-    axios.get('http://localhost:9000/weather/forecast')
-      .then(response => {
-        if (response.data.temperatureMin < 60.0) {
-          discounts.push('Cold');
-        }
-      })
-      .catch(error => {
-        console.error('Error fetching weather data:', error);
-      });
-    return discounts;
-  }
+
 
   const addToCart = (drink: Drink): void => {
     if (drink.size === "Large") {
       drink.price += 0.75;
     }
-
-    if (discounts.includes("Cold") && drink.name === "Caramel Chocolate Drink") {
+    const savedDiscountedDrink = sessionStorage.getItem('discountedDrink');
+    if (drink.name === savedDiscountedDrink) {
       drink.price = 0;
     }
 
@@ -104,7 +88,9 @@ function CashierView({ view }: CartViewProps) {
   }
 
   const submitOrder = async () => {
-    //var insert_url = "https://gong-cha-server.onrender.com/sales";
+    setTriggerBackAction(true);
+    setSeries("");
+    console.log(drinks); 
     var insert_url = "https://gong-cha-server.onrender.com/sales";
 
     const employeeId = sessionStorage.getItem("employeeId");
@@ -114,8 +100,7 @@ function CashierView({ view }: CartViewProps) {
       drinks,
     });
 
-    setTriggerBackAction(true);
-    setSeries("");
+    
     clearCart();
 
   };
@@ -124,25 +109,25 @@ function CashierView({ view }: CartViewProps) {
   return (
 
     <div className="container-fluid d-flex flex-row vh-100 vw-100 p-0 background">
-      <div className="col-2 d-flex flex-column vh-100 p-0">
+      <nav className="col-2 d-flex flex-column vh-100 p-0">
         <LeftNavBar view={view} />
-      </div>
-      <div className="col d-flex flex-column vh-100 p-0 main-content">
+      </nav>
+      <main className="col d-flex flex-column vh-100 p-0 main-content">
         <TopBar isBackButtonVisible={showBackButton} view={view} series={series} onBackClick={handleBackFromTopBar} />
-        <div className="row">
+        <div className="row"  aria-label="Product Categories">
           <CategoryGrid addToCart={addToCart} setShowBackButton={setShowBackButton} setHandleBackFromTopBar={setHandleBackFromTopBar} setSeries={setSeries} triggerBackAction={triggerBackAction} resetTriggerBackAction={() => setTriggerBackAction(false)} view={view} />
           {!isCheckoutView && !showBackButton &&
-            <div className="col-7 img"> <img src={gongChaImg}></img> </div>
+            <div className="col-7 img"> <img src={gongChaImg} alt="Gong-Cha Logo"></img> </div>
           }
           {isCheckoutView &&
-            <div className="col-md-3 cartViewContainer">
+            <aside className="col-md-3 cartViewContainer" aria-label="Shopping Cart">
               <CartView InputDrinks={drinks} onRemoveDrink={removeDrinkFromCart} onClearCart={clearCart} onSubmit={submitOrder} view={"Cashier View"} />
-            </div>
+            </aside>
           }
         </div>
 
         <BottomBar onCheckout={handleCheckoutButton} />
-      </div>
+      </main>
     </div>
   );
 }

@@ -55,7 +55,7 @@ function AutoCompleteCustom({data, label, handleChange, freeSolo = false, requir
         },
         "& + .MuiAutocomplete-popper .MuiAutocomplete-option": {
           color: "black !important",
-          fontSize: 20,
+          fontSize: 25,
         },
         '& .MuiAutocomplete-endAdornment': {
           // Center the arrow vertically
@@ -63,6 +63,10 @@ function AutoCompleteCustom({data, label, handleChange, freeSolo = false, requir
         },
         "& .MuiSvgIcon-root > path": {
           color: 'black', // Set the icon color to black
+          
+        },
+        "& .MuiSvgIcon-root": {
+          fontSize: 40,
         },
       }}
     />
