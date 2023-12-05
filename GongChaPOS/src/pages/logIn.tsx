@@ -9,11 +9,24 @@ import GoogleLogIn from '../components/googleLogIn';
 import gongChaLogo from '../assets/images/GongChaLogo.png';
 import e from 'cors';
 
+/**
+ * Login Component: Represents the login page of the application.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered Login component.
+ */
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
+  /**
+   * Handle Google Sign In: Async function to handle Google Sign In.
+   * It fetches employee data from the server, checks if the user is a manager or cashier,
+   * and navigates to the appropriate view accordingly.
+   *
+   * @param {string} userName - The username of the signed-in user.
+   */
   const handleGoogleSignIn = async (userName: string) => {    
     try {
       console.log("connect");
@@ -48,6 +61,13 @@ function Login() {
     }
   };
 
+  /**
+   * Handle Form Submission: Async function to handle the form submission.
+   * It fetches employee data from the server, checks if the user is a manager or cashier,
+   * and navigates to the appropriate view accordingly.
+   *
+   * @param {React.FormEvent} event - The form submission event.
+   */
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
@@ -84,6 +104,10 @@ function Login() {
   };
 
 
+  /**
+   * Toggle Password Visibility: Function to toggle the visibility of the password.
+   * It changes the input type between "password" and "text".
+   */
   const togglePasswordVisibility = () => {
     const passwordInput = document.getElementById("password") as HTMLInputElement;
     if (passwordInput) {
@@ -95,11 +119,15 @@ function Login() {
     }
   };
 
+  /**
+   * Handle Back Click: Function to handle the click on the back button.
+   * It navigates back to the previous page.
+   */
   const onBackClick = () => {
     navigate("/");
   };
 
-
+  
   return (
     <div className="container-fluid d-flex flex-row vh-100 vw-100 p-0 background">
       <div>
