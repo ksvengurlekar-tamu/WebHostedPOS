@@ -1157,23 +1157,16 @@
 }  */
 
 /* google logo with link (element is <a>) */
-.VIpgJd-ZVi9od-l4eHX-hSRGPd {
+/* .VIpgJd-ZVi9od-l4eHX-hSRGPd {
   visibility: hidden;
-}
+} */
 
-.goog-te-gadget-icon{
-  visibility: hidden;
-}
 
 #google_translate_element{
-  background-color: yellow;
-}
-
-.skiptranslate{
-  /* visibility: hidden; */
-  color: red;
-}
-
-
+  background-color: hsl(46, 100%, 90%);
+  border-radius: 10px;
+  padding: 10px;
+  border: 2px solid hsl(46, 100%, 70%);
 
 }
+
