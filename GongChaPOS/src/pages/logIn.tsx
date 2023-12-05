@@ -5,12 +5,48 @@ import './logIn.css';
 import { useNavigate  } from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
+import GoogleLogIn from '../components/googleLogIn';
 import gongChaLogo from '../assets/images/GongChaLogo.png';
+import e from 'cors';
 
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+
+  const handleGoogleSignIn = async (userName: string) => {    
+    try {
+      console.log("connect");
+      const response = await fetch('https://gong-cha-server.onrender.com/employees', {mode: 'cors'});
+      const data = await response.json();
+      let isLoginSuccessful = false; // flag to track successful login
+      data.forEach((employee: any) => {
+        if (userName === employee.employeename && employee.ismanager) {
+          console.log("Login successful as manager " + employee.employeename);
+          isLoginSuccessful = true; // set the flag to true if matching user found
+          sessionStorage.setItem("employeeId",employee.employeeid)
+          sessionStorage.setItem("userRole","manager")
+          navigate('/managerView');
+        }
+        else if (userName === employee.employeename && !employee.ismanager) {
+          console.log("Login successful as cashier " + employee.employeename);
+          isLoginSuccessful = true; // set the flag to true if matching user found
+          sessionStorage.setItem("employeeId",employee.employeeid)
+          sessionStorage.setItem("userRole","cashier")
+          navigate('/cashierView');
+        }
+      });
+
+      if (!isLoginSuccessful) {
+        console.log("Login successful as customer");
+        isLoginSuccessful = true; // set the flag to true if matching user found
+        navigate('/customerView');
+      }
+
+    } catch (error) {
+      console.error("Failed to fetch employees:", error);
+    }
+  };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -24,13 +60,15 @@ function Login() {
         if (username === employee.employeeusername && password === employee.employeeuserpassword && employee.ismanager) {
           console.log("Login successful");
           isLoginSuccessful = true; // set the flag to true if matching user found
-          sessionStorage.setItem("employeeId", employee.employeeid)
+          sessionStorage.setItem("employeeId",employee.employeeid)
+          sessionStorage.setItem("userRole","manager")
           navigate('/managerView');
         }
         else if (username === employee.employeeusername && password === employee.employeeuserpassword) {
           console.log("Login successful");
           isLoginSuccessful = true; // set the flag to true if matching user found
-          sessionStorage.setItem("employeeId", employee.employeeid)
+          sessionStorage.setItem("employeeId",employee.employeeid)
+          sessionStorage.setItem("userRole","cashier")
           navigate('/cashierView');
         }
       });
@@ -123,6 +161,9 @@ function Login() {
           <button type="submit" className="btn btn-primary buttonSubmit">
             Submit
           </button>
+          <div className="mt-3">
+            <GoogleLogIn  onSignIn={handleGoogleSignIn}/>
+          </div>
         </form>
       </div>
     </div>
