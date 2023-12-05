@@ -23,6 +23,17 @@ interface CartViewProps {
   view: string;
 }
 
+/**
+ * Represents the Cashier View component of the application.
+ *
+ * This component includes a left navigation bar, a top bar with back button and current time,
+ * a bottom bar for checkout, and a central area with product categories or a shopping cart.
+ * It allows cashiers to add drinks to the cart, view categories, and submit orders.
+ *
+ * @component
+ * @param {Object} props - The properties of the component.
+ * @param {string} props.view - The current view of the cashier.
+ */
 function CashierView({ view }: CartViewProps) {
 
   const [drinks, setDrinks] = useState<Drink[]>([]);
