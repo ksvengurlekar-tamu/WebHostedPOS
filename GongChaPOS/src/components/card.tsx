@@ -1,6 +1,14 @@
+/**
+ * @file card.tsx
+ * @description Card component for displaying menu items with selectable options.
+ */
 import React from "react";
 import "./components.css";
 
+/**
+ * @interface CardDetails
+ * @description Interface for configuring the Card component.
+ */
 interface CardDetails {
   className: string;
   menuItemName: string;
@@ -8,6 +16,12 @@ interface CardDetails {
   onSelect: () => void; // Add this line
 }
 
+/**
+ * @function Card
+ * @description Card component displaying a menu item with a selectable option.
+ * @param {CardDetails} props - Props for configuring the Card component.
+ * @returns {JSX.Element} Rendered Card component.
+ */
 function Card({ className, menuItemName, color, onSelect }: CardDetails) {
   // let cardColor = generateRandomColor();
   let cardColor = '';
