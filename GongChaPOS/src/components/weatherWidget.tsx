@@ -1,6 +1,27 @@
 import { useEffect, useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.css';
 
+/**
+ * Weather Widget Component
+ *
+ * Displays weather information, including city name, country, current temperature,
+ * feels-like temperature, min and max temperatures, weather description, and an icon.
+ *
+ * @component
+ *
+ * @param {Object} props - The properties of the WeatherWidget component.
+ * @param {Object} props.weatherInfo - An object containing weather information.
+ * @param {string} props.weatherInfo.cityName - The name of the city.
+ * @param {string} props.weatherInfo.countryName - The name of the country.
+ * @param {number} props.weatherInfo.currentTemp - The current temperature in Fahrenheit.
+ * @param {number} props.weatherInfo.feelsLike - The feels-like temperature in Fahrenheit.
+ * @param {number} props.weatherInfo.maxTemp - The maximum temperature in Fahrenheit.
+ * @param {number} props.weatherInfo.minTemp - The minimum temperature in Fahrenheit.
+ * @param {string} props.weatherInfo.weatherDescription - The description of the weather.
+ * @param {string} props.weatherInfo.weatherIcon - The icon code for the weather representation.
+ *
+ * @returns {JSX.Element} The rendered WeatherWidget component.
+ */
 interface weatherInfo{
     cityName: string;
     countryName: string;
