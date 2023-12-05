@@ -20,32 +20,27 @@ function Login() {
       const response = await fetch('https://gong-cha-server.onrender.com/employees', {mode: 'cors'});
       const data = await response.json();
       let isLoginSuccessful = false; // flag to track successful login
-      console.log(userName+ "AAAAAAAAAAAA")
       data.forEach((employee: any) => {
         if (userName === employee.employeename && employee.ismanager) {
-          console.log("Login successful");
+          console.log("Login successful as manager " + employee.employeename);
           isLoginSuccessful = true; // set the flag to true if matching user found
           sessionStorage.setItem("employeeId",employee.employeeid)
           sessionStorage.setItem("userRole","manager")
           navigate('/managerView');
         }
         else if (userName === employee.employeename && !employee.ismanager) {
-          console.log("Login successful");
+          console.log("Login successful as cashier " + employee.employeename);
           isLoginSuccessful = true; // set the flag to true if matching user found
           sessionStorage.setItem("employeeId",employee.employeeid)
           sessionStorage.setItem("userRole","cashier")
           navigate('/cashierView');
         }
-        else{
-          console.log("Login successful");
-          isLoginSuccessful = true; // set the flag to true if matching user found
-          navigate('/customerView');
-        }
       });
 
       if (!isLoginSuccessful) {
-        console.log("Login failed");
-        alert("Login failed");
+        console.log("Login successful as customer");
+        isLoginSuccessful = true; // set the flag to true if matching user found
+        navigate('/customerView');
       }
 
     } catch (error) {
