@@ -27,7 +27,14 @@ interface SQLDrinkInfo {
 }
 
 type DrinkDetail = "Cup Size" | "Sugar Level" | "Ice Level" | "Toppings" | "";
-
+/**
+ * Represents the Customer View component of the application.
+ *
+ * This component allows customers to view different series of drinks, customize and add drinks to their cart,
+ * view the cart, and submit their orders.
+ *
+ * @component
+ */
 function CustomerView() {
   const [menuItems, setMenuItems] = useState<SQLDrinkInfo[]>(() => {
     const savedMenuItems = sessionStorage.getItem("menuItems");
@@ -174,7 +181,11 @@ function CustomerView() {
     console.log(newDrink);
   }
 
-  
+  /**
+   * Removes a specific drink from the shopping cart.
+   *
+   * @param {Drink} drinkName - The drink to be removed from the cart.
+   */
   const removeDrinkFromCart = (drinkName: Drink) => {
     let found = false; // This flag will indicate if the drink has been found and removed
     const updatedDrinks = cartInfo.filter((drink) => {
@@ -211,6 +222,11 @@ function CustomerView() {
     clearCart();
   };
 
+  /**
+   * Handles the click on a drink series, loads the corresponding menu items, and updates the view.
+   *
+   * @param {string} seriesName - The name of the selected drink series.
+   */
   const handleSeriesClick = (seriesName: string) => {
     setSeriesName(seriesName);
     setMenuItems([]);
@@ -229,6 +245,11 @@ function CustomerView() {
     
   };
 
+  /**
+   * Handles the click on a specific drink, opens the drink details pop-up, and initializes customization.
+   *
+   * @param {SQLDrinkInfo} menuItem - The selected drink item from the menu.
+   */
   function handleDrinkDetailClick(detail: DrinkDetail): void {
     setActiveDetail(detail);
   }
@@ -261,6 +282,11 @@ function CustomerView() {
     }
   }
 
+  /**
+ * Handles the click on a specific drink, opens the drink details pop-up, and initializes customization.
+ *
+ * @param {SQLDrinkInfo} menuItem - The selected drink item from the menu.
+ */
   function handleDrinkClick(menuItem: SQLDrinkInfo): void {
     setIsDrinkPopUp(true);
     setActiveDetail("Cup Size");
