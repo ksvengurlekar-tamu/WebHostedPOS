@@ -24,6 +24,12 @@ declare global {
   }
 }
 
+/**
+ * Landing Component: Represents the landing page of the application.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered Landing component.
+ */
 function Landing() {
   const { selectedLanguage } = useLanguageContext();
   const [currTemp, setCurrTemp] = useState<string>(() => {
@@ -40,6 +46,9 @@ function Landing() {
   
   useEffect(() => { //determine current temperature
     const savedDiscountedDrink = sessionStorage.getItem('discountedDrink');
+    /**
+     * Fetch Weather Data: Asynchronous function to retrieve weather information and set component state.
+     */
     const fetchWeatherData = async () => {
       try {
         const dailyWeatherInfo = await axios.get('https://gong-cha-server.onrender.com/weather/forecast');
@@ -97,7 +106,10 @@ function Landing() {
     googleTranslateScript.src =
       '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
     googleTranslateScript.async = true;
-    
+
+    /**
+     * Initialize Google Translate: Function to initialize the Google Translate widget.
+     */
     const initializeTranslate = () => {
       if ((window as any).google?.translate?.TranslateElement) {
         new (window as any).google.translate.TranslateElement(
