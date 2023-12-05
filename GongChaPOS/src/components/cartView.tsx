@@ -1,11 +1,23 @@
+/**
+ * @file cartView.tsx
+ * @description Cart view component for displaying and managing the shopping cart in the Gong Cha POS project.
+ */
 import { useState, useEffect} from "react";
 
+/**
+ * @interface Topping
+ * @description Interface representing a topping with id, name, and price.
+ */
 interface Topping {
   id: number;
   name: string;
   price: number;
 }
 
+/**
+ * @interface Drink
+ * @description Interface representing a drink with id, name, price, size, topping names, quantity, and image URL.
+ */
 interface Drink {
   id: number;
   name: string;
@@ -16,6 +28,10 @@ interface Drink {
   imgurl: string;
 }
 
+/**
+ * @interface CartViewProps
+ * @description Props for configuring the CartView component.
+ */
 interface CartViewProps {
   InputDrinks: Drink[];
   onRemoveDrink: (drinkName: Drink) => void;
@@ -24,6 +40,12 @@ interface CartViewProps {
   view?: string;
 }
 
+/**
+ * @function CartView
+ * @description Cart view component displaying the shopping cart with drink items, quantities, and total amounts.
+ * @param {CartViewProps} props - Props for configuring the CartView component.
+ * @returns {JSX.Element} Rendered CartView component.
+ */
 function CartView({ InputDrinks, onRemoveDrink, onClearCart, onSubmit, view}: CartViewProps) {
   const [drinks, setDrinks] = useState<Drink[]>([]);
   const [toppings, setToppings] = useState<Topping[]>(); // this will align with the topping list
@@ -75,7 +97,9 @@ function CartView({ InputDrinks, onRemoveDrink, onClearCart, onSubmit, view}: Ca
     setDrinks(InputDrinks);
   }, [InputDrinks]);
   
-    
+  /**
+ * @description useEffect hook to calculate subtotal, tax, and total based on the selected drinks and toppings.
+ */
   useEffect(() => {
     let newSubtotal = 0;
 
@@ -97,10 +121,18 @@ function CartView({ InputDrinks, onRemoveDrink, onClearCart, onSubmit, view}: Ca
     setTotal(newSubtotal + newTax);
   }, [drinks]);
 
+  /**
+ * @description Remove a selected drink from the cart.
+ * @param {Drink} drinkToRemove - The drink to be removed.
+ */
   const removeDrink = (drinkToRemove: Drink) => {
     onRemoveDrink(drinkToRemove);
   };
 
+  /**
+ * @description Increment the quantity of a selected drink in the cart.
+ * @param {Drink} drinkToIncrement - The drink to be incremented.
+ */
   const incrementQuantity = (drinkToIncrement: Drink) => {
     setDrinks((prevDrinks) =>
       prevDrinks.map((drink) =>
@@ -110,6 +142,10 @@ function CartView({ InputDrinks, onRemoveDrink, onClearCart, onSubmit, view}: Ca
     setSelectedDrink(drinkToIncrement);
   };
 
+  /**
+ * @description Decrement the quantity of a selected drink in the cart, ensuring a minimum quantity of 1.
+ * @param {Drink} drinkToDecrement - The drink to be decremented.
+ */
   const decrementQuantity = (drinkToDecrement: Drink) => {
     setDrinks((prevDrinks) =>
       prevDrinks.map((drink) =>
@@ -119,10 +155,16 @@ function CartView({ InputDrinks, onRemoveDrink, onClearCart, onSubmit, view}: Ca
     setSelectedDrink(drinkToDecrement);
   };
 
+  /**
+ * @description Clear all items from the cart.
+ */
   const clearCart = () => {
     onClearCart();
   };
 
+  /**
+ * @description Submit the order, triggering the onSubmit callback.
+ */
   const submitOrder = () => {
     onSubmit();
   }
