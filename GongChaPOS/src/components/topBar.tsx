@@ -5,8 +5,19 @@ import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import "./components.css";
 
 /**
- * Renders the top bar component with a back button, title and current time.
- * @returns JSX element
+ * TopBar Component
+ *
+ * Renders the top navigation bar component with a back button, title, and current time.
+ *
+ * @component
+ *
+ * @param {Object} props - The properties of the TopBar component.
+ * @param {boolean} props.isBackButtonVisible - Determines the visibility of the back button.
+ * @param {string} props.view - The current view being displayed.
+ * @param {string} props.series - The series title for Bubble Tea (optional).
+ * @param {Function} props.onBackClick - The callback function to execute when the back button is clicked.
+ *
+ * @returns {JSX.Element} The rendered TopBar component.
  */
 interface TopBarProps {
   isBackButtonVisible: boolean;
