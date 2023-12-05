@@ -9,4 +9,10 @@ const pool = new Pool({
     database: 'csce315331_00g_db'
 });
 
+/**
+ * Execute a SQL query on the database.
+ * @param {string} text - The SQL query string.
+ * @param {any[]} params - Optional parameters for the SQL query.
+ * @returns {Promise<pg.QueryResult>} - A promise that resolves to the query result.
+ */
 export const db = (text: string, params?: any[]) => pool.query(text, params);
