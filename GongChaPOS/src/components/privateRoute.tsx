@@ -28,6 +28,20 @@ import Inventory from './../pages/inventory';
 //   return <Navigate to="/login" />;
 // };
 
+/**
+ * PrivateRoute Component
+ *
+ * A component for handling private routes based on user roles.
+ *
+ * @component
+ *
+ * @param {Object} props - The properties of the PrivateRoute component.
+ * @param {React.ReactNode} props.children - The child elements to be rendered within the PrivateRoute.
+ * @param {string} props.toRender - The view to render based on the user's role.
+ * @param {string} props.role - The required role for accessing the route.
+ *
+ * @returns {JSX.Element} The rendered PrivateRoute component.
+ */
 type PrivateRouteProps = {
   children: React.ReactNode;
   toRender: string;
