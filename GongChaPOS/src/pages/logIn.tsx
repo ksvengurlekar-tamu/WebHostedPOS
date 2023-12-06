@@ -7,7 +7,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
 import GoogleLogIn from '../components/googleLogIn';
 import gongChaLogo from '../assets/images/GongChaLogo.png';
-import e from 'cors';
 
 /**
  * Login Component: Represents the login page of the application.

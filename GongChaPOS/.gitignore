@@ -25,3 +25,4 @@ dist-ssr
 
 
 server/server.ts
+src/pages/menuBoar_noscroll.tsx

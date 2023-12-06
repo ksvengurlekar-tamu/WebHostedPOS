@@ -30,9 +30,17 @@ interface DrinkRequest {
 
 
 /**
- * Define API routes and their corresponding logic 
- * @route GET /
- * @description Root endpoint
+ * @api {get} / Request root
+ * @apiName GetRoot
+ * @apiGroup Root
+ *
+ * @apiSuccess {String} message Welcome message.
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "message": "Hello from Express!"
+ *     }
  */
 app.get('/', (_req, res) => {
   res.send('Hello from Express!');
@@ -40,8 +48,9 @@ app.get('/', (_req, res) => {
 
 //employees
 /**
- * @route GET /employees
- * @description Get all employee information
+ * @api {get} /employees Get all employee information
+ * @apiName GetEmployees
+ * @apiGroup Employees
  */
 app.get('/employees', async (_req, res) => { // To get all employee info
   try {
@@ -56,8 +65,9 @@ app.get('/employees', async (_req, res) => { // To get all employee info
 
 // menu items
 /**
- * @route GET /menuitems
- * @description Get all menu items
+ * @api {get} /menuitems Get all menu items
+ * @apiName GetMenuItems
+ * @apiGroup Menu
  */
 app.get('/menuitems', async (_req, res) => { // To get all menu items
   try {
@@ -83,9 +93,11 @@ app.get('/menuitems/:menuitemname', async (req, res) => { // To get a specific m
 });
 
 /**
- * @route GET /category/:series
- * @description Get all menu items in a specific category
- * @param {string} series - The category of menu items
+ * @api {get} /category/:series Get all menu items in a specific category
+ * @apiName GetMenuItemsInCategory
+ * @apiGroup Category
+ *
+ * @apiParam {String} series The category of menu items.
  */
 app.get('/category/:series', async (req, res) => { // To get all menu items in a specific category
   try {
@@ -100,8 +112,9 @@ app.get('/category/:series', async (req, res) => { // To get all menu items in a
 
 // Sales
 /**
- * @route GET /sales
- * @description Get all sales
+ * @api {get} /sales Get all sales
+ * @apiName GetSales
+ * @apiGroup Sales
  */
 app.get('/sales', async (req, res) => { // To get all sales
   try {
@@ -113,11 +126,13 @@ app.get('/sales', async (req, res) => { // To get all sales
 });
 
 /**
- * @route GET /salesReport
- * @description Get sales report based on menu item, start date, and end date
- * @param {string} menuItem - The name of the menu item
- * @param {string} startDate - The start date for the report
- * @param {string} endDate - The end date for the report
+ * @api {get} /salesReport Get sales report based on menu item, start date, and end date
+ * @apiName GetSalesReport
+ * @apiGroup SalesReport
+ *
+ * @apiParam {String} menuItem The name of the menu item.
+ * @apiParam {String} startDate The start date for the report.
+ * @apiParam {String} endDate The end date for the report.
  */
 app.get('/salesReport', async (req, res) => {
   const { menuItem, startDate, endDate } = req.query as {
@@ -149,10 +164,12 @@ app.get('/salesReport', async (req, res) => {
 });
 
 /**
- * @route POST /sales
- * @description Add a sale into the database
- * @param {string} employeeId - The ID of the employee making the sale
- * @param {Array} drinks - An array of drinks in the sale
+ * @api {post} /sales Add a sale into the database
+ * @apiName AddSale
+ * @apiGroup Sales
+ *
+ * @apiParam {String} employeeId The ID of the employee making the sale.
+ * @apiParam {Array} drinks An array of drinks in the sale.
  */
 app.post('/sales', async (req, res) => { // To add a sale into the database (with auto-incremented orderID) ))
   try {
@@ -241,8 +258,9 @@ app.post('/sales', async (req, res) => { // To add a sale into the database (wit
 
 //inventory
 /**
- * @route GET /inventory
- * @description Get all inventory items
+ * @api {get} /inventory Get all inventory items
+ * @apiName GetInventory
+ * @apiGroup Inventory
  */
 app.get('/inventory', async (_req, res) => {
   try {
@@ -254,14 +272,16 @@ app.get('/inventory', async (_req, res) => {
 });
 
 /**
- * @route POST /inventory
- * @description Add a new inventory item
- * @param {string} inventoryName - The name of the inventory item
- * @param {number} quantity - The quantity of the inventory item
- * @param {string} receivedDate - The date when the inventory item was received
- * @param {string} expirationDate - The expiration date of the inventory item
- * @param {boolean} inStock - Whether the inventory item is in stock or not
- * @param {string} supplier - The supplier of the inventory item
+ * @api {post} /inventory Add a new inventory item
+ * @apiName AddInventory
+ * @apiGroup Inventory
+ *
+ * @apiParam {String} inventoryName The name of the inventory item.
+ * @apiParam {Number} quantity The quantity of the inventory item.
+ * @apiParam {String} receivedDate The date when the inventory item was received.
+ * @apiParam {String} expirationDate The expiration date of the inventory item.
+ * @apiParam {Boolean} inStock Whether the inventory item is in stock or not.
+ * @apiParam {String} supplier The supplier of the inventory item.
  */
 app.post('/inventory', async (req, res) => { // add inventory
   try {
@@ -282,9 +302,11 @@ app.post('/inventory', async (req, res) => { // add inventory
 });
 
 /**
- * @route PUT /inventory/:inventoryName
- * @description Update an existing inventory item
- * @param {string} inventoryName - The name of the inventory item to be updated
+ * @api {put} /inventory/:inventoryName Update an existing inventory item
+ * @apiName UpdateInventory
+ * @apiGroup Inventory
+ *
+ * @apiParam {String} inventoryName The name of the inventory item to be updated.
  */
 app.put('/inventory/:inventoryName', async (req, res) => { //upadate inventory
   try {
@@ -341,9 +363,11 @@ app.put('/inventory/:inventoryName', async (req, res) => { //upadate inventory
 });
 
 /**
- * @route GET /inventory/:itemName
- * @description Get information about a specific inventory item by name
- * @param {string} itemName - The name of the inventory item
+ * @api {get} /inventory/:itemName Get information about a specific inventory item by name
+ * @apiName GetInventoryItem
+ * @apiGroup Inventory
+ *
+ * @apiParam {String} itemName The name of the inventory item.
  */
 app.get('/inventory/:itemName', async (req, res) => {
   const itemName = req.params.itemName;
@@ -362,14 +386,16 @@ app.get('/inventory/:itemName', async (req, res) => {
 });
 
 /**
- * @route POST /addOrUpdateDrink
- * @description Add a new drink or update an existing one
- * @param {string} drinkName - The name of the drink
- * @param {string} drinkPrice - The price of the drink
- * @param {string} drinkCalories - The calories in the drink
- * @param {string} drinkCategory - The category of the drink
- * @param {boolean} hasCaffeine - Whether the drink contains caffeine or not
- * @param {Array} ingredients - An array of ingredients in the drink
+ * @api {post} /addOrUpdateDrink Add a new drink or update an existing one
+ * @apiName AddOrUpdateDrink
+ * @apiGroup Drinks
+ *
+ * @apiParam {String} drinkName The name of the drink.
+ * @apiParam {String} drinkPrice The price of the drink.
+ * @apiParam {String} drinkCalories The calories in the drink.
+ * @apiParam {String} drinkCategory The category of the drink.
+ * @apiParam {Boolean} hasCaffeine Whether the drink contains caffeine or not.
+ * @apiParam {Array} ingredients An array of ingredients in the drink.
  */
 //addOrUpdateDrink
 app.post('/addOrUpdateDrink', async (req, res) => {
@@ -414,11 +440,14 @@ app.post('/addOrUpdateDrink', async (req, res) => {
 });
 
 /**
- * @route GET /pairProducts
- * @description Get paired products based on sales within a date range
- * @param {string} req.query.startDate - The start date for the analysis (YYYY-MM-DD format)
- * @param {string} req.query.endDate - The end date for the analysis (YYYY-MM-DD format)
- * @returns {Object[]} An array of paired products with their frequency of being sold together
+ * @api {get} /pairProducts Get paired products based on sales within a date range
+ * @apiName GetPairProducts
+ * @apiGroup Products
+ *
+ * @apiParam {String} startDate The start date for the analysis (YYYY-MM-DD format).
+ * @apiParam {String} endDate The end date for the analysis (YYYY-MM-DD format).
+ *
+ * @apiSuccess {Object[]} products An array of paired products with their frequency of being sold together.
  */
 app.get('/pairProducts', async (req, res) => {
   try {
@@ -444,10 +473,13 @@ app.get('/pairProducts', async (req, res) => {
 });
 
 /**
- * @route GET /excessReport
- * @description Get a report of excess inventory items based on sales and inventory data
- * @param {string} req.query.targetDate - The target date for the excess report (YYYY-MM-DD format)
- * @returns {Object[]} An array of excess inventory items
+ * @api {get} /excessReport Get a report of excess inventory items based on sales and inventory data
+ * @apiName GetExcessReport
+ * @apiGroup Reports
+ *
+ * @apiParam {String} targetDate The target date for the excess report (YYYY-MM-DD format).
+ *
+ * @apiSuccess {Object[]} items An array of excess inventory items.
  */
 app.get('/excessReport', async (req, res) => {
   try {
@@ -509,10 +541,14 @@ app.get('/excessReport', async (req, res) => {
 });
 
 /**
- * @function getInventoryID
- * @description Get the inventory ID for a given inventory item name
- * @param {string} inventoryName - The name of the inventory item
- * @returns {number | null} The inventory ID or null if not found
+ * @api {get} /inventory/:inventoryName/id Get the inventory ID for a given inventory item name
+ * @apiName GetInventoryID
+ * @apiGroup Inventory
+ *
+ * @apiParam {String} inventoryName The name of the inventory item.
+ *
+ * @apiSuccess {Number} id The inventory ID.
+ * @apiError {Null} null The inventory ID is not found.
  */
 async function getInventoryID(inventoryName: string): Promise<number> {
   const query = 'SELECT inventoryid FROM Inventory WHERE inventoryname = $1';
@@ -521,10 +557,14 @@ async function getInventoryID(inventoryName: string): Promise<number> {
 }
 
 /**
- * @function getMenuItemID
- * @description Get the menu item ID for a given menu item name
- * @param {string} menuItemName - The name of the menu item
- * @returns {number | null} The menu item ID or null if not found
+ * @api {get} /menu/:menuItemName/id Get the menu item ID for a given menu item name
+ * @apiName GetMenuItemID
+ * @apiGroup Menu
+ *
+ * @apiParam {String} menuItemName The name of the menu item.
+ *
+ * @apiSuccess {Number} id The menu item ID.
+ * @apiError {Null} null The menu item ID is not found.
  */
 async function getMenuItemID(menuItemName: string): Promise<number> {
   const query = 'SELECT menuItemid FROM menuItems WHERE menuitemname = $1';
@@ -533,9 +573,11 @@ async function getMenuItemID(menuItemName: string): Promise<number> {
 }
 
 /**
- * @function getRandomColor
- * @description Generate a random hexadecimal color
- * @returns {string} A random color in hexadecimal format
+ * @api {get} /randomColor Generate a random hexadecimal color
+ * @apiName GetRandomColor
+ * @apiGroup Colors
+ *
+ * @apiSuccess {String} color A random color in hexadecimal format.
  */
 function getRandomColor(): string {
   // Generate a random hexadecimal color
@@ -549,9 +591,11 @@ function getRandomColor(): string {
 
 // Weather API
 /**
- * @route GET /weather/forecast
- * @description Get the current weather forecast for a specific location
- * @returns {Object} Object containing temperature range, weather description, and location information
+ * @api {get} /weather/forecast Get the current weather forecast for a specific location
+ * @apiName GetWeatherForecast
+ * @apiGroup Weather
+ *
+ * @apiSuccess {Object} forecast Object containing temperature range, weather description, and location information.
  */
 app.get('/weather/forecast', async (req, res) => {
   try {
@@ -579,9 +623,11 @@ app.get('/weather/forecast', async (req, res) => {
 })
 
 /**
- * @route GET /weather/current
- * @description Get the current weather for a specific location
- * @returns {Object} Object containing current temperature, feels-like temperature, and location information
+ * @api {get} /weather/current Get the current weather for a specific location
+ * @apiName GetCurrentWeather
+ * @apiGroup Weather
+ *
+ * @apiSuccess {Object} weather Object containing current temperature, feels-like temperature, and location information.
  */
 app.get('/weather/current', async (req, res) => { //
   try {
@@ -604,8 +650,11 @@ app.get('/weather/current', async (req, res) => { //
 })
 
 /**
- * Start the server on the specified port and log the server's URL.
- * @param {number} port - The port number on which the server will listen.
+ * @api {post} /startServer Start the server on the specified port and log the server's URL
+ * @apiName StartServer
+ * @apiGroup Server
+ *
+ * @apiParam {Number} port The port number on which the server will listen.
  */
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
